@@ -15,7 +15,7 @@ The following **required** functionality is completed:
 * [ ] User can view details for items in the yard sale
 * [ ] User can edit yard sale if it belongs to him - add/remove pictures, change time, date, location, title, description
 * [ ] User can delete a yard sale if it belongs to him
-* [ ] User can edit/delete items in a yard sale if it belongs to him
+* [ ] User can edit/delete items in a yard sale if it belongs to him - description, price
 * [ ] Users can share the yard sale information to friends
 
 The following **optional** features are implemented:
