@@ -7,19 +7,22 @@
 The following **required** functionality is completed:
 
 * [ ] User can **login/register** to the app
-* [ ] User can host a yard sale, including the follwoing items
+* [ ] User can host a yard sale, including the following items
 	* [ ] pictures of the sale items
 	* [ ] time, date, location
 	* [ ] title, description 
-* [ ] User can edit yard sale - add/remove pictures, change time, date, location, title, description
-* [ ] User can delete a yard sale 
-* [ ] User can view the yard sale in map/list view. 
+* [ ] User can view the yard sale in map/list view
+* [ ] User can view details for items in the yard sale
+* [ ] User can edit yard sale if it belongs to him - add/remove pictures, change time, date, location, title, description
+* [ ] User can delete a yard sale if it belongs to him
+* [ ] User can edit/delete items in a yard sale if it belongs to him
 * [ ] Users can share the yard sale information to friends
 
 The following **optional** features are implemented:
 
 * [ ] push notifications for favorited yard sales and/or for new yard sales in your home location
-* [ ] save yard sale to visit for future 
+* [ ] view his own profile and edit it
+* [ ] save/bookmark a yard sale to visit in future 
 * [ ] advanced filters to search yard sale 
 * [ ] users can view history of users activity
 * [ ] users can route to the selected yard sale
