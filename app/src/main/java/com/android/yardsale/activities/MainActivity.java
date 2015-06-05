@@ -1,9 +1,11 @@
-package com.android.yardsale;
+package com.android.yardsale.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.android.yardsale.R;
 
 
 public class MainActivity extends ActionBarActivity {
