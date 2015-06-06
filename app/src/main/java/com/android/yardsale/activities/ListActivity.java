@@ -24,8 +24,9 @@ public class ListActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        String username = getIntent().getStringExtra("test_user_name");
 
-             //get the viewpager
+        //get the viewpager
             vpPager = (ViewPager) findViewById(R.id.vpPager);
 
 

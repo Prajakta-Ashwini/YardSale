@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.yardsale.activities.MainActivity;
+import com.android.yardsale.activities.ListActivity;
 import com.facebook.FacebookSdk;
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -70,7 +70,7 @@ public class YardSaleApplication extends Application {
                 if (user != null) {
                     // Hooray! The user is logged in.
                     Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                    launchMainActivity(username);
+                    launchListActivity(username);
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
                     Toast.makeText(context, "Login failed :(", Toast.LENGTH_LONG).show();
@@ -80,8 +80,8 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    private static void launchMainActivity(String username) {
-        Intent intent = new Intent(context, MainActivity.class);
+    private static void launchListActivity(String username) {
+        Intent intent = new Intent(context, ListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("test_user_name", username);
         context.startActivity(intent);
@@ -104,10 +104,10 @@ public class YardSaleApplication extends Application {
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
                     //showUserDetailsActivity();
-                    launchMainActivity(user.getUsername());
+                    launchListActivity(user.getUsername());
                 } else {
                     Log.d("DEBUG", "User logged in through Facebook!");
-                    launchMainActivity(user.getUsername());
+                    launchListActivity(user.getUsername());
                 }
             }
         });
