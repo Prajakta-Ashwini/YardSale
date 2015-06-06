@@ -3,4 +3,9 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="parse_app_id">MMFnruGWoh34ACUP3e4z7MPpn4zjU7eSTtgv4t6o</string>
+    <string name="parse_client_key">1hYdGwa3TljmkHjwJnuBSvUjTlHE7UT9iByTPy7x</string>
+    <string name="title_activity_how_it_works">HowItWorksActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
 </resources>
