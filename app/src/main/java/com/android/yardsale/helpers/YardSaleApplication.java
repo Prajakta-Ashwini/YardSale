@@ -8,11 +8,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.yardsale.activities.ListActivity;
+import com.android.yardsale.models.YardSale;
 import com.facebook.FacebookSdk;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -38,6 +40,8 @@ public class YardSaleApplication extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
         //Parse.enableLocalDatastore(this);
+        // Register your parse models
+        ParseObject.registerSubclass(YardSale.class);
         Parse.initialize(this, YARDSALE_APPLICATION_ID, YARDSALE_CLIENT_KEY);
         ParseFacebookUtils.initialize(this);
 
