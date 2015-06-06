@@ -5,9 +5,6 @@ import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
-/**
- * Created by Prajakta on 6/5/2015.
- */
 @ParseClassName("Wishlist")
 public class Wishlist extends ParseObject{
     public Wishlist(){

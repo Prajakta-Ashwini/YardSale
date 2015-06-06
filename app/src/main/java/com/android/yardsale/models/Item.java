@@ -11,9 +11,6 @@ import com.parse.ParseRelation;
 
 import java.io.File;
 
-/**
- * Created by Prajakta on 6/5/2015.
- */
 @ParseClassName("Item")
 public class Item extends ParseObject {
    public Item() {

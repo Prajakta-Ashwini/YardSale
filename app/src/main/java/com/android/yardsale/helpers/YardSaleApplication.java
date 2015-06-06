@@ -10,14 +10,19 @@ import android.widget.Toast;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.models.YardSale;
 import com.facebook.FacebookSdk;
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class YardSaleApplication extends Application {
@@ -27,6 +32,7 @@ public class YardSaleApplication extends Application {
     private Activity callingActivity;
 
     public YardSaleApplication() {
+        super();
     }
 
     public YardSaleApplication(Activity activity) {
@@ -74,7 +80,7 @@ public class YardSaleApplication extends Application {
                 if (user != null) {
                     // Hooray! The user is logged in.
                     Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                    launchListActivity(username);
+                    getYardSales(username);
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
                     Toast.makeText(context, "Login failed :(", Toast.LENGTH_LONG).show();
@@ -84,10 +90,11 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    private static void launchListActivity(String username) {
+    private static void launchListActivity(String username, ArrayList<CharSequence> saleList) {
         Intent intent = new Intent(context, ListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("test_user_name", username);
+        intent.putCharSequenceArrayListExtra("sale_list", saleList);
         context.startActivity(intent);
     }
 
@@ -101,18 +108,42 @@ public class YardSaleApplication extends Application {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
-              //TODO Progress bars
+                //TODO Progress bars
                 if (user == null) {
                     Log.d("DEBUG", "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
                     //showUserDetailsActivity();
-                    launchListActivity(user.getUsername());
+                    getYardSales(user.getUsername());
                 } else {
                     Log.d("DEBUG", "User logged in through Facebook!");
-                    launchListActivity(user.getUsername());
+                    getYardSales(user.getUsername());
                 }
+            }
+        });
+    }
+
+    public void createYardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location){
+        YardSale sale = new YardSale(title,description,startTime,endTime,location,ParseUser.getCurrentUser());
+        sale.saveInBackground();
+    }
+
+    public void getYardSales(final String username){
+        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+        query.findInBackground(new FindCallback<YardSale>() {
+            public void done(List<YardSale> itemList, ParseException e) {
+                if (e == null) {
+                    //String firstItemId = itemList.get(0).getObjectId();
+                    ArrayList<CharSequence> saleList = new ArrayList<>();
+                    for (YardSale sale : itemList) {
+                        saleList.add(sale.getObjectId());
+                    }
+                    launchListActivity(username, saleList);
+                } else {
+                    Log.d("item", "Error: " + e.getMessage());
+                }
+
             }
         });
     }

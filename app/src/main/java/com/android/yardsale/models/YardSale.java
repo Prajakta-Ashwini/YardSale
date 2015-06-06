@@ -7,9 +7,7 @@ import com.parse.ParseUser;
 
 import java.util.Date;
 
-/**
- * Created by Prajakta on 6/5/2015.
- */
+
 @ParseClassName("YardSale")
 public class YardSale extends ParseObject {
     public YardSale() {
