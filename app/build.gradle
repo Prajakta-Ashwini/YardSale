@@ -26,4 +26,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: 'Parse-*.jar')
     compile fileTree(dir: 'libs', include: 'ParseFacebookUtilsV4-*.jar')
     compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
