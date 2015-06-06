@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.yardsale.R;
 import com.android.yardsale.activities.MainActivity;
 import com.facebook.FacebookSdk;
 import com.parse.LogInCallback;
@@ -20,7 +19,8 @@ import com.parse.SignUpCallback;
 import java.util.List;
 
 public class YardSaleApplication extends Application {
-
+    public static final String YARDSALE_APPLICATION_ID = "MMFnruGWoh34ACUP3e4z7MPpn4zjU7eSTtgv4t6o";
+    public static final String YARDSALE_CLIENT_KEY = "1hYdGwa3TljmkHjwJnuBSvUjTlHE7UT9iByTPy7x";
     private static Context context;
     private Activity callingActivity;
 
@@ -38,7 +38,7 @@ public class YardSaleApplication extends Application {
         FacebookSdk.sdkInitialize(getApplicationContext());
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
         //Parse.enableLocalDatastore(this);
-        Parse.initialize(this, getString(R.string.parse_app_id), getString(R.string.parse_client_key));
+        Parse.initialize(this, YARDSALE_APPLICATION_ID, YARDSALE_CLIENT_KEY);
         ParseFacebookUtils.initialize(this);
 
     }
