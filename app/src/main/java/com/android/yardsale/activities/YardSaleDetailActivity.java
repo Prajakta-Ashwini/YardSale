@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
@@ -14,6 +13,7 @@ import com.android.yardsale.adapters.ItemsArrayAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
+import com.etsy.android.grid.StaggeredGridView;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class YardSaleDetailActivity extends ActionBarActivity {
-    private ListView lvItems;
+    private StaggeredGridView gvItems;
     private ItemsArrayAdapter aItems;
     private List<Item> itemList;
     private Button btCreateItem;
@@ -33,12 +33,12 @@ public class YardSaleDetailActivity extends ActionBarActivity {
         final YardSaleApplication client = new YardSaleApplication();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yard_sale_detail);
-        lvItems = (ListView) findViewById(R.id.lvItems);
+        gvItems = (StaggeredGridView) findViewById(R.id.gvItems);
         itemList = new ArrayList<>();
         final List<CharSequence> itemsObjList = getIntent().getCharSequenceArrayListExtra("item_list");
         final String yardsaleObj = getIntent().getStringExtra("yardsale");
         aItems = new ItemsArrayAdapter(this,itemList);
-        lvItems.setAdapter(aItems);
+        gvItems.setAdapter(aItems);
 
         for(CharSequence objId:itemsObjList) {
             ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
@@ -47,7 +47,6 @@ public class YardSaleDetailActivity extends ActionBarActivity {
                 public void done(Item item, ParseException e) {
                     if (e == null) {
                         aItems.add(item);
-                        itemList.add(item);
                         aItems.notifyDataSetChanged();
                     }
                 }

@@ -134,6 +134,7 @@ public class YardSaleApplication extends Application {
 
     public void getYardSales(final String username) {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+        query.include("seller");
         query.findInBackground(new FindCallback<YardSale>() {
             public void done(List<YardSale> itemList, ParseException e) {
                 if (e == null) {

@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.yardsale.R;
 import com.android.yardsale.models.Item;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -17,9 +19,9 @@ import java.util.List;
  */
 public class ItemsArrayAdapter extends ArrayAdapter<Item> {
     private static class ViewHolderSale {
-
+        ImageView ivPic;
         TextView tvDescription;
-
+        TextView tvPrice;
     }
 
     public ItemsArrayAdapter(Context context, List<Item> itemList) {
@@ -29,30 +31,21 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Item item = getItem(position);
-        //find or inflate the template
-//        if(convertView == null){
-//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet,parent,false);
-//        }
         ViewHolderSale viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
             viewHolder = new ViewHolderSale();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_sale_item, parent, false);
-//            viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
-//            viewHolder.tvFullName = (TextView) convertView.findViewById(R.id.tvFullName);
-//            viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
+            viewHolder.ivPic = (ImageView) convertView.findViewById(R.id.ivPic);
             viewHolder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
+            viewHolder.tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolderSale) convertView.getTag();
         }
-        //find the subviews to fill data in the template
-
-        //populate data into subview
-
-        viewHolder.tvDescription.setText("@" + item.getDescription());
-        //Picasso.with(getContext()).load(user.getProfileImageUrl()).into(viewHolder.ivProfileImage);
-        //return view to be inserted in the list
+        viewHolder.tvDescription.setText(item.getDescription());
+        viewHolder.tvPrice.setText(item.getPrice().toString());
+        Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(viewHolder.ivPic);
         return convertView;
     }
 }
