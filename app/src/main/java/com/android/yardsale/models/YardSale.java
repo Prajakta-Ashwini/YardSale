@@ -9,7 +9,7 @@ import java.util.Date;
 
 
 @ParseClassName("YardSale")
-public class YardSale extends ParseObject {
+public class YardSale extends ParseObject  {
     public YardSale() {
         super();
     }
@@ -72,4 +72,6 @@ public class YardSale extends ParseObject {
     public ParseUser getSeller(){
         return getParseUser("seller");
     }
+
+
 }

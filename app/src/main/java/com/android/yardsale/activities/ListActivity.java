@@ -100,5 +100,4 @@ public class ListActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

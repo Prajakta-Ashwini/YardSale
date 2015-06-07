@@ -3,9 +3,6 @@ package com.android.yardsale.models;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
-
-import java.io.File;
 
 @ParseClassName("Item")
 public class Item extends ParseObject {
@@ -14,7 +11,7 @@ public class Item extends ParseObject {
     }
 
     // Add a constructor that contains core properties
-    public Item(String description, Number price, File photo, ParseRelation<YardSale> yardsale_id) {
+    public Item(String description, Number price, ParseFile photo, YardSale yardsale_id) {
         super();
         setDescription(description);
         setPrice(price);
@@ -43,16 +40,16 @@ public class Item extends ParseObject {
         return getParseFile("photo");
     }
 
-    public void setPhoto(File photo) {
+    public void setPhoto(ParseFile photo) {
         put("photo",photo);
     }
 
-    public void setYardSaleId(ParseRelation<YardSale> sale) {
+    public void setYardSaleId(YardSale sale) {
         put("yardsale_id",sale);
     }
 
-    public ParseRelation<YardSale> getYardSale(){
-        return getRelation("yardsale_id");
+    public YardSale getYardSale(){
+        return (YardSale)getParseObject("yardsale_id");
     }
 
 

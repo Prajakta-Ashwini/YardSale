@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.yardsale" >
+    package="com.android.yardsale">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -10,10 +10,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activities.HowItWorksActivity"
-            android:label="@string/title_activity_how_it_works" >
+            android:label="@string/title_activity_how_it_works">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,23 +22,31 @@
         </activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main">
         </activity>
         <activity
             android:name=".activities.SignUpActivity"
-            android:label="@string/title_activity_sign_up" >
+            android:label="@string/title_activity_sign_up">
         </activity>
         <activity
             android:name=".activities.ListActivity"
-            android:label="@string/title_activity_list" >
+            android:label="@string/title_activity_list">
         </activity>
         <activity
             android:name=".activities.SearchActivity"
-            android:label="@string/title_activity_search" >
+            android:label="@string/title_activity_search">
+        </activity>
+        <activity
+            android:name=".activities.YardSaleDetailActivity"
+            android:label="@string/title_activity_yard_sale_detail"
+            android:parentActivityName=".activities.ListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.yardsale.activities.ListActivity" />
         </activity>
     </application>
 
