@@ -36,6 +36,14 @@
             android:name=".activities.ListActivity"
             android:label="@string/title_activity_list" >
         </activity>
+        <activity
+            android:name=".activities.YardSaleDetailActivity"
+            android:label="@string/title_activity_yard_sale_detail"
+            android:parentActivityName=".activities.ListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.yardsale.activities.ListActivity" />
+        </activity>
     </application>
 
 </manifest>

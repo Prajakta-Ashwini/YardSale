@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 public class FindStuffFragment extends Fragment {
-    public static List<YardSale> yardSalesList ;
+    public static List<YardSale> yardSalesList= new ArrayList<>() ;
     public ListView lvYardSales;
     //private ProgressBar progressBarFooter;
     public SalesArrayAdapter aSales;
@@ -40,6 +41,7 @@ public class FindStuffFragment extends Fragment {
 
     public void addYardSale(YardSale row){
         aSales.add(row);
+        yardSalesList.add(row);
         aSales.notifyDataSetChanged();
     }
 
@@ -56,8 +58,16 @@ public class FindStuffFragment extends Fragment {
         btCreateSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"creating!!!", Toast.LENGTH_SHORT).show();
-                client.createYardSale("my yardsale","all items must go by fri",new Date(),new Date(),new ParseGeoPoint(37.42,-121.94));
+                Toast.makeText(getActivity(), "creating!!!", Toast.LENGTH_SHORT).show();
+                client.createYardSale("my yardsale", "all items must go by fri", new Date(), new Date(), new ParseGeoPoint(37.42, -121.94));
+            }
+        });
+
+        lvYardSales.setOnItemClickListener( new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                YardSale s = yardSalesList.get(position);
+                client.getItemsForYardSale(s);
             }
         });
 

@@ -57,11 +57,6 @@ public class ListActivity extends ActionBarActivity {
                 }
             });
         }
-
-
-
-
-
     }
 
     @Override
@@ -91,18 +86,16 @@ public class ListActivity extends ActionBarActivity {
         private String tabtitles[] = {"Find Stuff", "Sell Stuff"};  //to be replaced with icons
         FindStuffFragment hf;
         SellStuffFragment mf;
-        List<YardSale> yardSalesList;
 
         public BuySellPagerAdapter(FragmentManager fm, List<YardSale> yardSalesList) {
             super(fm);
-            this.yardSalesList = yardSalesList;
         }
 
         @Override
         public Fragment getItem(int position) {
             if (position == 0) {
                 if (hf == null)
-                    hf = FindStuffFragment.newInstance(yardSalesList);
+                    hf = FindStuffFragment.newInstance();
                 return hf;
             } else if (position == 1) {
                 if (mf == null)

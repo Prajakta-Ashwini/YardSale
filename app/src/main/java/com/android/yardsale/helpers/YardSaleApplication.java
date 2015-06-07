@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.yardsale.activities.ListActivity;
+import com.android.yardsale.activities.YardSaleDetailActivity;
+import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.FacebookSdk;
 import com.parse.FindCallback;
@@ -15,6 +17,7 @@ import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -48,6 +51,7 @@ public class YardSaleApplication extends Application {
         //Parse.enableLocalDatastore(this);
         // Register your parse models
         ParseObject.registerSubclass(YardSale.class);
+        ParseObject.registerSubclass(Item.class);
         Parse.initialize(this, YARDSALE_APPLICATION_ID, YARDSALE_CLIENT_KEY);
         ParseFacebookUtils.initialize(this);
 
@@ -103,8 +107,7 @@ public class YardSaleApplication extends Application {
         ParseUser.logOut();
     }
 
-    public void signUpAndLoginWithFacebook(List<String> permissions)
-    {
+    public void signUpAndLoginWithFacebook(List<String> permissions) {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
@@ -124,12 +127,12 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void createYardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location){
-        YardSale sale = new YardSale(title,description,startTime,endTime,location,ParseUser.getCurrentUser());
+    public void createYardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location) {
+        YardSale sale = new YardSale(title, description, startTime, endTime, location, ParseUser.getCurrentUser());
         sale.saveInBackground();
     }
 
-    public void getYardSales(final String username){
+    public void getYardSales(final String username) {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.findInBackground(new FindCallback<YardSale>() {
             public void done(List<YardSale> itemList, ParseException e) {
@@ -148,4 +151,35 @@ public class YardSaleApplication extends Application {
         });
     }
 
+    public void createItem(String description,Number price, ParseFile photo, YardSale yardSale){
+        Item item = new Item(description, price, photo, yardSale);
+        item.saveInBackground();
+    }
+
+    public void getItemsForYardSale(final YardSale yardSale){
+        // Define the class we would like to query
+        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        query.whereEqualTo("yardsale_id", yardSale);
+        query.findInBackground(new FindCallback<Item>() {
+            public void done(List<Item> itemList, ParseException e) {
+                if (e == null) {
+                    launchYardSaleDetailActivity(yardSale, itemList);
+                } else {
+                    Log.d("item", "Error: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private static void launchYardSaleDetailActivity(YardSale yardsale, List<Item> items) {
+        Intent intent = new Intent(context, YardSaleDetailActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ArrayList<CharSequence> itemObjList = new ArrayList<>();
+        for (Item item : items) {
+            itemObjList.add(item.getObjectId());
+        }
+        intent.putCharSequenceArrayListExtra("item_list", itemObjList);
+        intent.putExtra("yardsale", yardsale.getObjectId());
+        context.startActivity(intent);
+    }
 }
