@@ -12,9 +12,6 @@ import com.android.yardsale.models.YardSale;
 
 import java.util.List;
 
-/**
- * Created by Prajakta on 6/6/2015.
- */
 public class SalesArrayAdapter  extends ArrayAdapter<YardSale> {
     private static class ViewHolderSale {
 

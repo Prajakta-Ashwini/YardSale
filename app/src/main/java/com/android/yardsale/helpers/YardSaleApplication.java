@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.yardsale.activities.ListActivity;
+import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.FacebookSdk;
 import com.parse.FindCallback;
@@ -103,8 +104,7 @@ public class YardSaleApplication extends Application {
         ParseUser.logOut();
     }
 
-    public void signUpAndLoginWithFacebook(List<String> permissions)
-    {
+    public void signUpAndLoginWithFacebook(List<String> permissions) {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
@@ -124,12 +124,12 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void createYardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location){
-        YardSale sale = new YardSale(title,description,startTime,endTime,location,ParseUser.getCurrentUser());
+    public void createYardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location) {
+        YardSale sale = new YardSale(title, description, startTime, endTime, location, ParseUser.getCurrentUser());
         sale.saveInBackground();
     }
 
-    public void getYardSales(final String username){
+    public void getYardSales(final String username) {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.findInBackground(new FindCallback<YardSale>() {
             public void done(List<YardSale> itemList, ParseException e) {
@@ -146,6 +146,23 @@ public class YardSaleApplication extends Application {
 
             }
         });
+    }
+
+    public List<Item> searchForItems(String query) {
+        final ArrayList<Item> items = new ArrayList<>();
+        ParseQuery searchQuery = new ParseQuery("Items");
+        searchQuery.whereEqualTo("description", query);
+        searchQuery.findInBackground(new FindCallback<Item>() {
+            public void done(List<Item> objects, ParseException e) {
+                if (e == null) {
+                    items.addAll(objects);
+                    //   objectsWereRetrievedSuccessfully(objects);
+                } else {
+                    //  objectRetrievalFailed();
+                }
+            }
+        });
+        return items;
     }
 
 }

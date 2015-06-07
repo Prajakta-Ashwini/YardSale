@@ -1,9 +1,5 @@
 package com.android.yardsale.models;
 
-/**
- * Created by Prajakta on 6/5/2015.
- */
-
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;

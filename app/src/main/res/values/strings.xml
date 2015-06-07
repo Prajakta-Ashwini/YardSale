@@ -10,5 +10,6 @@
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="create_yardsale" >Create Sale</string>
+    <string name="title_activity_search">SearchActivity</string>
 
 </resources>

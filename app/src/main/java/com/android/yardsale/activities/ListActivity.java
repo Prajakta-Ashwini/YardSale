@@ -1,17 +1,17 @@
 package com.android.yardsale.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
-import com.android.yardsale.fragments.FindStuffFragment;
-import com.android.yardsale.fragments.SellStuffFragment;
+import com.android.yardsale.adapters.BuySellPagerAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.astuetz.PagerSlidingTabStrip;
@@ -35,15 +35,18 @@ public class ListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_list);
         final YardSaleApplication client = new YardSaleApplication(this);
 
-        String username = getIntent().getStringExtra("test_user_name");
         final List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
         final List<YardSale> yardSalesList = new ArrayList<>();
         vpPager = (ViewPager) findViewById(R.id.vpPager);
         vpAdapter = new BuySellPagerAdapter(getSupportFragmentManager(), yardSalesList);
         vpPager.setAdapter(vpAdapter);
+
         tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
+
         for(CharSequence objId:yardSalesObjList) {
+            //TODO move this to the client class
+            //client.queryYardSale(String objectId)
             ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
             query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
             query.getInBackground((String) objId, new GetCallback<YardSale>() {
@@ -52,22 +55,34 @@ public class ListActivity extends ActionBarActivity {
                         // item was found
                         //yardSalesList.add(item);
                         vpAdapter.addNewRow(item);
-
                     }
                 }
             });
         }
-
-
-
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_list, menu);
+        MenuItem item = menu.findItem(R.id.miSearch);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getBaseContext(), "query "+ query , Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ListActivity.this, SearchActivity.class);
+                intent.putExtra("query", query);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -86,46 +101,4 @@ public class ListActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //return the order of fragments in the view pager
-    public class BuySellPagerAdapter extends FragmentPagerAdapter {
-        private String tabtitles[] = {"Find Stuff", "Sell Stuff"};  //to be replaced with icons
-        FindStuffFragment hf;
-        SellStuffFragment mf;
-        List<YardSale> yardSalesList;
-
-        public BuySellPagerAdapter(FragmentManager fm, List<YardSale> yardSalesList) {
-            super(fm);
-            this.yardSalesList = yardSalesList;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if (position == 0) {
-                if (hf == null)
-                    hf = FindStuffFragment.newInstance(yardSalesList);
-                return hf;
-            } else if (position == 1) {
-                if (mf == null)
-                    mf = new SellStuffFragment();
-                return mf;
-            } else
-                return null;
-        }
-
-        @Override
-        public int getCount() {
-            return tabtitles.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabtitles[position];
-        }
-
-        public void addNewRow(YardSale row){
-            hf.addYardSale(row);
-            //this.notifyDataSetChanged();
-        }
-
-    }
 }
