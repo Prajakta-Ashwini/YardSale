@@ -171,7 +171,14 @@ public class YardSaleApplication extends Application {
 
     public void createItem(String description,Number price, ParseFile photo, YardSale yardSale){
         Item item = new Item(description, price, photo, yardSale);
+        if(yardSale.getCoverPic() == null)
+            setPicForYardSale(yardSale, photo);
         item.saveInBackground();
+    }
+
+    public void setPicForYardSale(YardSale sale, ParseFile photo){
+        sale.setCoverPic(photo);
+        sale.saveInBackground();
     }
 
     public void getItemsForYardSale(final YardSale yardSale){
