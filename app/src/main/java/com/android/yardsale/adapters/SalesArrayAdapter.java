@@ -47,7 +47,10 @@ public class SalesArrayAdapter  extends ArrayAdapter<YardSale> {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Picasso.with(getContext()).load(R.drawable.placeholder).into(viewHolder.ivCoverPic);
+        if(sale.getCoverPic() != null)
+            Picasso.with(getContext()).load(sale.getCoverPic().getUrl()).placeholder(R.drawable.placeholder).into(viewHolder.ivCoverPic);
+        else
+            Picasso.with(getContext()).load(R.drawable.placeholder).into(viewHolder.ivCoverPic);
         //return view to be inserted in the list
         return convertView;
     }

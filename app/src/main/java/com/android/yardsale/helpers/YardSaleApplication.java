@@ -187,10 +187,17 @@ public class YardSaleApplication extends Application {
 
     public void createItem(String description, Number price, ParseFile photo, YardSale yardSale) {
         Item item = new Item(description, price, photo, yardSale);
+        if(yardSale.getCoverPic() == null)
+            setPicForYardSale(yardSale, photo);
         item.saveInBackground();
     }
 
-    public void getItemsForYardSale(final YardSale yardSale) {
+    public void setPicForYardSale(YardSale sale, ParseFile photo){
+        sale.setCoverPic(photo);
+        sale.saveInBackground();
+    }
+
+    public void getItemsForYardSale(final YardSale yardSale){
         // Define the class we would like to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.whereEqualTo("yardsale_id", yardSale);

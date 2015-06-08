@@ -1,6 +1,7 @@
 package com.android.yardsale.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -23,10 +24,11 @@ public class YardSale extends ParseObject  {
         setEndTime(endTime);
         setLocation(location);
         setSeller(seller);
+
     }
 
     public void setTitle(String title) {
-        put("title",title);
+        put("title", title);
     }
 
     public String getTitle(){
@@ -73,5 +75,11 @@ public class YardSale extends ParseObject  {
         return getParseUser("seller");
     }
 
+    public ParseFile getCoverPic(){
+        return getParseFile("cover_pic");
+    }
 
+    public void setCoverPic(ParseFile photo) {
+        put("cover_pic",photo);
+    }
 }
