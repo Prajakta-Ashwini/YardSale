@@ -160,7 +160,6 @@ public class YardSaleApplication extends Application {
         searchQuery.findInBackground(new FindCallback<Item>() {
             public void done(List<Item> results, ParseException e) {
                 if (e == null) {
-                    Log.d("DEBUG 1", results.isEmpty() + "");
                     launchSearchActivity(results);
                     //   objectsWereRetrievedSuccessfully(objects);
                 } else {

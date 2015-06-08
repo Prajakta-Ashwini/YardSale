@@ -14,9 +14,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by Prajakta on 6/6/2015.
- */
 public class ItemsArrayAdapter extends ArrayAdapter<Item> {
     private static class ViewHolderSale {
         ImageView ivPic;

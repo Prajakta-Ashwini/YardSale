@@ -5,10 +5,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.BuySellPagerAdapter;
@@ -71,10 +69,7 @@ public class ListActivity extends ActionBarActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("DEBUG: 0", "onQueryTextSubmit " + query);
                 client.searchForItems(query);
-                Toast.makeText(getBaseContext(), "query "+ query , Toast.LENGTH_LONG).show();
-
                 return true;
             }
 
