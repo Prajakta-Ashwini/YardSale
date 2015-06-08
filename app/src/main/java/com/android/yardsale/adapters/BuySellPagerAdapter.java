@@ -8,32 +8,33 @@ import com.android.yardsale.fragments.FindStuffFragment;
 import com.android.yardsale.fragments.SellStuffFragment;
 import com.android.yardsale.models.YardSale;
 
-import java.util.List;
-
 //return the order of fragments in the view pager
 public class BuySellPagerAdapter extends FragmentPagerAdapter {
     private String tabtitles[] = {"Find Stuff", "Sell Stuff"};  //to be replaced with icons
-    FindStuffFragment hf;
-    SellStuffFragment mf;
-    List<YardSale> yardSalesList;
+    private FindStuffFragment findStuffFragment;
+    private SellStuffFragment sellStuffFragment;
 
-    public BuySellPagerAdapter(FragmentManager fm, List<YardSale> yardSalesList) {
+    public BuySellPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.yardSalesList = yardSalesList;
     }
 
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            if (hf == null)
-                hf = FindStuffFragment.newInstance();
-            return hf;
+            if (findStuffFragment == null) {
+                findStuffFragment = FindStuffFragment.newInstance(0);
+            }
+            return findStuffFragment;
         } else if (position == 1) {
-            if (mf == null)
-                mf = new SellStuffFragment();
-            return mf;
+            if (sellStuffFragment == null)
+                sellStuffFragment = new SellStuffFragment();
+            return sellStuffFragment;
         } else
             return null;
+    }
+
+    public FindStuffFragment getFindStuffFragment(){
+        return findStuffFragment;
     }
 
     @Override
@@ -47,8 +48,6 @@ public class BuySellPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void addNewRow(YardSale row){
-        hf.addYardSale(row);
-        //this.notifyDataSetChanged();
+        findStuffFragment.addYardSale(row);
     }
-
 }

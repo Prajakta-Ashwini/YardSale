@@ -16,7 +16,6 @@ import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.astuetz.PagerSlidingTabStrip;
 import com.parse.GetCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class ListActivity extends ActionBarActivity {
         final List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
         final List<YardSale> yardSalesList = new ArrayList<>();
         vpPager = (ViewPager) findViewById(R.id.vpPager);
-        vpAdapter = new BuySellPagerAdapter(getSupportFragmentManager(), yardSalesList);
+        vpAdapter = new BuySellPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(vpAdapter);
 
         tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -50,16 +49,16 @@ public class ListActivity extends ActionBarActivity {
             ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
             query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
             query.getInBackground((String) objId, new GetCallback<YardSale>() {
-                public void done(YardSale item, ParseException e) {
+                @Override
+                public void done(YardSale yardSale, com.parse.ParseException e) {
                     if (e == null) {
-                        // item was found
-                        //yardSalesList.add(item);
-                        vpAdapter.addNewRow(item);
+                        vpAdapter.addNewRow(yardSale);
                     }
                 }
             });
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -88,16 +87,16 @@ public class ListActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id == R.id.miFlip){
+            Bundle args = new Bundle();
+            vpAdapter.getFindStuffFragment().replace();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

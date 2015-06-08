@@ -24,7 +24,6 @@ public class YardSale extends ParseObject  {
         setEndTime(endTime);
         setLocation(location);
         setSeller(seller);
-
     }
 
     public void setTitle(String title) {

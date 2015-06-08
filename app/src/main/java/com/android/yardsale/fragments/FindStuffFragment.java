@@ -5,80 +5,94 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.FrameLayout;
 
 import com.android.yardsale.R;
-import com.android.yardsale.adapters.SalesArrayAdapter;
-import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.listeners.ReplaceListener;
 import com.android.yardsale.models.YardSale;
-import com.etsy.android.grid.StaggeredGridView;
-import com.parse.ParseGeoPoint;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-public class FindStuffFragment extends Fragment {
-    public static List<YardSale> yardSalesList= new ArrayList<>() ;
-    //public ListView lvYardSales;
-    //private ProgressBar progressBarFooter;
-    public SalesArrayAdapter aSales;
-    private Button btCreateSale;
-    private StaggeredGridView gvYardSales;
-
-    public FindStuffFragment(){
-        super();
-    }
-    public static FindStuffFragment newInstance(){
-        FindStuffFragment fragmentDemo = new FindStuffFragment();
-        yardSalesList = new ArrayList<>();
-        //Bundle args = new Bundle();
-        //args.putInt("sale_list", list);
-        //fragmentDemo.setArguments(args);
-        return fragmentDemo;
-    }
-
-    public void addYardSale(YardSale row){
-        aSales.add(row);
-        aSales.notifyDataSetChanged();
+//http://stackoverflow.com/questions/13379194/how-to-add-a-fragment-inside-a-viewpager-using-nested-fragment-android-4-2
+public class FindStuffFragment extends Fragment implements
+        ReplaceListener {
+    private static int currentFragment;
+    public static FindStuffFragment newInstance(int position) {
+        FindStuffFragment wp = new FindStuffFragment();
+        Bundle args = new Bundle();
+        args.putInt("position", position);
+        wp.setArguments(args);
+        currentFragment = 1;
+        return wp;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_sale_list, parent, false);
-       // lvYardSales = (ListView) v.findViewById(R.id.lvYardSales);
-        gvYardSales = (StaggeredGridView) v.findViewById(R.id.gvYardSales);
-
-        aSales = new SalesArrayAdapter(getActivity(),yardSalesList);
-        gvYardSales.setAdapter(aSales);
-        final YardSaleApplication client = new YardSaleApplication(getActivity());
-        btCreateSale = (Button)v.findViewById(R.id.btCreateSale);
-        btCreateSale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), "creating!!!", Toast.LENGTH_SHORT).show();
-                client.createYardSale("my yardsale", "all items must go by fri", new Date(), new Date(), new ParseGeoPoint(37.42, -121.94));
-            }
-        });
-
-        gvYardSales.setOnItemClickListener( new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                YardSale s = yardSalesList.get(position);
-                client.getItemsForYardSale(s);
-            }
-        });
-
-        return v;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_find_stuff, container, false);
+        FrameLayout fl = (FrameLayout) v.findViewById(R.id.flPage);
+        if (getChildFragmentManager().findFragmentByTag("initialTag") == null) {
+            SaleListFragment iif = new SaleListFragment();
+            Bundle args = new Bundle();
+            args.putInt("position", 1);
+            iif.setArguments(args);
+            getChildFragmentManager().beginTransaction().add(R.id.flPage, iif, "initialTag").commit();
+            currentFragment = 1;
+        }
+        return fl;
     }
 
+    // required because it seems the getChildFragmentManager only "sees"
+    // containers in the View of the parent Fragment.
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onReplace(Bundle args) {
 
+        if(currentFragment == 1) {
+            MapFragment iif;
+            if (getChildFragmentManager().findFragmentByTag("afterTag") == null) {
+                iif = MapFragment.newInstance();
+                args.putInt("position", 2);
+                iif.setArguments(args);
+            }else{
+                iif = (MapFragment) getChildFragmentManager().findFragmentByTag("afterTag");
+                iif.getArguments().putInt("position", 2);;
+            }
+
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.flPage, iif, "afterTag").addToBackStack("afterTag")
+                    .commit();
+            currentFragment = 2;
+        }else{
+            SaleListFragment iif;
+            if (getChildFragmentManager().findFragmentByTag("initialTag") == null) {
+                iif = SaleListFragment.newInstance();
+                iif.setArguments(args);
+            }else{
+                iif = (SaleListFragment) getChildFragmentManager().findFragmentByTag("initialTag");
+                iif.getArguments().putAll(args);
+            }
+
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.flPage, iif, "initialTag").addToBackStack("initialTag")
+                    .commit();
+            currentFragment = 1;
+        }
     }
 
 
+    public void addYardSale(YardSale row) {
+        SaleListFragment iif;
+        if (getChildFragmentManager().findFragmentByTag("initialTag") != null) {
+
+            iif = (SaleListFragment) getChildFragmentManager().findFragmentByTag("initialTag");
+
+            iif.addYardSale(row);
+            //this.notifyDataSetChanged();
+        }
+    }
+
+    public void replace() {
+        Bundle b = new Bundle();
+        //ReplaceListener mListener = (ReplaceListener) this.getParentFragment();
+        onReplace(b);
+
+    }
 }
