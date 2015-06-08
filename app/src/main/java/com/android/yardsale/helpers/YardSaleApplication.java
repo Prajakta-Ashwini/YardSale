@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.android.yardsale.activities.ListActivity;
+import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
@@ -152,29 +154,43 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public List<Item> searchForItems(String query) {
-        final ArrayList<Item> items = new ArrayList<>();
-        ParseQuery searchQuery = new ParseQuery("Items");
-        searchQuery.whereEqualTo("description", query);
+    public void searchForItems(String query) {
+        ParseQuery<Item> searchQuery = ParseQuery.getQuery(Item.class);
+        searchQuery.whereMatches("description", "(" + query + ")", "i");
         searchQuery.findInBackground(new FindCallback<Item>() {
-            public void done(List<Item> objects, ParseException e) {
+            public void done(List<Item> results, ParseException e) {
                 if (e == null) {
-                    items.addAll(objects);
+                    Log.d("DEBUG 1", results.isEmpty() + "");
+                    launchSearchActivity(results);
                     //   objectsWereRetrievedSuccessfully(objects);
                 } else {
                     //  objectRetrievalFailed();
                 }
             }
         });
-        return items;
     }
 
-    public void createItem(String description,Number price, ParseFile photo, YardSale yardSale){
+    public void getMyYardSales() {
+        ParseQuery<YardSale> myYardSales = ParseQuery.getQuery(YardSale.class);
+        myYardSales.whereEqualTo("seller", ParseUser.getCurrentUser());
+        myYardSales.findInBackground(new FindCallback<YardSale>() {
+            @Override
+            public void done(List<YardSale> list, ParseException e) {
+                if (e == null) {
+                    //fragment section loaded with list view of yardsale
+                } else {
+                    //failure
+                }
+            }
+        });
+    }
+
+    public void createItem(String description, Number price, ParseFile photo, YardSale yardSale) {
         Item item = new Item(description, price, photo, yardSale);
         item.saveInBackground();
     }
 
-    public void getItemsForYardSale(final YardSale yardSale){
+    public void getItemsForYardSale(final YardSale yardSale) {
         // Define the class we would like to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.whereEqualTo("yardsale_id", yardSale);
@@ -200,4 +216,19 @@ public class YardSaleApplication extends Application {
         intent.putExtra("yardsale", yardsale.getObjectId());
         context.startActivity(intent);
     }
+
+    //TODO may be generalize this
+    private static void launchSearchActivity(List<Item> items) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle data = new Bundle();
+        ArrayList<String> seachItems = new ArrayList<>();
+        for (Item item : items) {
+            seachItems.add(item.getDescription());
+        }
+        data.putStringArrayList("search", seachItems);
+        intent.putExtras(data);
+        context.startActivity(intent);
+    }
+
 }

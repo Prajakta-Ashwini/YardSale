@@ -2,10 +2,11 @@ package com.android.yardsale.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.android.yardsale.R;
 import com.android.yardsale.helpers.YardSaleApplication;
@@ -22,16 +23,21 @@ public class SearchActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        //TODO the list has to be changed to item
-//        items = new ArrayList<>();
-//        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-//        ListView lvSearchElements = (ListView) findViewById(R.id.lvSearchElements);
-//        lvSearchElements.setAdapter(adapter);
-//        client = new YardSaleApplication(this);
-        String searchText = getIntent().getStringExtra("query");
-       // search(searchText);
 
-        Toast.makeText(this,searchText, Toast.LENGTH_LONG).show();
+        //TODO customize the toolbar later
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //TODO the list has to be changed to item
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        ListView lvSearchElements = (ListView) findViewById(R.id.lvSearchElements);
+        lvSearchElements.setAdapter(adapter);
+        client = new YardSaleApplication(this);
+        items = getIntent().getExtras().getStringArrayList("search");
+
+        Log.d("DEBUG 2:" , items.get(0));
+        adapter.addAll(items);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -52,11 +58,10 @@ public class SearchActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.home) {
+            finish();
+        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void search(String query) {
-        client.searchForItems(query);
     }
 }

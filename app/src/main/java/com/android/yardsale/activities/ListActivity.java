@@ -1,11 +1,11 @@
 package com.android.yardsale.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -27,13 +27,14 @@ public class ListActivity extends ActionBarActivity {
     private ViewPager vpPager;
     private BuySellPagerAdapter vpAdapter;
     private PagerSlidingTabStrip tabStrip;
+    private YardSaleApplication client;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-        final YardSaleApplication client = new YardSaleApplication(this);
+        client = new YardSaleApplication(this);
 
         final List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
         final List<YardSale> yardSalesList = new ArrayList<>();
@@ -70,10 +71,10 @@ public class ListActivity extends ActionBarActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Log.d("DEBUG: 0", "onQueryTextSubmit " + query);
+                client.searchForItems(query);
                 Toast.makeText(getBaseContext(), "query "+ query , Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(ListActivity.this, SearchActivity.class);
-                intent.putExtra("query", query);
-                startActivity(intent);
+
                 return true;
             }
 

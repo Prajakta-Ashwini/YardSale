@@ -6,13 +6,16 @@ import com.parse.ParseObject;
 
 @ParseClassName("Item")
 public class Item extends ParseObject {
-   public Item() {
+
+    //TODO make these objects pracelable
+    public Item() {
         super();
     }
 
     // Add a constructor that contains core properties
     public Item(String description, Number price, ParseFile photo, YardSale yardsale_id) {
         super();
+
         setDescription(description);
         setPrice(price);
         setPhoto(photo);
