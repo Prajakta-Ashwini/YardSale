@@ -147,10 +147,10 @@ public class SaleMapFragment extends SupportMapFragment implements
 
     public void onLocationChanged(Location location) {
         // Report to the UI that the location was updated
-        String msg = "Updated Location: " +
-                Double.toString(location.getLatitude()) + "," +
-                Double.toString(location.getLongitude());
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+//        String msg = "Updated Location: " +
+//                Double.toString(location.getLatitude()) + "," +
+//                Double.toString(location.getLongitude());
+       // Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 
     }
 

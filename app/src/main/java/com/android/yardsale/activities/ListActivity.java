@@ -1,10 +1,12 @@
 package com.android.yardsale.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -94,5 +96,20 @@ public class ListActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+           if(vpPager.getCurrentItem() == 1){
+               vpPager.setCurrentItem(0);
+               return true;
+           }
+        }
+        if (vpPager.getCurrentItem() == 0) {
+            FragmentManager childFm = vpAdapter.getFindStuffFragment().getChildFragmentManager();
+            if (childFm.getBackStackEntryCount() > 0) {
+                childFm.popBackStack();
+               return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

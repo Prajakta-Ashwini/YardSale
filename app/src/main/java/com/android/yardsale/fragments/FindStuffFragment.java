@@ -40,7 +40,11 @@ public class FindStuffFragment extends Fragment implements
             Bundle args = new Bundle();
             args.putInt("position", 1);
             iif.setArguments(args);
-            getChildFragmentManager().beginTransaction().add(R.id.flPage, iif, "initialTag").commit();
+            getChildFragmentManager().beginTransaction()
+                                    .add(R.id.flPage, iif, "initialTag")
+                                    .addToBackStack(null)
+                                    .commit();
+
             currentFragment = 1;
         }
         return fl;
@@ -62,9 +66,10 @@ public class FindStuffFragment extends Fragment implements
                 iif.getArguments().putInt("position", 2);;
             }
 
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.flPage, iif, "afterTag").addToBackStack("afterTag")
-                    .commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.flPage, iif, "afterTag")
+                                                        .addToBackStack("afterTag")
+                                                        .commit();
+
             currentFragment = 2;
         }else{
             SaleListFragment iif;
@@ -77,9 +82,11 @@ public class FindStuffFragment extends Fragment implements
             }
 
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.flPage, iif, "initialTag").addToBackStack("initialTag")
-                    .commit();
+                                    .replace(R.id.flPage, iif, "initialTag")
+                                    .addToBackStack("initialTag")
+                                    .commit();
             currentFragment = 1;
+
         }
     }
 
@@ -106,4 +113,6 @@ public class FindStuffFragment extends Fragment implements
         onReplace(b);
 
     }
+
+
 }
