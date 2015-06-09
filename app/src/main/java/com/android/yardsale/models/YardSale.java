@@ -4,6 +4,7 @@ import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.Date;
@@ -80,5 +81,9 @@ public class YardSale extends ParseObject  {
 
     public void setCoverPic(ParseFile photo) {
         put("cover_pic",photo);
+    }
+
+    public static ParseQuery<YardSale> getQuery() {
+        return ParseQuery.getQuery(YardSale.class);
     }
 }

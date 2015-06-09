@@ -4,39 +4,57 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.yardsale.R;
 import com.android.yardsale.models.YardSale;
+import com.parse.ParseQueryAdapter;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
 
-public class MyYardSaleAdapter extends ArrayAdapter<YardSale> {
+public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
 
+    private LayoutInflater inflater;
 
-    public MyYardSaleAdapter(Context context, List<YardSale> objects) {
-        super(context, R.layout.seller_item_row, objects);
+    private static class ViewHolder {
+        ImageView ivYardSaleCoverPic;
+        TextView tvYardSaleDescription;
+        TextView tvYardSaleTime;
+    }
+
+    public MyYardSaleAdapter(Context context,
+                             ParseQueryAdapter.QueryFactory<YardSale> queryFactory, LayoutInflater inflater) {
+        super(context, queryFactory);
+        this.inflater = inflater;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        YardSale yardSale = getItem(position);
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.seller_item_row, parent, false);
+    public View getItemView(YardSale yardSale, View view, ViewGroup parent) {
+        ViewHolder viewHolder;
+
+        if (view == null) {
+            viewHolder = new ViewHolder();
+            view = inflater.inflate(R.layout.seller_item_row, parent, false);
+            //TODO add the location element
+            viewHolder.ivYardSaleCoverPic = (ImageView) view.findViewById(R.id.ivYardSaleCoverPic);
+            viewHolder.tvYardSaleDescription = (TextView) view.findViewById(R.id.tvYardSaleDescription);
+            viewHolder.tvYardSaleTime = (TextView) view.findViewById(R.id.tvYardSaleTime);
+
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
         }
-        ImageView ivYardSaleCoverPic = (ImageView) convertView.findViewById(R.id.ivYardSaleCoverPic);
-        TextView tvYardSaleDescription = (TextView) convertView.findViewById(R.id.tvYardSaleDescription);
-        TextView tvYardSaleLocation = (TextView) convertView.findViewById(R.id.tvYardSaleLocation);
 
-        Picasso.with(getContext())
-                .load(yardSale.getCoverPic().getUrl())
-                .into(ivYardSaleCoverPic);
-        tvYardSaleDescription.setText(yardSale.getDescription());
-        tvYardSaleLocation.setText(yardSale.getLocation().toString());
+        if (yardSale.getCoverPic().getUrl() != null) {
+            Picasso.with(getContext())
+                    .load(yardSale.getCoverPic().getUrl())
+                    .into(viewHolder.ivYardSaleCoverPic);
+        }
 
-        return super.getView(position, convertView, parent);
+        viewHolder.tvYardSaleDescription.setText(yardSale.getDescription());
+        viewHolder.tvYardSaleTime.setText(yardSale.getLocation().toString());
+        return view;
     }
+
 }

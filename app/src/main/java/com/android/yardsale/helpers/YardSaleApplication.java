@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
+import com.android.yardsale.adapters.BuySellPagerAdapter;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.FacebookSdk;
@@ -54,7 +55,9 @@ public class YardSaleApplication extends Application {
         // Register your parse models
         ParseObject.registerSubclass(YardSale.class);
         ParseObject.registerSubclass(Item.class);
+        Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(this, YARDSALE_APPLICATION_ID, YARDSALE_CLIENT_KEY);
+        ParseUser.enableAutomaticUser();
         ParseFacebookUtils.initialize(this);
 
     }
@@ -86,7 +89,8 @@ public class YardSaleApplication extends Application {
                 if (user != null) {
                     // Hooray! The user is logged in.
                     Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                    getYardSales(username);
+                    //getYardSales(true);
+                    getYardSales(false);
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
                     Toast.makeText(context, "Login failed :(", Toast.LENGTH_LONG).show();
@@ -96,12 +100,15 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    private static void launchListActivity(String username, ArrayList<CharSequence> saleList) {
+    private void launchListActivity(ArrayList<CharSequence> saleList, BuySellPagerAdapter.Type type) {
         Intent intent = new Intent(context, ListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("test_user_name", username);
-        intent.putCharSequenceArrayListExtra("sale_list", saleList);
-        context.startActivity(intent);
+        if (type == BuySellPagerAdapter.Type.BUYER) {
+            intent.putCharSequenceArrayListExtra("sale_list", saleList);
+        } else if (type == BuySellPagerAdapter.Type.SELLER) {
+            intent.putCharSequenceArrayListExtra("my_yard_sales", saleList);
+        }
+        callingActivity.startActivity(intent);
     }
 
     public void logout() {
@@ -120,10 +127,10 @@ public class YardSaleApplication extends Application {
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
                     //showUserDetailsActivity();
-                    getYardSales(user.getUsername());
+                    getYardSales(true);
                 } else {
                     Log.d("DEBUG", "User logged in through Facebook!");
-                    getYardSales(user.getUsername());
+                    getYardSales(true);
                 }
             }
         });
@@ -134,9 +141,12 @@ public class YardSaleApplication extends Application {
         sale.saveInBackground();
     }
 
-    public void getYardSales(final String username) {
+    public void getYardSales(final boolean myYardSale) {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.include("seller");
+        if (myYardSale) {
+            query.whereEqualTo("seller", ParseUser.getCurrentUser());
+        }
         query.findInBackground(new FindCallback<YardSale>() {
             public void done(List<YardSale> itemList, ParseException e) {
                 if (e == null) {
@@ -145,7 +155,11 @@ public class YardSaleApplication extends Application {
                     for (YardSale sale : itemList) {
                         saleList.add(sale.getObjectId());
                     }
-                    launchListActivity(username, saleList);
+                    if (myYardSale) {
+                        launchListActivity(saleList, BuySellPagerAdapter.Type.SELLER);
+                    } else {
+                        launchListActivity(saleList, BuySellPagerAdapter.Type.BUYER);
+                    }
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
                 }
@@ -169,34 +183,41 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void getMyYardSales() {
-        ParseQuery<YardSale> myYardSales = ParseQuery.getQuery(YardSale.class);
-        myYardSales.whereEqualTo("seller", ParseUser.getCurrentUser());
-        myYardSales.findInBackground(new FindCallback<YardSale>() {
+    public ArrayList<String> getMyYardSales() {
+        final ArrayList<String> myYardSales = new ArrayList<>();
+        ParseQuery<YardSale> myYardSalesQuery = ParseQuery.getQuery(YardSale.class);
+        Log.d("DEBUG 0.0", ParseUser.getCurrentUser().getObjectId());
+        myYardSalesQuery.whereEqualTo("seller", ParseUser.getCurrentUser().getObjectId());
+        myYardSalesQuery.findInBackground(new FindCallback<YardSale>() {
             @Override
             public void done(List<YardSale> list, ParseException e) {
                 if (e == null) {
-                    //fragment section loaded with list view of yardsale
+                    for (YardSale sale : list) {
+                        myYardSales.add(sale.getObjectId());
+                    }
                 } else {
                     //failure
                 }
             }
+
         });
+        Log.d("DEBUG 0.1", myYardSales.size() +"");
+        return myYardSales;
     }
 
     public void createItem(String description, Number price, ParseFile photo, YardSale yardSale) {
         Item item = new Item(description, price, photo, yardSale);
-        if(yardSale.getCoverPic() == null)
+        if (yardSale.getCoverPic() == null)
             setPicForYardSale(yardSale, photo);
         item.saveInBackground();
     }
 
-    public void setPicForYardSale(YardSale sale, ParseFile photo){
+    public void setPicForYardSale(YardSale sale, ParseFile photo) {
         sale.setCoverPic(photo);
         sale.saveInBackground();
     }
 
-    public void getItemsForYardSale(final YardSale yardSale){
+    public void getItemsForYardSale(final YardSale yardSale) {
         // Define the class we would like to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.whereEqualTo("yardsale_id", yardSale);

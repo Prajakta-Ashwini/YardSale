@@ -14,26 +14,37 @@ public class BuySellPagerAdapter extends FragmentPagerAdapter {
     private FindStuffFragment findStuffFragment;
     private SellStuffFragment sellStuffFragment;
 
+    public enum Type {
+        SELLER, BUYER
+    }
+
+
     public BuySellPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
-            if (findStuffFragment == null) {
-                findStuffFragment = FindStuffFragment.newInstance(0);
-            }
-            return findStuffFragment;
-        } else if (position == 1) {
-            if (sellStuffFragment == null)
-                sellStuffFragment = new SellStuffFragment();
-            return sellStuffFragment;
-        } else
-            return null;
+
+        switch (position) {
+            case 0:
+                if (findStuffFragment == null) {
+                    findStuffFragment = FindStuffFragment.newInstance(0);
+                }
+                return findStuffFragment;
+            case 1:
+                if (sellStuffFragment == null)
+                    sellStuffFragment = SellStuffFragment.newInstance();
+                return sellStuffFragment;
+            default:
+                if (findStuffFragment == null) {
+                    findStuffFragment = FindStuffFragment.newInstance(0);
+                }
+                return findStuffFragment;
+        }
     }
 
-    public FindStuffFragment getFindStuffFragment(){
+    public FindStuffFragment getFindStuffFragment() {
         return findStuffFragment;
     }
 
@@ -47,7 +58,16 @@ public class BuySellPagerAdapter extends FragmentPagerAdapter {
         return tabtitles[position];
     }
 
-    public void addNewRow(YardSale row){
-        findStuffFragment.addYardSale(row);
+    public void addNewRow(YardSale row, Type type) {
+        switch (type) {
+            case BUYER:
+                findStuffFragment.addYardSale(row);
+                break;
+            case SELLER:
+                sellStuffFragment.addYardSale(row);
+        }
+
     }
+
+
 }

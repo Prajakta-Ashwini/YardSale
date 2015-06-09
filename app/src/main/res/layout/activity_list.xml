@@ -17,7 +17,6 @@
         android:id="@+id/vpPager"
         android:layout_below="@id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
