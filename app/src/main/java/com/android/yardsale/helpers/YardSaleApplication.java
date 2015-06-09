@@ -34,6 +34,7 @@ import java.util.List;
 public class YardSaleApplication extends Application {
     public static final String YARDSALE_APPLICATION_ID = "MMFnruGWoh34ACUP3e4z7MPpn4zjU7eSTtgv4t6o";
     public static final String YARDSALE_CLIENT_KEY = "1hYdGwa3TljmkHjwJnuBSvUjTlHE7UT9iByTPy7x";
+    public static final int MAP_ZOOM = 13;
     private static Context context;
     private Activity callingActivity;
 
@@ -258,4 +259,7 @@ public class YardSaleApplication extends Application {
         context.startActivity(intent);
     }
 
+    public ParseUser getCurrentUser(){
+        return ParseUser.getCurrentUser();
+    }
 }

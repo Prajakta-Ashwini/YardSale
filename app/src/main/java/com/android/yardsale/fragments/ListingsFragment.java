@@ -16,11 +16,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
-
 public class ListingsFragment extends SellStuffFragment {
 
-    private ArrayList<YardSale> myYardSales;
     private MyYardSaleAdapter adapter;
 
     public ListingsFragment() {
@@ -30,13 +27,10 @@ public class ListingsFragment extends SellStuffFragment {
     public static ListingsFragment newInstance() {
         return new ListingsFragment();
     }
-
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myYardSales = new ArrayList<>();
-
 
         ParseQueryAdapter.QueryFactory<YardSale> factory = getYardSaleQueryFactory();
 

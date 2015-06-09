@@ -11,16 +11,22 @@ import com.android.yardsale.R;
 import com.android.yardsale.listeners.ReplaceListener;
 import com.android.yardsale.models.YardSale;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //http://stackoverflow.com/questions/13379194/how-to-add-a-fragment-inside-a-viewpager-using-nested-fragment-android-4-2
 public class FindStuffFragment extends Fragment implements
         ReplaceListener {
     private static int currentFragment;
+    private static List<YardSale> yardSaleList;
+
     public static FindStuffFragment newInstance(int position) {
         FindStuffFragment wp = new FindStuffFragment();
         Bundle args = new Bundle();
         args.putInt("position", position);
         wp.setArguments(args);
         currentFragment = 1;
+        yardSaleList = new ArrayList<>();
         return wp;
     }
 
@@ -34,7 +40,11 @@ public class FindStuffFragment extends Fragment implements
             Bundle args = new Bundle();
             args.putInt("position", 1);
             iif.setArguments(args);
-            getChildFragmentManager().beginTransaction().add(R.id.flPage, iif, "initialTag").commit();
+            getChildFragmentManager().beginTransaction()
+                                    .add(R.id.flPage, iif, "initialTag")
+                                    .addToBackStack(null)
+                                    .commit();
+
             currentFragment = 1;
         }
         return fl;
@@ -46,19 +56,20 @@ public class FindStuffFragment extends Fragment implements
     public void onReplace(Bundle args) {
 
         if(currentFragment == 1) {
-            MapFragment iif;
+            SaleMapFragment iif;
             if (getChildFragmentManager().findFragmentByTag("afterTag") == null) {
-                iif = MapFragment.newInstance();
+                iif = SaleMapFragment.newInstance();
                 args.putInt("position", 2);
                 iif.setArguments(args);
             }else{
-                iif = (MapFragment) getChildFragmentManager().findFragmentByTag("afterTag");
+                iif = (SaleMapFragment) getChildFragmentManager().findFragmentByTag("afterTag");
                 iif.getArguments().putInt("position", 2);;
             }
 
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.flPage, iif, "afterTag").addToBackStack("afterTag")
-                    .commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.flPage, iif, "afterTag")
+                                                        .addToBackStack("afterTag")
+                                                        .commit();
+
             currentFragment = 2;
         }else{
             SaleListFragment iif;
@@ -71,9 +82,11 @@ public class FindStuffFragment extends Fragment implements
             }
 
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.flPage, iif, "initialTag").addToBackStack("initialTag")
-                    .commit();
+                                    .replace(R.id.flPage, iif, "initialTag")
+                                    .addToBackStack("initialTag")
+                                    .commit();
             currentFragment = 1;
+
         }
     }
 
@@ -85,8 +98,13 @@ public class FindStuffFragment extends Fragment implements
             iif = (SaleListFragment) getChildFragmentManager().findFragmentByTag("initialTag");
 
             iif.addYardSale(row);
+            yardSaleList.add(row);
             //this.notifyDataSetChanged();
         }
+    }
+
+    public List<YardSale> getYardSaleList(){
+        return yardSaleList;
     }
 
     public void replace() {
@@ -95,4 +113,6 @@ public class FindStuffFragment extends Fragment implements
         onReplace(b);
 
     }
+
+
 }

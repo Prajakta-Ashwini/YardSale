@@ -1,14 +1,14 @@
 package com.android.yardsale.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.BuySellPagerAdapter;
@@ -24,7 +24,6 @@ public class ListActivity extends ActionBarActivity {
 
     private ViewPager vpPager;
     private BuySellPagerAdapter vpAdapter;
-    private PagerSlidingTabStrip tabStrip;
     private YardSaleApplication client;
 
 
@@ -37,26 +36,8 @@ public class ListActivity extends ActionBarActivity {
         vpPager = (ViewPager) findViewById(R.id.vpPager);
         vpAdapter = new BuySellPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(vpAdapter);
-        tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
-
-//        ArrayList<String> myYardSales = client.getMyYardSales();
-//        Log.d("DEBUG 1:", myYardSales.size() + "");
-//        //ArrayList<CharSequence> myYardSales = getIntent().getCharSequenceArrayListExtra("my_yard_sales");
-//        if (!myYardSales.isEmpty()) {
-//            for (String myYardSaleId : myYardSales) {
-//                ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-//                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-//                query.getInBackground(myYardSaleId, new GetCallback<YardSale>() {
-//                    @Override
-//                    public void done(YardSale yardSale, ParseException e) {
-//                        if (e == null) {
-//                            vpAdapter.addNewRow(yardSale, BuySellPagerAdapter.Type.SELLER);
-//                        }
-//                    }
-//                });
-//            }
-//        }
 
         List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
 
@@ -105,20 +86,26 @@ public class ListActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.miFlip) {
-            Bundle args = new Bundle();
             vpAdapter.getFindStuffFragment().replace();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == 200) {
-
-            Toast.makeText(this, "200", Toast.LENGTH_LONG).show();
-        } else if (resultCode == 201) {
-            Toast.makeText(this, "201", Toast.LENGTH_LONG).show();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+           if(vpPager.getCurrentItem() == 1){
+               vpPager.setCurrentItem(0);
+               return true;
+           }
         }
+        if (vpPager.getCurrentItem() == 0) {
+            FragmentManager childFm = vpAdapter.getFindStuffFragment().getChildFragmentManager();
+            if (childFm.getBackStackEntryCount() > 0) {
+                childFm.popBackStack();
+               return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
