@@ -30,8 +30,8 @@ The following **optional** features are implemented:
 
 ## Sprint 1
 
-* [x] User can **login/register** to the app
-* [x] User can view the yard sale in map/list view
+* [x] User can register and login to the app
+* [x] User can view the yard sale in list view and map view
 * [x] User can view details for items in the yard sale
 * [x] Users can search for a specific item 
 
