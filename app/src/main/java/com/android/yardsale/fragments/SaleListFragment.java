@@ -1,5 +1,6 @@
 package com.android.yardsale.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +10,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.activities.AddActivity;
 import com.android.yardsale.adapters.SalesArrayAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.etsy.android.grid.StaggeredGridView;
-import com.parse.ParseGeoPoint;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class SaleListFragment extends FindStuffFragment {
@@ -56,7 +56,8 @@ public class SaleListFragment extends FindStuffFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "creating!!!", Toast.LENGTH_SHORT).show();
-                client.createYardSale("my yardsale", "all items must go by fri", new Date(), new Date(), new ParseGeoPoint(37.42, -121.94));
+                startActivity(new Intent(getActivity(), AddActivity.class));
+                //client.createYardSale("my yardsale", "all items must go by fri", new Date(), new Date(), new ParseGeoPoint(37.42, -121.94));
             }
         });
 
