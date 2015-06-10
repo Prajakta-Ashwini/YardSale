@@ -10,9 +10,11 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.SalesArrayAdapter;
+import com.android.yardsale.helpers.GeopointUtils;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.etsy.android.grid.StaggeredGridView;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseGeoPoint;
 
 import java.util.ArrayList;
@@ -56,7 +58,10 @@ public class SaleListFragment extends FindStuffFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "creating!!!", Toast.LENGTH_SHORT).show();
-                client.createYardSale("my yardsale", "all items must go by fri", new Date(), new Date(), new ParseGeoPoint(37.42, -121.94));
+                String address = "447 Great Mall Dr " +
+                        "Milpitas, CA 95035";
+                LatLng loc = GeopointUtils.getLocationFromAddress(getActivity(),address);
+                client.createYardSale("my yardsale", "all items must go by fri", new Date(), new Date(), address, new ParseGeoPoint(loc.latitude, loc.longitude));
             }
         });
 

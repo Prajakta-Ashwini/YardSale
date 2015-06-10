@@ -129,8 +129,8 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void createYardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location) {
-        YardSale sale = new YardSale(title, description, startTime, endTime, location, ParseUser.getCurrentUser());
+    public void createYardSale(String title, String description, Date startTime, Date endTime, String address, ParseGeoPoint location) {
+        YardSale sale = new YardSale(title, description, startTime, endTime, address, location, ParseUser.getCurrentUser());
         sale.saveInBackground();
     }
 

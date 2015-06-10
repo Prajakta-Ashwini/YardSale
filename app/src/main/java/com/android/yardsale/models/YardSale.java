@@ -17,12 +17,13 @@ public class YardSale extends ParseObject  {
     }
 
     // Add a constructor that contains core properties
-    public YardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location, ParseUser seller) {
+    public YardSale(String title, String description, Date startTime, Date endTime, String address, ParseGeoPoint location, ParseUser seller) {
         super();
         setTitle(title);
         setDescription(description);
         setStartTime(startTime);
         setEndTime(endTime);
+        setAddress(address);
         setLocation(location);
         setSeller(seller);
     }
@@ -65,6 +66,14 @@ public class YardSale extends ParseObject  {
 
     public ParseGeoPoint getLocation(){
         return getParseGeoPoint("location");
+    }
+
+    public void setAddress(String address) {
+        put("address",address);
+    }
+
+    public String getAddress(){
+        return getString("address");
     }
 
     public void setSeller(ParseUser seller) {
