@@ -42,7 +42,7 @@ Sprint 1
 
 Here's a walkthrough of implemented user stories:
 
-![YardSale Sprint 1 Demo](YardSale-Sprint1.gif)
+![YardSale Sprint 1 Demo](YardSale-Sprint-1.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
