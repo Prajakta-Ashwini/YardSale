@@ -46,9 +46,14 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        if (yardSale.getCoverPic().getUrl() != null) {
+        if (yardSale.getCoverPic() != null && yardSale.getCoverPic().getUrl() != null) {
             Picasso.with(getContext())
                     .load(yardSale.getCoverPic().getUrl())
+                    .placeholder(R.drawable.placeholder)
+                    .into(viewHolder.ivYardSaleCoverPic);
+        } else {
+            Picasso.with(getContext())
+                    .load(R.drawable.placeholder)
                     .into(viewHolder.ivYardSaleCoverPic);
         }
 

@@ -12,8 +12,8 @@ public class AddWizard extends BasicWizardLayout{
     public WizardFlow onSetup() {
 
         return new WizardFlow.Builder()
-                .addStep(Step1.class)           //Add your steps in the order you want them
-                .addStep(Step2.class)           //to appear and eventually call create()
+                .addStep(Step1.class)
+                .addStep(Step2.class)
                 .create();
     }
 

@@ -20,12 +20,12 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -129,9 +129,13 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void createYardSale(String title, String description, Date startTime, Date endTime, ParseGeoPoint location) {
-        YardSale sale = new YardSale(title, description, startTime, endTime, location, ParseUser.getCurrentUser());
-        sale.saveInBackground();
+    public void createYardSale(String title, String description, Date startTime, Date endTime, String address) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+        String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
+        Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
+        //TODO get location from the given address
+        //YardSale sale = new YardSale(title, description, startTime, endTime, address, location, ParseUser.getCurrentUser());
+        //sale.saveInBackground();
     }
 
     public void getYardSales() {

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etAddYSTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:hint="title"/>
+
+    <EditText
+        android:id="@+id/etAddYSDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/etAddYSTitle"
+        android:layout_below="@+id/etAddYSTitle"
+        android:hint="description" />
+
+    <EditText
+        android:id="@+id/etAddYSAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etAddYSDescription"
+        android:hint="address"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:layout_width="1dp"
+        android:id="@+id/line1"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/etAddYSAddress"
+        android:background="#000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/llCalendarSecion"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/line1"
+        android:layout_alignEnd="@+id/btnCancel">
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#000000" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/tvAddYSStart"
+            android:text="Start" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="#000000" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/tvAddYSEnd"
+            android:onClick="selectEndDate"
+            android:text="End" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:id="@+id/line2"
+        android:layout_height="fill_parent"
+        android:background="#000000" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/btnSave"
+        android:layout_below="@id/llCalendarSecion"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/btnCancel"
+        android:layout_alignTop="@+id/btnSave"
+        android:layout_alignBottom="@+id/btnSave"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/btnSave" />
+
+
+</RelativeLayout>

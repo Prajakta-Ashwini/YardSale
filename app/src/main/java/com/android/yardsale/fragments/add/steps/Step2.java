@@ -1,31 +1,37 @@
 package com.android.yardsale.fragments.add.steps;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.android.yardsale.R;
+import com.android.yardsale.helpers.YardSaleApplication;
 
 import org.codepond.wizardroid.WizardStep;
 import org.codepond.wizardroid.persistence.ContextVariable;
 
+import java.util.Calendar;
 import java.util.Date;
 
-public class Step2 extends WizardStep {
+public class Step2 extends WizardStep implements DatePickerDialog.OnDateSetListener {
 
     @ContextVariable
     private Date startTime;
     @ContextVariable
     private Date endTime;
     @ContextVariable
-    private String location;
+    private String address;
+    @ContextVariable
+    private String title;
+    @ContextVariable
+    private String description;
 
-    DatePicker dpAddStartDate;
-    EditText etAddEndDate;
+    TextView tvStartDate;
 
     public Step2() {
     }
@@ -34,14 +40,7 @@ public class Step2 extends WizardStep {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.add_step_2, container, false);
-        dpAddStartDate = (DatePicker) v.findViewById(R.id.dpAddStartDate);
-        etAddEndDate = (EditText) v.findViewById(R.id.etAddEndDate);
-
-        //WizarDroid will automatically inject the values for these fields
-        //so we can simply set the text views
-//        firstnameTv.setText(firstname);
-//        lastnameTv.setText(lastname);
-
+        tvStartDate = (TextView) v.findViewById(R.id.tvStartDateTitle);
         return v;
     }
 
@@ -62,7 +61,15 @@ public class Step2 extends WizardStep {
         //...
         //The values of these fields will be automatically stored in the wizard context
         //and will be populated in the next steps only if the same field names are used.
-        //startTime = new Date(String.valueOf(dpAddStartDate.()));
-        endTime  = new Date(String.valueOf(etAddEndDate.getText()));
+        YardSaleApplication client = new YardSaleApplication(getActivity());
+        client.createYardSale(title, description, startTime, endTime, address);
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, monthOfYear, dayOfMonth);
+        startTime = cal.getTime();
+        tvStartDate.setText(startTime.toString());
     }
 }

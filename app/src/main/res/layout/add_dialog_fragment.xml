@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:id="@+id/flAdd"
-    android:layout_height="fill_parent">
+    android:layout_height="150dp">
     <fragment
         android:id="@+id/form_wizard_fragment"
         android:layout_width="match_parent"

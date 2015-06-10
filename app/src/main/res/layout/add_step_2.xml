@@ -11,36 +11,16 @@
         android:id="@+id/tvStep2Title"/>
 
     <TextView
+        android:padding="10dp"
+        android:id="@+id/tvStartDateTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Date"
-        android:id="@+id/tvStartDateLabel"
         android:layout_below="@+id/tvStep2Title"
-        android:layout_alignParentLeft="true" />
+        android:onClick="showDatePickerDialog"
+        android:layout_alignParentStart="true"
+        android:text="start date"
+        />
 
-    <DatePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/dpAddStartDate"
-        android:layout_toEndOf="@+id/tvStartDateLabel" />
 
-    <TextView
-        android:padding="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="End Date"
-        android:id="@+id/tvEndDateLabel"
-        android:layout_below="@+id/tvStartDateLabel" />
-
-    <EditText
-        android:padding="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/etAddEndDate"
-        android:layout_toRightOf="@+id/tvEndDateLabel"/>
 
 </RelativeLayout>
