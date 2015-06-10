@@ -40,7 +40,7 @@ public class SaleMapFragment extends SupportMapFragment implements
     private LocationRequest mLocationRequest;
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
-
+    private static YardSale yardSale;
     private static BitmapDescriptor defaultMarker ;
     /*
      * Define a request code to send to Google Play services This code is
@@ -48,10 +48,10 @@ public class SaleMapFragment extends SupportMapFragment implements
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    public static SaleMapFragment newInstance(){
+    public static SaleMapFragment newInstance(YardSale sale){
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
-
+        yardSale = sale;
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
@@ -68,8 +68,7 @@ public class SaleMapFragment extends SupportMapFragment implements
 
     private void initMap(){
         UiSettings settings = getMap().getUiSettings();
-//        settings.setAllGesturesEnabled(false);
-//        settings.setMyLocationButtonEnabled(false);
+
         getMap().setMyLocationEnabled(true);
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API)
@@ -78,10 +77,15 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-
-        List<YardSale> sales = ((FindStuffFragment)getParentFragment()).getYardSaleList();
-        for(YardSale s:sales){
-            addYardSale(s);
+        if(yardSale.getTitle().isEmpty() && yardSale.getDescription().isEmpty()){
+            List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
+            for (YardSale s : sales) {
+                addYardSale(s);
+            }
+        } else {
+            addYardSale(yardSale);
+            settings.setAllGesturesEnabled(false);
+            settings.setMyLocationButtonEnabled(false);
         }
     }
 
@@ -119,8 +123,14 @@ public class SaleMapFragment extends SupportMapFragment implements
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location != null) {
             Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, YardSaleApplication.MAP_ZOOM);
+            CameraUpdate cameraUpdate;
+            if(yardSale.getTitle().isEmpty() && yardSale.getDescription().isEmpty()) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, YardSaleApplication.MAP_ZOOM);
+            } else {
+                LatLng latLng = new LatLng(yardSale.getLocation().getLatitude(), yardSale.getLocation().getLongitude());
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, YardSaleApplication.MAP_ZOOM);
+            }
             getMap().animateCamera(cameraUpdate);
             startLocationUpdates();
         } else {
