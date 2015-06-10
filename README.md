@@ -17,6 +17,7 @@ The following **required** functionality is completed:
 * [ ] User can delete a yard sale if it belongs to him
 * [ ] User can edit/delete items in a yard sale if it belongs to him - description, price
 * [ ] Users can share the yard sale information to friends
+* [ ] Users can search for a specific item 
 
 The following **optional** features are implemented:
 
@@ -26,6 +27,13 @@ The following **optional** features are implemented:
 * [ ] advanced filters to search yard sale 
 * [ ] users can view history of users activity
 * [ ] users can route to the selected yard sale
+
+## Sprint 1
+
+* [x] User can **login/register** to the app
+* [x] User can view the yard sale in map/list view
+* [x] User can view details for items in the yard sale
+* [x] Users can search for a specific item 
 
 ## Video Walkthrough 
 
