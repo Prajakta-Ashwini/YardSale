@@ -1,6 +1,7 @@
 package com.android.yardsale.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ItemsArrayAdapter;
+import com.android.yardsale.fragments.SaleMapFragment;
 import com.android.yardsale.helpers.GridViewScrollable;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
@@ -31,7 +33,7 @@ public class YardSaleDetailActivity extends ActionBarActivity {
     private TextView tvTitle;
     private TextView tvDescription;
     private TextView tvDateTime;
-    private TextView tvLocation;
+    private TextView tvAddress;
     private TextView tvSeller;
 
     @Override
@@ -43,7 +45,7 @@ public class YardSaleDetailActivity extends ActionBarActivity {
         btCreateItem = (Button) findViewById(R.id.btCreateItem);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvDescription = (TextView) findViewById(R.id.tvDescription);
-        tvLocation = (TextView) findViewById(R.id.tvLocation);
+        tvAddress = (TextView) findViewById(R.id.tvAddress);
         tvDateTime = (TextView) findViewById(R.id.tvDateTime);
         tvSeller = (TextView) findViewById(R.id.tvSeller);
 
@@ -74,8 +76,12 @@ public class YardSaleDetailActivity extends ActionBarActivity {
                     tvTitle.setText(sale.getTitle());
                     tvDescription.setText(sale.getDescription());
                     tvDateTime.setText(sale.getStartTime().toString() + " to " + sale.getEndTime().toString());
-                    tvLocation.setText("Location: " + sale.getLocation().toString());
+                    tvAddress.setText("Location: " + sale.getAddress());
                     tvSeller.setText("Added By: " + sale.getSeller().getUsername());
+
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.add(R.id.flMap, SaleMapFragment.newInstance(sale));
+                    ft.commit();
                     btCreateItem.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -93,10 +99,6 @@ public class YardSaleDetailActivity extends ActionBarActivity {
                 }
             }
         });
-
-
-
-
     }
 
     @Override
