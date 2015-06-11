@@ -77,7 +77,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-        if(yardSale.getTitle().isEmpty() && yardSale.getDescription().isEmpty()){
+        if(yardSale.getTitle() == null){
             List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
             for (YardSale s : sales) {
                 addYardSale(s);
@@ -124,7 +124,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (location != null) {
             Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
             CameraUpdate cameraUpdate;
-            if(yardSale.getTitle().isEmpty() && yardSale.getDescription().isEmpty()) {
+            if(yardSale == null || yardSale.getTitle()==null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, YardSaleApplication.MAP_ZOOM);
             } else {
