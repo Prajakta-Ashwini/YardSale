@@ -44,6 +44,8 @@ Here's a walkthrough of implemented user stories:
 
 ![YardSale Sprint 1 Demo](YardSale-Sprint-1.gif)
 
+![YardSale Map functionality](sprint1.gif)
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 Sprint 2
