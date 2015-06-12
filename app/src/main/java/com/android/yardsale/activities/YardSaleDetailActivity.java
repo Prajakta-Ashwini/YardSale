@@ -98,14 +98,7 @@ public class YardSaleDetailActivity extends ActionBarActivity {
                             client.createItem("like new chair", 12, file, sale);
                         }
                     });
-                    btDeleteItem.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(getBaseContext(), "delete item!!!", Toast.LENGTH_SHORT).show();
-                            //TODO move to yardsale card
-                            //client.deleteSale(sale);
-                        }
-                    });
+
                 }
             }
         });

@@ -24,4 +24,20 @@
         android:id="@+id/tvPrice"
         android:layout_below="@+id/tvDescription"
         android:gravity="center"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Item"
+        android:layout_below="@+id/tvPrice"
+        android:id="@+id/btDeleteItem"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Item"
+        android:id="@+id/btEditItem"
+        android:layout_below="@+id/btDeleteItem"
+        />
 </RelativeLayout>

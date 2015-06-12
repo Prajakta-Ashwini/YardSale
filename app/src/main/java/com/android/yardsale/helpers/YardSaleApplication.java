@@ -274,4 +274,9 @@ public class YardSaleApplication extends Application {
 //
 //        todoItem.deleteEventually();
     }
+
+    public void deleteItem(Item item) {
+        item.deleteInBackground();
+
+    }
 }
