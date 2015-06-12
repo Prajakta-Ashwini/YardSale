@@ -12,5 +12,6 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_yard_sale_detail">YardSaleDetailActivity</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_add_item">AddItemActivity</string>
 
 </resources>

@@ -25,6 +25,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -134,8 +137,17 @@ public class YardSaleApplication extends Application {
         String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
         Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
         //TODO get location from the given address
-        //YardSale sale = new YardSale(title, description, startTime, endTime, address, location, ParseUser.getCurrentUser());
-        //sale.saveInBackground();
+        //LatLng latLong = GeopointUtils.getLocationFromAddress(callingActivity, address);
+        //ParseGeoPoint location = new ParseGeoPoint(latLong.latitude, latLong.longitude);
+
+        YardSale yardSale = new YardSale();
+        yardSale.setTitle(title);
+        yardSale.setDescription(description);
+        yardSale.setAddress(address);
+        yardSale.setSeller(ParseUser.getCurrentUser());
+        yardSale.setStartTime(startTime);
+        yardSale.setEndTime(startTime);
+        yardSale.saveInBackground();
     }
 
     public void getYardSales() {
@@ -226,6 +238,18 @@ public class YardSaleApplication extends Application {
         data.putStringArrayList("search", seachItems);
         intent.putExtras(data);
         context.startActivity(intent);
+    }
+
+    private double getLatitude(JSONObject json) {
+        return ((JSONArray) json.opt("results")).optJSONObject(0)
+                .optJSONObject("geometry").optJSONObject("location")
+                .optDouble("lat");
+    }
+
+    private double getLongitude(JSONObject json) {
+        return ((JSONArray) json.opt("results")).optJSONObject(0)
+                .optJSONObject("geometry").optJSONObject("location")
+                .optDouble("lng");
     }
 
 }

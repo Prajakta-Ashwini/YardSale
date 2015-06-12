@@ -21,9 +21,8 @@ import android.widget.TimePicker;
 import com.android.yardsale.R;
 import com.android.yardsale.helpers.YardSaleApplication;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddFragment extends DialogFragment {
 
@@ -34,10 +33,15 @@ public class AddFragment extends DialogFragment {
     private static TextView tvAddYSEnd;
     private Button btnSave;
     private Button btnCancel;
-    private static String start;
-    private static String end;
+    private static Date start;
+    private static Date end;
     private YardSaleApplication client;
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+    static final int DATE_DIALOG_ID_START = 1;
+    static final int DATE_DIALOG_ID_END = 2;
+    static final int TIME_DIALOG_ID_START = 3;
+    static final int TIME_DIALOG_ID_END = 4;
+    private static int current_date = 0;
+    private static int current_time = 0;
 
     public AddFragment() {
     }
@@ -66,7 +70,6 @@ public class AddFragment extends DialogFragment {
             public void onClick(View v) {
                 timePicker("start_time");
                 datePicker("start_date");
-                //  tvAddYSStart.setText(start.toString());
             }
         });
 
@@ -75,22 +78,26 @@ public class AddFragment extends DialogFragment {
             public void onClick(View v) {
                 timePicker("end_time");
                 datePicker("end_date");
-                // tvAddYSEnd.setText(end.toString());
             }
         });
 
-        final String title = String.valueOf(etAddYSTitle.getText());
-        final String description = String.valueOf(etAddYSDescription.getText());
-        final String address = String.valueOf(etAddYSAddress.getText());
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Log.d("before save", start + "\t" + end);
-                    client.createYardSale(title, description, dateFormat.parse(start), dateFormat.parse(end), address);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                Log.d("before save", start + "\t" + end);
+                client.createYardSale(String.valueOf(etAddYSTitle.getText()),
+                        String.valueOf(etAddYSDescription.getText()),
+                        start,
+                        end,
+                        String.valueOf(etAddYSAddress.getText()));
+                dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
             }
         });
 
@@ -101,12 +108,22 @@ public class AddFragment extends DialogFragment {
     }
 
     private void datePicker(String date) {
-        DialogFragment dateFragment = new DatePickerDialogFragment();
+        if (date.equals("start_date")) {
+            current_date = DATE_DIALOG_ID_START;
+        } else if (date.equals("end_date")) {
+            current_date = DATE_DIALOG_ID_END;
+        }
+        DialogFragment dateFragment = new DatePickerFragment();
         dateFragment.show(getActivity().getSupportFragmentManager(), date);
     }
 
     private void timePicker(String time) {
-        DialogFragment timeFragment = new DatePickerDialogFragment();
+        if (time.equals("start_time")) {
+            current_time = TIME_DIALOG_ID_START;
+        } else if (time.equals("end_time")) {
+            current_time = TIME_DIALOG_ID_END;
+        }
+        DialogFragment timeFragment = new TimePickerFragment();
         timeFragment.show(getActivity().getSupportFragmentManager(), time);
     }
 
@@ -125,18 +142,26 @@ public class AddFragment extends DialogFragment {
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the date chosen by the user
-            //DateEdit.setText(day + "/" + (month + 1) + "/" + year);
-            Log.d("Tags", view.getTag().toString());
-            if (view.getTag().equals("start_date")) {
-                start = year + "-" + (month + 1) + "-" + day;
-                Log.d("Debug: on dateset", start);
-            } else if (view.getTag().equals("end_date")) {
-                end = year + "-" + (month + 1) + "-" + day;
-                Log.d("Debug: on dateset", end);
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            if (current_date == DATE_DIALOG_ID_START) {
+                start = getDate(datePicker);
+                Log.d("Debug: on dateset", start.toString());
+            } else if (current_date == DATE_DIALOG_ID_END) {
+                end = getDate(datePicker);
+                Log.d("Debug: on dateset", end.toString());
             }
         }
+    }
+
+    private static Date getDate(DatePicker datePicker) {
+        int selectedDay = datePicker.getDayOfMonth();
+        int selectedMonth = datePicker.getMonth();
+        int selectedYear = datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(selectedYear, selectedMonth, selectedDay);
+
+        return calendar.getTime();
     }
 
     public static class TimePickerFragment extends DialogFragment implements
@@ -155,18 +180,17 @@ public class AddFragment extends DialogFragment {
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            // Do something with the time chosen by the user
-            // DateEdit.setText(DateEdit.getText() + " -" + hourOfDay + ":" + minute);
-
-            Log.d("Tags", view.getTag().toString());
-            if (view.getTag().equals("start_time")) {
-                start = start + " " + view.getCurrentHour() + ":" + view.getCurrentMinute();
-                Log.d("Debug: on timeset", start);
-                tvAddYSStart.setText(dateFormat.format(start));
-            } else if (view.getTag().equals("end_time")) {
-                end = end + " " + view.getCurrentHour() + ":" + view.getCurrentMinute();
-                tvAddYSEnd.setText(dateFormat.format(end));
-                Log.d("Debug: on timeset", end);
+            Log.d("Current time tag", current_time + "");
+            if (current_time == TIME_DIALOG_ID_START) {
+                start.setHours(view.getCurrentHour());
+                start.setMinutes(view.getCurrentMinute());
+                Log.d("Debug: on timeset", start.toString());
+                tvAddYSStart.setText(start.toString());
+            } else if (current_time == TIME_DIALOG_ID_END) {
+                end.setHours(view.getCurrentHour());
+                end.setMinutes(view.getCurrentMinute());
+                tvAddYSEnd.setText(end.toString());
+                Log.d("Debug: on timeset", end.toString());
             }
         }
     }
