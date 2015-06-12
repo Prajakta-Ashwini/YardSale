@@ -109,6 +109,8 @@ public class SaleMapFragment extends SupportMapFragment implements
     }
 
     private void addYardSale(YardSale row){
+        if(row.getLocation() == null)
+            return;
         LatLng loc = new LatLng(row.getLocation().getLatitude(),row.getLocation().getLongitude());
         //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12));
         Marker marker = getMap().addMarker(new MarkerOptions()
@@ -124,7 +126,8 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (location != null) {
             Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
             CameraUpdate cameraUpdate;
-            if(yardSale == null || yardSale.getTitle()==null) {
+            //Todo If loc for the selected sale is null then just display current loca?
+            if(yardSale == null || yardSale.getTitle()==null || yardSale.getLocation() == null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, YardSaleApplication.MAP_ZOOM);
             } else {

@@ -58,7 +58,8 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
         }
 
         viewHolder.tvYardSaleDescription.setText(yardSale.getDescription());
-        viewHolder.tvYardSaleTime.setText(yardSale.getLocation().toString());
+        if(yardSale.getLocation() !=null)
+            viewHolder.tvYardSaleTime.setText(yardSale.getLocation().toString());
         return view;
     }
 

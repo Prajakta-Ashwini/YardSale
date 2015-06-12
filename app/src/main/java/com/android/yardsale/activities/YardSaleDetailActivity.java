@@ -30,6 +30,7 @@ public class YardSaleDetailActivity extends ActionBarActivity {
     private ItemsArrayAdapter aItems;
     private List<Item> itemList;
     private Button btCreateItem;
+    private Button btDeleteItem;
     private TextView tvTitle;
     private TextView tvDescription;
     private TextView tvDateTime;
@@ -48,6 +49,7 @@ public class YardSaleDetailActivity extends ActionBarActivity {
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         tvDateTime = (TextView) findViewById(R.id.tvDateTime);
         tvSeller = (TextView) findViewById(R.id.tvSeller);
+        btDeleteItem = (Button) findViewById(R.id.btDeleteItem);
 
         itemList = new ArrayList<>();
         final List<CharSequence> itemsObjList = getIntent().getCharSequenceArrayListExtra("item_list");
@@ -94,6 +96,14 @@ public class YardSaleDetailActivity extends ActionBarActivity {
                                 e1.printStackTrace();
                             }
                             client.createItem("like new chair", 12, file, sale);
+                        }
+                    });
+                    btDeleteItem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getBaseContext(), "delete item!!!", Toast.LENGTH_SHORT).show();
+                            //TODO move to yardsale card
+                            //client.deleteSale(sale);
                         }
                     });
                 }
