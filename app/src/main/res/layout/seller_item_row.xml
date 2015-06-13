@@ -19,7 +19,36 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvYardSaleTime"
+        android:id="@+id/tvYardLocation"
         android:layout_below="@+id/tvYardSaleDescription"
         android:layout_alignStart="@+id/tvYardSaleDescription"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvYardSaleTime"
+        android:layout_below="@+id/tvYardLocation"
+        android:layout_alignStart="@+id/tvYardLocation"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/btnAddItem"
+        android:onClick="addItem"
+        android:background="@drawable/ic_add_item"
+        android:layout_below="@+id/tvYardSaleTime"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/btnEditItem"
+        android:background="@drawable/ic_item_edit"
+        android:layout_alignTop="@+id/btnAddItem"
+        android:onClick="editItem"
+        android:layout_toEndOf="@+id/btnAddItem"
+        android:layout_marginStart="59dp" />
+
 </RelativeLayout>

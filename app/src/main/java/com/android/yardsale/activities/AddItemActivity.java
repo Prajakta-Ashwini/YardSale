@@ -12,23 +12,55 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.android.yardsale.R;
+import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.models.YardSale;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseQuery;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
 public class AddItemActivity extends ActionBarActivity {
 
     public final String APP_TAG = "YardSaleApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public final static int PICK_PHOTO_CODE = 1046;
+    private YardSaleApplication client;
     public String photoFileName = "photo.jpg";
     private ImageView ivItemPreview;
+    private EditText etAddItemDescription;
+    private EditText etAddItemPrice;
+    private YardSale yardSale;
+    private Bitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+        //TODO setup action bar
+
+        image = null;
+        String yardSaleId = getIntent().getStringExtra("yard_sale_id");
+        Log.d("DEBUG 8:", yardSaleId);
+        ParseQuery getQuery = YardSale.getQuery();
+        try {
+            yardSale = (YardSale) getQuery.get(yardSaleId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Log.d("DEBUG 9:", yardSale.getAddress());
+
+        client = new YardSaleApplication(this);
+
+        ivItemPreview = (ImageView) findViewById(R.id.ivItemPreview);
+        etAddItemDescription = (EditText) findViewById(R.id.etAddItemDescription);
+        etAddItemPrice = (EditText) findViewById(R.id.etAddItemPrice);
     }
 
     @Override
@@ -43,14 +75,15 @@ public class AddItemActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // API 5+ solution
+                finish();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void onTakePicture(View view) {
@@ -67,7 +100,7 @@ public class AddItemActivity extends ActionBarActivity {
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), APP_TAG);
 
         // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             Log.d(APP_TAG, "failed to create directory");
         }
 
@@ -77,14 +110,51 @@ public class AddItemActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE)
-        {
-            if(resultCode == RESULT_OK)
-            {
+        Log.d("DEBUG: request ", requestCode + " result " + resultCode + " data " + (data != null));
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-                Bitmap takenImage = BitmapFactory.decodeFile(takenPhotoUri.getPath());
-                ivItemPreview = (ImageView) findViewById(R.id.ivItemPreview);
+                image = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+                Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
+                ivItemPreview.setImageBitmap(bMapScaled);
             }
+        } else if (requestCode == PICK_PHOTO_CODE) {
+            Uri photoUri = data.getData();
+            // Do something with the photo based on Uri
+            try {
+                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // Load the selected image into a preview
+            Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
+            ivItemPreview.setImageBitmap(bMapScaled);
         }
     }
+
+    public byte[] getBytesFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
+    }
+
+
+    public void addItem(View view) {
+        Number price = Double.parseDouble(etAddItemPrice.getText().toString());
+        String description = String.valueOf(etAddItemDescription.getText());
+        ParseFile imageParseFile = new ParseFile(getBytesFromBitmap(image));
+        client.createItem(description, price, imageParseFile, yardSale);
+        finish();
+    }
+
+    public void onPickPhoto(View view) {
+        // Create intent for picking a photo from the gallery
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        // Bring up gallery to select a photo
+        startActivityForResult(intent, PICK_PHOTO_CODE);
+    }
+
+
 }

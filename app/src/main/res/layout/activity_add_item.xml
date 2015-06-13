@@ -1,23 +1,60 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.android.yardsale.activities.AddItemActivity">
 
 
     <ImageView
+        android:id="@+id/ivItemPreview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+
+    <TextView
+        android:id="@+id/tvCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ivItemPreview"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/ic_camera"
+        android:clickable="true"
+        android:onClick="onTakePicture" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvCamera"
+        android:id="@+id/tvGallery"
+        android:layout_toStartOf="@id/tvCamera"
+        android:background="@drawable/ic_gallery"
         android:clickable="true"
-        android:onClick="onTakePicture"
-        android:background="@drawable/ic_camera"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"/>
+        android:onClick="onPickPhoto"/>
+
+    <EditText
+        android:id="@+id/etAddItemDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivItemPreview"
+        android:hint="Description" />
+
+    <EditText
+        android:id="@+id/etAddItemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etAddItemDescription"
+        android:ems="10"
+        android:hint="Price"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btnAddItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etAddItemPrice"
+        android:layout_centerHorizontal="true"
+        android:onClick="addItem"
+        android:text="add" />
+
 </RelativeLayout>

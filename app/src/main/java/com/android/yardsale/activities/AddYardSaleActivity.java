@@ -1,17 +1,17 @@
-package com.android.yardsale.fragments;
+package com.android.yardsale.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,7 +24,7 @@ import com.android.yardsale.helpers.YardSaleApplication;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AddFragment extends DialogFragment {
+public class AddYardSaleActivity extends ActionBarActivity {
 
     private EditText etAddYSTitle;
     private EditText etAddYSDescription;
@@ -43,26 +43,22 @@ public class AddFragment extends DialogFragment {
     private static int current_date = 0;
     private static int current_time = 0;
 
-    public AddFragment() {
-    }
-
-    public static AddFragment newInstance() {
-        return new AddFragment();
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add_activity, container);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_yard_sale);
 
-        client = new YardSaleApplication(getActivity());
-        etAddYSTitle = (EditText) view.findViewById(R.id.etAddYSTitle);
-        etAddYSDescription = (EditText) view.findViewById(R.id.etAddYSDescription);
-        etAddYSAddress = (EditText) view.findViewById(R.id.etAddYSAddress);
-        tvAddYSStart = (TextView) view.findViewById(R.id.tvAddYSStart);
-        tvAddYSEnd = (TextView) view.findViewById(R.id.tvAddYSEnd);
-        btnSave = (Button) view.findViewById(R.id.btnSave);
-        btnCancel = (Button) view.findViewById(R.id.btnCancel);
+        setupActionBar();
+        client = new YardSaleApplication(this);
+
+
+        etAddYSTitle = (EditText) findViewById(R.id.etAddYSTitle);
+        etAddYSDescription = (EditText) findViewById(R.id.etAddYSDescription);
+        etAddYSAddress = (EditText) findViewById(R.id.etAddYSAddress);
+        tvAddYSStart = (TextView) findViewById(R.id.tvAddYSStart);
+        tvAddYSEnd = (TextView) findViewById(R.id.tvAddYSEnd);
+        btnSave = (Button) findViewById(R.id.btnSave);
+        btnCancel = (Button) findViewById(R.id.btnCancel);
 
         tvAddYSStart.setClickable(true);
         tvAddYSStart.setOnClickListener(new View.OnClickListener() {
@@ -84,27 +80,41 @@ public class AddFragment extends DialogFragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("before save", start + "\t" + end);
                 client.createYardSale(String.valueOf(etAddYSTitle.getText()),
                         String.valueOf(etAddYSDescription.getText()),
                         start,
                         end,
                         String.valueOf(etAddYSAddress.getText()));
-                dismiss();
+                finish();
             }
         });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+                finish();
             }
         });
+    }
 
-        getDialog().setTitle("Create Yard Sale");
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        return view;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.m, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // API 5+ solution
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void datePicker(String date) {
@@ -114,7 +124,7 @@ public class AddFragment extends DialogFragment {
             current_date = DATE_DIALOG_ID_END;
         }
         DialogFragment dateFragment = new DatePickerFragment();
-        dateFragment.show(getActivity().getSupportFragmentManager(), date);
+        dateFragment.show(getSupportFragmentManager(), date);
     }
 
     private void timePicker(String time) {
@@ -124,7 +134,7 @@ public class AddFragment extends DialogFragment {
             current_time = TIME_DIALOG_ID_END;
         }
         DialogFragment timeFragment = new TimePickerFragment();
-        timeFragment.show(getActivity().getSupportFragmentManager(), time);
+        timeFragment.show(getSupportFragmentManager(), time);
     }
 
     public static class DatePickerFragment extends DialogFragment implements
@@ -193,6 +203,11 @@ public class AddFragment extends DialogFragment {
                 Log.d("Debug: on timeset", end.toString());
             }
         }
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }
 

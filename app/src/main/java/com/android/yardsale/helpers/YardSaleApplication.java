@@ -62,7 +62,6 @@ public class YardSaleApplication extends Application {
         ParseFacebookUtils.initialize(this);
 
 
-
     }
 
     public void manualSignUp(final String userName, final String password) {
@@ -139,8 +138,6 @@ public class YardSaleApplication extends Application {
         String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
         Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
         //TODO get location from the given address
-        //LatLng latLong = GeopointUtils.getLocationFromAddress(callingActivity, address);
-        //ParseGeoPoint location = new ParseGeoPoint(latLong.latitude, latLong.longitude);
 
         YardSale yardSale = new YardSale();
         yardSale.setTitle(title);
@@ -150,6 +147,7 @@ public class YardSaleApplication extends Application {
         yardSale.setStartTime(startTime);
         yardSale.setEndTime(startTime);
         yardSale.saveInBackground();
+        //TODO populate the listview of the sell and load that view
     }
 
     public void getYardSales() {
@@ -262,7 +260,7 @@ public class YardSaleApplication extends Application {
         query.findInBackground(new FindCallback<Item>() {
             public void done(List<Item> itemList, ParseException e) {
                 if (e == null) {
-                    for(Item item:itemList)
+                    for (Item item : itemList)
                         item.deleteInBackground();
                 } else {
                     Log.d("item", "Error: " + e.getMessage());

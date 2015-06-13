@@ -39,6 +39,7 @@ public class YardSaleDetailActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO back button
         final YardSaleApplication client = new YardSaleApplication();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yard_sale_detail);

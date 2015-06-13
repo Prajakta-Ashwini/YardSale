@@ -95,4 +95,6 @@ public class YardSale extends ParseObject  {
     public static ParseQuery<YardSale> getQuery() {
         return ParseQuery.getQuery(YardSale.class);
     }
+
+
 }

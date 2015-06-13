@@ -52,6 +52,9 @@
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search" >
         </activity>
+        <activity android:name=".activities.AddYardSaleActivity"
+            android:label="Create a Yard Sale">
+        </activity>
         <activity
             android:name=".activities.YardSaleDetailActivity"
             android:label="@string/title_activity_yard_sale_detail"

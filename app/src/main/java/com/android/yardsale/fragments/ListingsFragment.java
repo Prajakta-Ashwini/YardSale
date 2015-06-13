@@ -57,6 +57,18 @@ public class ListingsFragment extends SellStuffFragment {
         };
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.loadObjects();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        adapter.loadObjects();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

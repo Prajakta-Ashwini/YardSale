@@ -33,6 +33,7 @@ public class SearchActivity extends ActionBarActivity {
         ListView lvSearchElements = (ListView) findViewById(R.id.lvSearchElements);
         lvSearchElements.setAdapter(adapter);
         client = new YardSaleApplication(this);
+        //TODO show items list view
         items = getIntent().getExtras().getStringArrayList("search");
 
         Log.d("DEBUG 2:" , items.get(0));

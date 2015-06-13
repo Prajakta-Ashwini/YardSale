@@ -63,7 +63,7 @@ public class FindStuffFragment extends Fragment implements
                 iif.setArguments(args);
             }else{
                 iif = (SaleMapFragment) getChildFragmentManager().findFragmentByTag("afterTag");
-                iif.getArguments().putInt("position", 2);;
+                iif.getArguments().putInt("position", 2);
             }
 
             getChildFragmentManager().beginTransaction().replace(R.id.flPage, iif, "afterTag")
@@ -99,7 +99,6 @@ public class FindStuffFragment extends Fragment implements
 
             iif.addYardSale(row);
             yardSaleList.add(row);
-            //this.notifyDataSetChanged();
         }
     }
 

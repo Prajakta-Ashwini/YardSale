@@ -45,7 +45,7 @@ public class ListActivity extends ActionBarActivity {
         for (CharSequence objId : yardSalesObjList) {
             //client.queryYardSale(String objectId)
             ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-     //       query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
+            //       query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
             query.getInBackground((String) objId, new GetCallback<YardSale>() {
                 @Override
                 public void done(YardSale yardSale, com.parse.ParseException e) {
@@ -94,16 +94,16 @@ public class ListActivity extends ActionBarActivity {
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-           if(vpPager.getCurrentItem() == 1){
-               vpPager.setCurrentItem(0);
-               return true;
-           }
+            if (vpPager.getCurrentItem() == 1) {
+                vpPager.setCurrentItem(0);
+                return true;
+            }
         }
         if (vpPager.getCurrentItem() == 0) {
             FragmentManager childFm = vpAdapter.getFindStuffFragment().getChildFragmentManager();
             if (childFm.getBackStackEntryCount() > 0) {
                 childFm.popBackStack();
-               return true;
+                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
