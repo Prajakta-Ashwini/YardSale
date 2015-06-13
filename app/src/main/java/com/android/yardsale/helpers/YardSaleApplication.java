@@ -4,7 +4,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,6 +34,9 @@ import com.parse.SignUpCallback;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -275,6 +284,87 @@ public class YardSaleApplication extends Application {
 
     public void deleteItem(Item item) {
         item.deleteInBackground();
+    }
 
+    // Can be triggered by a view event such as a button press
+    public void shareSale(Context context, YardSale sale) {
+        try {
+            ParseFile file = sale.getCoverPic();
+            if (file == null) {
+                Toast.makeText(context, "cover pic not found!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // Get access to the URI for the bitmap
+            Uri bmpUri = getLocalBitmapUri(file);
+
+            if (bmpUri != null) {
+//                // Construct a ShareIntent with link to image
+//                Intent shareIntent = new Intent();
+//                shareIntent.setAction(Intent.ACTION_SEND);
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri);
+//                shareIntent.setType("image/*");
+//                // Launch sharing dialog for image
+//                context.startActivity(Intent.createChooser(shareIntent, "Share Image"));
+                List<Intent> targetedShareIntents = new ArrayList<Intent>();
+                Intent share = new Intent(android.content.Intent.ACTION_SEND);
+                share.setType("image/*");
+
+                List<ResolveInfo> resInfo = context.getPackageManager()
+                        .queryIntentActivities(share, 0);
+                if (!resInfo.isEmpty()) {
+                    for (ResolveInfo info : resInfo) {
+                        Intent targetedShare = new Intent(
+                                android.content.Intent.ACTION_SEND);
+                        targetedShare.setType("image/*"); // put here your mime
+                        // type
+//                        if (info.activityInfo.packageName.toLowerCase().contains(
+//                                nameApp)
+//                                || info.activityInfo.name.toLowerCase().contains(
+//                                nameApp)) {
+                        String subject =  "Yardsale alert! :) "+ sale.getTitle() + " at " + sale.getAddress();
+                        targetedShare.putExtra(Intent.EXTRA_SUBJECT, subject);
+                        targetedShare.putExtra(Intent.EXTRA_TEXT, subject);
+                        targetedShare.putExtra(Intent.EXTRA_STREAM,
+                                bmpUri);
+                        targetedShare.setPackage(info.activityInfo.packageName);
+                        targetedShareIntents.add(targetedShare);
+
+                    }
+                    Intent chooserIntent = Intent.createChooser(
+                            targetedShareIntents.remove(0), "Select app to share");
+                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                            targetedShareIntents.toArray(new Parcelable[]{}));
+                    context.startActivity(chooserIntent);
+                }
+            } else {
+                // ...sharing failed, handle error
+                Toast.makeText(context, "Error while sharing image!", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }catch(ParseException e){
+            Toast.makeText(context, "Error while sharing image!", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    // Returns the URI path to the Bitmap displayed in specified ImageView
+    public Uri getLocalBitmapUri(ParseFile image) throws ParseException {
+        // Extract Bitmap from ImageView drawable
+        Bitmap bmp = BitmapFactory.decodeByteArray(image.getData(), 0, image.getData().length);;
+
+        // Store image to default external storage directory
+        Uri bmpUri = null;
+        try {
+            File file =  new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
+            file.getParentFile().mkdirs();
+            FileOutputStream out = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.close();
+            bmpUri = Uri.fromFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bmpUri;
     }
 }

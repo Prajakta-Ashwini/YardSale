@@ -66,6 +66,15 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             }
         });
 
+        saleViewHolder.btShareSale.setOnClickListener(new View.OnClickListener() {
+            YardSale s = salesList.get(position);
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "share sale!", Toast.LENGTH_SHORT).show();
+                client.shareSale(context,s);
+            }
+        });
+
         saleViewHolder.ivCoverPic.setOnClickListener(new View.OnClickListener() {
             YardSale s = salesList.get(position);
             @Override
@@ -85,4 +94,6 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 
         return new SaleViewHolder(itemView);
     }
+
+
 }
