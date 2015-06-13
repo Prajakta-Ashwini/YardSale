@@ -11,9 +11,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
@@ -208,14 +212,14 @@ public class YardSaleApplication extends Application {
         sale.saveInBackground();
     }
 
-    public void getItemsForYardSale(final YardSale yardSale) {
+    public void getItemsForYardSale(final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
         // Define the class we would like to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.whereEqualTo("yardsale_id", yardSale);
         query.findInBackground(new FindCallback<Item>() {
             public void done(List<Item> itemList, ParseException e) {
                 if (e == null) {
-                    launchYardSaleDetailActivity(yardSale, itemList);
+                    launchYardSaleDetailActivity(context, yardSale, itemList, ivCoverPic);
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
                 }
@@ -223,7 +227,7 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    private static void launchYardSaleDetailActivity(YardSale yardsale, List<Item> items) {
+    private static void launchYardSaleDetailActivity(Context context, YardSale yardsale, List<Item> items, ImageView ivCoverPic) {
         Intent intent = new Intent(context, YardSaleDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ArrayList<CharSequence> itemObjList = new ArrayList<>();
@@ -232,7 +236,9 @@ public class YardSaleApplication extends Application {
         }
         intent.putCharSequenceArrayListExtra("item_list", itemObjList);
         intent.putExtra("yardsale", yardsale.getObjectId());
-        context.startActivity(intent);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation((Activity)context, ivCoverPic, "itemDetail");
+        context.startActivity(intent, options.toBundle());
     }
 
     //TODO may be generalize this
@@ -366,5 +372,13 @@ public class YardSaleApplication extends Application {
             e.printStackTrace();
         }
         return bmpUri;
+    }
+
+    public static void launchItemDetailActivity(Context context, Item item, ImageView ivItemPic) {
+        Intent i = new Intent(context, ItemDetailActivity.class);
+        i.putExtra("selected_item", item.getObjectId());
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation((Activity) context, (View)ivItemPic, "itemDetail");
+        context.startActivity(i, options.toBundle());
     }
 }

@@ -33,7 +33,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(SaleViewHolder saleViewHolder, final int position) {
+    public void onBindViewHolder(final SaleViewHolder saleViewHolder, final int position) {
         final YardSale sale = salesList.get(position);
         saleViewHolder.tvTitle.setText(sale.getTitle());
         try {
@@ -79,7 +79,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             YardSale s = salesList.get(position);
             @Override
             public void onClick(View v) {
-                client.getItemsForYardSale(s);
+                client.getItemsForYardSale(context, s, saleViewHolder.ivCoverPic);
             }
         });
 

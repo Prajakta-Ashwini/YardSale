@@ -40,10 +40,7 @@
             android:name=".activities.SignUpActivity"
             android:label="@string/title_activity_sign_up" >
         </activity>
-        <activity
-            android:name=".activities.AddActivity"
-            android:label="Add Activity" >
-        </activity>
+
         <activity
             android:name=".activities.ListActivity"
             android:label="@string/title_activity_list" >
@@ -77,7 +74,8 @@
         </activity>
         <activity
             android:name=".activities.ItemDetailActivity"
-            android:label="@string/title_activity_item_detail" >
+            android:label="@string/title_activity_item_detail"
+            android:parentActivityName="com.android.yardsale.activities.YardSaleDetailActivity">
         </activity>
     </application>
 

@@ -120,8 +120,14 @@ public class YardSaleDetailActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
