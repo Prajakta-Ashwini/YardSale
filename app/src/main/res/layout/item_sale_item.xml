@@ -29,16 +29,18 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Item"
+        android:text="Delete"
         android:layout_below="@+id/tvPrice"
         android:id="@+id/btDeleteItem"
+        android:background="@android:color/transparent"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Item"
+        android:text="Edit"
         android:id="@+id/btEditItem"
         android:layout_below="@+id/btDeleteItem"
+        android:background="@android:color/transparent"
         />
 </RelativeLayout>
