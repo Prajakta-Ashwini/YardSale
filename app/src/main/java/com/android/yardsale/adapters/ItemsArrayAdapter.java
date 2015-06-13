@@ -1,6 +1,7 @@
 package com.android.yardsale.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.squareup.picasso.Picasso;
@@ -55,12 +57,22 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
 
         viewHolder.btDeleteItem.setOnClickListener(new View.OnClickListener() {
             Item item = getItem(position);
+
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "delete item!!!", Toast.LENGTH_SHORT).show();
                 client.deleteItem(item);
                 remove(item);
                 notifyDataSetChanged();
+            }
+        });
+        viewHolder.ivPic.setOnClickListener(new View.OnClickListener() {
+            Item item = getItem(position);
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), ItemDetailActivity.class);
+                i.putExtra("selected_item",item.getObjectId());
+                getContext().startActivity(i);
             }
         });
         return convertView;
