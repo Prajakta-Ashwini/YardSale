@@ -35,7 +35,6 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:id="@+id/btnAddItem"
-        android:onClick="addItem"
         android:background="@drawable/ic_add_item"
         android:layout_below="@+id/tvYardSaleTime"
         android:layout_centerHorizontal="true" />
@@ -47,7 +46,6 @@
         android:id="@+id/btnEditItem"
         android:background="@drawable/ic_item_edit"
         android:layout_alignTop="@+id/btnAddItem"
-        android:onClick="editItem"
         android:layout_toEndOf="@+id/btnAddItem"
         android:layout_marginStart="59dp" />
 

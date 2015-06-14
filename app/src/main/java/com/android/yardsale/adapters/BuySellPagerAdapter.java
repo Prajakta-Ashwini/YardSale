@@ -65,6 +65,7 @@ public class BuySellPagerAdapter extends FragmentPagerAdapter {
                 break;
             case SELLER:
                 sellStuffFragment.addYardSale(row);
+                //break;
         }
 
     }

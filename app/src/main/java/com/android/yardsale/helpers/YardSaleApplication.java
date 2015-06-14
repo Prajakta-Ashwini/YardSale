@@ -15,6 +15,7 @@ import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.FacebookSdk;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -148,6 +149,24 @@ public class YardSaleApplication extends Application {
         yardSale.setEndTime(startTime);
         yardSale.saveInBackground();
         //TODO populate the listview of the sell and load that view
+    }
+
+    public void updateYardSale(String id, final String title, final String description, final Date startTime, final Date endTime, final String address) {
+        ParseQuery<YardSale> query = YardSale.getQuery();
+        query.getInBackground(id, new GetCallback<YardSale>() {
+            @Override
+            public void done(YardSale yardSale, ParseException e) {
+                if (e == null) {
+                    yardSale.setTitle(title);
+                    yardSale.setDescription(description);
+                    yardSale.setStartTime(startTime);
+                    yardSale.setEndTime(endTime);
+                    yardSale.setAddress(address);
+                    yardSale.saveInBackground();
+                    Toast.makeText(getBaseContext(), "Updated Yard Sale", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     public void getYardSales() {

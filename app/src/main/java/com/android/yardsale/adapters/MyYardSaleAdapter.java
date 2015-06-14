@@ -85,6 +85,14 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
             }
         });
 
+//        viewHolder.btnEditItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(),"Editing Item", Toast.LENGTH_LONG).show();
+//                //TODO Editing items in a yard sale
+//            }
+//        });
+
         return view;
     }
 

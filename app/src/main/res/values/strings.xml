@@ -14,5 +14,6 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_add_item">AddItemActivity</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
+    <string name="title_activity_edit_yard_sale">EditYardSaleActivity</string>
 
 </resources>

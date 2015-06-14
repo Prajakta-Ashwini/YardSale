@@ -1,6 +1,7 @@
 package com.android.yardsale.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.activities.EditYardSaleActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
@@ -61,8 +63,9 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "edit sale!", Toast.LENGTH_SHORT).show();
-                //Todo add method
-                //client.editSale(sale);
+                Intent intent = new Intent(context, EditYardSaleActivity.class);
+                intent.putExtra("edit_yard_sale_id", sale.getObjectId());
+                context.startActivity(intent);
             }
         });
 
