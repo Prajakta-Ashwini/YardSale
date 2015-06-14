@@ -1,6 +1,7 @@
 package com.android.yardsale.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.activities.EditItemActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.squareup.picasso.Picasso;
@@ -36,7 +38,7 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Item item = getItem(position);
+        final Item item = getItem(position);
         final ViewHolderSale viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
             viewHolder = new ViewHolderSale();
@@ -70,7 +72,16 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
             Item item = getItem(position);
             @Override
             public void onClick(View v) {
-                client.launchItemDetailActivity(getContext(),item,viewHolder.ivPic);
+                client.launchItemDetailActivity(getContext(), item, viewHolder.ivPic);
+            }
+        });
+
+        viewHolder.btEditItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EditItemActivity.class);
+                intent.putExtra("item_id", item.getObjectId());
+                getContext().startActivity(intent);
             }
         });
         return convertView;

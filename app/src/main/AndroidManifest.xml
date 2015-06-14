@@ -40,7 +40,6 @@
             android:name=".activities.SignUpActivity"
             android:label="@string/title_activity_sign_up" >
         </activity>
-
         <activity
             android:name=".activities.ListActivity"
             android:label="@string/title_activity_list" >
@@ -76,11 +75,15 @@
         <activity
             android:name=".activities.ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
-            android:parentActivityName="com.android.yardsale.activities.YardSaleDetailActivity">
+            android:parentActivityName=".activities.YardSaleDetailActivity" >
         </activity>
         <activity
             android:name=".activities.EditYardSaleActivity"
             android:label="@string/title_activity_edit_yard_sale" >
+        </activity>
+        <activity
+            android:name=".activities.EditItemActivity"
+            android:label="@string/title_activity_edit_item" >
         </activity>
     </application>
 

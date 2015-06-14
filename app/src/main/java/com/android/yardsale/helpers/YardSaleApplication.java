@@ -225,6 +225,21 @@ public class YardSaleApplication extends Application {
         item.saveInBackground();
     }
 
+    public void updateItem(final String id, final String description, final Number price, final ParseFile photo, final YardSale yardSale) {
+        ParseQuery<Item> query = Item.getQuery();
+        query.getInBackground(id, new GetCallback<Item>() {
+            @Override
+            public void done(Item item, ParseException e) {
+                if (e == null) {
+                    item.setDescription(description);
+                    item.setPrice(price);
+                    item.setPhoto(photo);
+                    item.saveInBackground();
+                }
+            }
+        });
+    }
+
     public void setPicForYardSale(YardSale sale, ParseFile photo) {
         sale.setCoverPic(photo);
         sale.saveInBackground();
@@ -255,7 +270,7 @@ public class YardSaleApplication extends Application {
         intent.putCharSequenceArrayListExtra("item_list", itemObjList);
         intent.putExtra("yardsale", yardsale.getObjectId());
         ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation((Activity)context, ivCoverPic, "itemDetail");
+                makeSceneTransitionAnimation((Activity) context, ivCoverPic, "itemDetail");
         context.startActivity(intent, options.toBundle());
     }
 
@@ -345,7 +360,7 @@ public class YardSaleApplication extends Application {
 //                                nameApp)
 //                                || info.activityInfo.name.toLowerCase().contains(
 //                                nameApp)) {
-                        String subject =  "Yardsale alert! :) "+ sale.getTitle() + " at " + sale.getAddress();
+                        String subject = "Yardsale alert! :) " + sale.getTitle() + " at " + sale.getAddress();
                         targetedShare.putExtra(Intent.EXTRA_SUBJECT, subject);
                         targetedShare.putExtra(Intent.EXTRA_TEXT, subject);
                         targetedShare.putExtra(Intent.EXTRA_STREAM,
@@ -365,7 +380,7 @@ public class YardSaleApplication extends Application {
                 Toast.makeText(context, "Error while sharing image!", Toast.LENGTH_SHORT)
                         .show();
             }
-        }catch(ParseException e){
+        } catch (ParseException e) {
             Toast.makeText(context, "Error while sharing image!", Toast.LENGTH_SHORT)
                     .show();
         }
@@ -374,12 +389,13 @@ public class YardSaleApplication extends Application {
     // Returns the URI path to the Bitmap displayed in specified ImageView
     public Uri getLocalBitmapUri(ParseFile image) throws ParseException {
         // Extract Bitmap from ImageView drawable
-        Bitmap bmp = BitmapFactory.decodeByteArray(image.getData(), 0, image.getData().length);;
+        Bitmap bmp = BitmapFactory.decodeByteArray(image.getData(), 0, image.getData().length);
+        ;
 
         // Store image to default external storage directory
         Uri bmpUri = null;
         try {
-            File file =  new File(Environment.getExternalStoragePublicDirectory(
+            File file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
             file.getParentFile().mkdirs();
             FileOutputStream out = new FileOutputStream(file);
@@ -396,7 +412,7 @@ public class YardSaleApplication extends Application {
         Intent i = new Intent(context, ItemDetailActivity.class);
         i.putExtra("selected_item", item.getObjectId());
         ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation((Activity) context, (View)ivItemPic, "itemDetail");
+                makeSceneTransitionAnimation((Activity) context, (View) ivItemPic, "itemDetail");
         context.startActivity(i, options.toBundle());
     }
 }

@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.android.yardsale.activities.EditItemActivity">
+
+    <ImageView
+        android:id="@+id/ivEditItemPreview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+
+    <TextView
+        android:id="@+id/tvEditCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/ic_camera"
+        android:clickable="true"
+        android:onClick="onTakePicture" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvEditGallery"
+        android:layout_toStartOf="@id/tvEditCamera"
+        android:background="@drawable/ic_gallery"
+        android:clickable="true"
+        android:onClick="onPickPhoto"/>
+
+    <EditText
+        android:id="@+id/etEditItemDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivEditItemPreview"
+        android:hint="Description" />
+
+    <EditText
+        android:id="@+id/etEditItemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etEditItemDescription"
+        android:ems="10"
+        android:hint="Price"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btnEditItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etEditItemPrice"
+        android:layout_centerHorizontal="true"
+        android:onClick="editItem"
+        android:text="save" />
+</RelativeLayout>

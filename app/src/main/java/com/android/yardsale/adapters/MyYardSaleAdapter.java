@@ -52,7 +52,7 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
             viewHolder.tvYardSaleLoction = (TextView) view.findViewById(R.id.tvYardLocation);
             viewHolder.tvYardSaleTime = (TextView) view.findViewById(R.id.tvYardSaleTime);
             viewHolder.btnAddItem = (Button) view.findViewById(R.id.btnAddItem);
-            viewHolder.btnEditItem = (Button) view.findViewById(R.id.btEditItem);
+            viewHolder.btnEditItem = (Button) view.findViewById(R.id.btnEditItem);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -85,13 +85,12 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
             }
         });
 
-//        viewHolder.btnEditItem.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getContext(),"Editing Item", Toast.LENGTH_LONG).show();
-//                //TODO Editing items in a yard sale
-//            }
-//        });
+        viewHolder.btnEditItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "edit", Toast.LENGTH_LONG).show();
+            }
+        });
 
         return view;
     }

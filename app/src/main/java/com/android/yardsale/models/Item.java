@@ -3,6 +3,7 @@ package com.android.yardsale.models;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,9 @@ public class Item extends ParseObject {
         YardSale yardsale = (YardSale) itemObject.getParseObject("yardsale_id");
         return new Item(description, price, photo, yardsale);
     }
-
+    public static ParseQuery<Item> getQuery() {
+        return ParseQuery.getQuery(Item.class);
+    }
 
 }
 
