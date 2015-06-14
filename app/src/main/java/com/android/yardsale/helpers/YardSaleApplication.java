@@ -176,7 +176,6 @@ public class YardSaleApplication extends Application {
                     yardSale.setEndTime(endTime);
                     yardSale.setAddress(address);
                     yardSale.saveInBackground();
-                    Toast.makeText(getBaseContext(), "Updated Yard Sale", Toast.LENGTH_LONG).show();
                 }
             }
         });

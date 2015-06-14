@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.helpers.YardSaleApplication;
@@ -67,12 +67,18 @@ public class EditYardSaleActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        start = yardSale.getStartTime();
-        end = yardSale.getEndTime();
+        etEditYSTitle.setText(yardSale.getTitle());
         etEditYSDescription.setText(yardSale.getDescription());
         etEditYSAddress.setText(yardSale.getAddress());
         tvEditYSStart.setText(format.format(yardSale.getStartTime()));
         tvEditYSEnd.setText(format.format(yardSale.getEndTime()));
+
+        try {
+            start = format.parse(tvEditYSStart.getText().toString());
+            end = format.parse(tvEditYSEnd.getText().toString());
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
 
         final Calendar startCal = Calendar.getInstance();
         startCal.setTime(start);
@@ -85,9 +91,9 @@ public class EditYardSaleActivity extends ActionBarActivity {
             }
         });
 
+
         final Calendar endCal = Calendar.getInstance();
         endCal.setTime(end);
-
         tvEditYSEnd.setClickable(true);
         tvEditYSEnd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +132,7 @@ public class EditYardSaleActivity extends ActionBarActivity {
                 start,
                 end,
                 String.valueOf(etEditYSAddress.getText()));
+        Toast.makeText(this, "Updated Yard Sale", Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -152,29 +159,20 @@ public class EditYardSaleActivity extends ActionBarActivity {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            if (hour == 0 && minute == 0) {
-                final Calendar c = Calendar.getInstance();
-                hour = c.get(Calendar.HOUR_OF_DAY);
-                minute = c.get(Calendar.MINUTE);
-            }
             // Create a new instance of TimePickerDialog and return it
             return new TimePickerDialog(getActivity(), this, hour, minute,
                     android.text.format.DateFormat.is24HourFormat(getActivity()));
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            Log.d("Current time tag", current_time + "");
             if (current_time == TIME_DIALOG_ID_START) {
                 start.setHours(view.getCurrentHour());
                 start.setMinutes(view.getCurrentMinute());
-                Log.d("Debug: on timeset", start.toString());
-                tvEditYSStart.setText(start.toString());
+                tvEditYSStart.setText(format.format(start));
             } else if (current_time == TIME_DIALOG_ID_END) {
                 end.setHours(view.getCurrentHour());
                 end.setMinutes(view.getCurrentMinute());
-                tvEditYSStart.setText(end.toString());
-                Log.d("Debug: on timeset", end.toString());
+                tvEditYSEnd.setText(format.format(end));
             }
         }
     }
@@ -190,7 +188,6 @@ public class EditYardSaleActivity extends ActionBarActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             Bundle data = getArguments();
-            Log.d("DEBUG 0: year", year + " month " + day + " day");
             year = data.getInt("year");
             month = data.getInt("month");
             day = data.getInt("day");
@@ -198,30 +195,14 @@ public class EditYardSaleActivity extends ActionBarActivity {
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            if (year == 0 && month == 0 && day == 0) {
-                final Calendar c = Calendar.getInstance();
-                year = c.get(Calendar.YEAR);
-                month = c.get(Calendar.MONTH);
-                day = c.get(Calendar.DAY_OF_MONTH);
-            }
-
-            // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             if (current_date == DATE_DIALOG_ID_START) {
                 start = getDate(datePicker);
-                Log.d("Debug: on dateset", start.toString());
             } else if (current_date == DATE_DIALOG_ID_END) {
-                try {
-                    setDate(datePicker, "end");
-                } catch (java.text.ParseException e) {
-                    e.printStackTrace();
-                }
                 end = getDate(datePicker);
-                Log.d("Debug: on dateset", end.toString());
             }
         }
     }
@@ -238,7 +219,6 @@ public class EditYardSaleActivity extends ActionBarActivity {
     }
 
     private void datePicker(String date, int year, int month, int day) {
-
         if (date.equals("start_date")) {
             current_date = DATE_DIALOG_ID_START;
         } else if (date.equals("end_date")) {
@@ -246,11 +226,9 @@ public class EditYardSaleActivity extends ActionBarActivity {
         }
 
         Bundle data = new Bundle();
-        Log.d("DEBUG 1:", "year: " + year + " month: " + month);
         data.putInt("year", year);
         data.putInt("month", month);
         data.putInt("day", day);
-
 
         DialogFragment dateFragment = new DatePickerFragment();
         dateFragment.setArguments(data);
@@ -261,7 +239,6 @@ public class EditYardSaleActivity extends ActionBarActivity {
         if (time.equals("start_time")) {
             current_time = TIME_DIALOG_ID_START;
         } else if (time.equals("end_time")) {
-
             current_time = TIME_DIALOG_ID_END;
         }
 
@@ -272,18 +249,6 @@ public class EditYardSaleActivity extends ActionBarActivity {
         DialogFragment timeFragment = new TimePickerFragment();
         timeFragment.setArguments(data);
         timeFragment.show(getSupportFragmentManager(), time);
-    }
-
-    private static void setDate(DatePicker picker, String tag) throws java.text.ParseException {
-        Date dateBeforeEdit;
-        if (tag.contains("start")) {
-            dateBeforeEdit = format.parse(String.valueOf(tvEditYSStart.getText()));
-            picker.updateDate(dateBeforeEdit.getYear(), dateBeforeEdit.getMonth(), dateBeforeEdit.getDay());
-
-        } else if (tag.contains("end")) {
-            dateBeforeEdit = format.parse(String.valueOf(tvEditYSEnd.getText()));
-            picker.updateDate(dateBeforeEdit.getYear(), dateBeforeEdit.getMonth(), dateBeforeEdit.getDay());
-        }
     }
     //TODO code cleanup lot of redundant code extract this and clean it up
 }
