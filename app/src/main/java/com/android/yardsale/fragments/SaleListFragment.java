@@ -1,19 +1,22 @@
 package com.android.yardsale.fragments;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.activities.AddYardSaleActivity;
 import com.android.yardsale.adapters.SalesAdapter;
+import com.android.yardsale.helpers.CircularReveal;
 import com.android.yardsale.models.YardSale;
 
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ import java.util.List;
 public class SaleListFragment extends FindStuffFragment{
     public static List<YardSale> yardSalesList = new ArrayList<>();
     //private ProgressBar progressBarFooter;
-    private Button btCreateSale;
+    private FloatingActionButton btCreateSale;
     private RecyclerView rvSales;
     private RecyclerView.Adapter rAdapter;
 
@@ -55,7 +58,16 @@ public class SaleListFragment extends FindStuffFragment{
         rAdapter = new SalesAdapter(getActivity(),yardSalesList);
         rvSales.setAdapter(rAdapter);
 
-        btCreateSale = (Button) v.findViewById(R.id.btCreateSale);
+        btCreateSale = (FloatingActionButton) v.findViewById(R.id.btCreateSale);
+        v.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                v.removeOnLayoutChangeListener(this);
+                CircularReveal.enterReveal(btCreateSale);
+            }
+        });
+
         btCreateSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
