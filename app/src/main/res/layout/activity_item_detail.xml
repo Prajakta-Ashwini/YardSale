@@ -3,7 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.yardsale.activities.ItemDetailActivity">
+    tools:context="com.android.yardsale.activities.ItemDetailActivity"
+    >
 
     <com.android.yardsale.helpers.TouchImageView
         android:id="@+id/ivFullImage"
@@ -14,6 +15,7 @@
         android:layout_alignParentRight="true"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:transitionName="itemDetail"/>
 
 </RelativeLayout>

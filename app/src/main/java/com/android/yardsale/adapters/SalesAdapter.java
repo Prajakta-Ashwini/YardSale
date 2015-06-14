@@ -35,7 +35,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(SaleViewHolder saleViewHolder, final int position) {
+    public void onBindViewHolder(final SaleViewHolder saleViewHolder, final int position) {
         final YardSale sale = salesList.get(position);
         saleViewHolder.tvTitle.setText(sale.getTitle());
         try {
@@ -69,11 +69,20 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             }
         });
 
+        saleViewHolder.btShareSale.setOnClickListener(new View.OnClickListener() {
+            YardSale s = salesList.get(position);
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "share sale!", Toast.LENGTH_SHORT).show();
+                client.shareSale(context,s);
+            }
+        });
+
         saleViewHolder.ivCoverPic.setOnClickListener(new View.OnClickListener() {
             YardSale s = salesList.get(position);
             @Override
             public void onClick(View v) {
-                client.getItemsForYardSale(s);
+                client.getItemsForYardSale(context, s, saleViewHolder.ivCoverPic);
             }
         });
 
@@ -88,4 +97,6 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 
         return new SaleViewHolder(itemView);
     }
+
+
 }

@@ -14,6 +14,7 @@ public class SaleViewHolder extends RecyclerView.ViewHolder {
     ImageView ivCoverPic;
     Button btEditSale;
     Button btDeleteSale;
+    Button btShareSale;
 
     public SaleViewHolder(View v) {
         super(v);
@@ -22,5 +23,6 @@ public class SaleViewHolder extends RecyclerView.ViewHolder {
         tvTitle = (TextView) v.findViewById(R.id.tvTitle);
         btEditSale = (Button) v.findViewById(R.id.btEditSale);
         btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
+        btShareSale = (Button) v.findViewById(R.id.btShareSale);
     }
 }
