@@ -1,5 +1,6 @@
 package com.android.yardsale.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -7,9 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.parse.ParseFacebookUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +40,7 @@ public class SignUpActivity extends ActionBarActivity {
         btnLoginWithFB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(SignUpActivity.this, "logging in with FB", Toast.LENGTH_LONG).show();
                 client.signUpAndLoginWithFacebook(permissions);
             }
         });
@@ -62,5 +66,11 @@ public class SignUpActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 }

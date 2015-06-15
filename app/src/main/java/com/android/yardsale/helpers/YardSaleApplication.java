@@ -71,8 +71,6 @@ public class YardSaleApplication extends Application {
         Parse.initialize(this, YARDSALE_APPLICATION_ID, YARDSALE_CLIENT_KEY);
         ParseUser.enableAutomaticUser();
         ParseFacebookUtils.initialize(this);
-
-
     }
 
     public void manualSignUp(final String userName, final String password) {
