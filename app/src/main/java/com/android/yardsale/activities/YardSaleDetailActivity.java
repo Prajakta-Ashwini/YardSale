@@ -1,5 +1,6 @@
 package com.android.yardsale.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +20,6 @@ import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
@@ -55,11 +55,11 @@ public class YardSaleDetailActivity extends ActionBarActivity {
         itemList = new ArrayList<>();
         final List<CharSequence> itemsObjList = getIntent().getCharSequenceArrayListExtra("item_list");
         final String yardsaleObj = getIntent().getStringExtra("yardsale");
-        aItems = new ItemsArrayAdapter(this,itemList);
+        aItems = new ItemsArrayAdapter(this, itemList);
         gvItems.setExpanded(true);
         gvItems.setAdapter(aItems);
 
-        for(CharSequence objId:itemsObjList) {
+        for (CharSequence objId : itemsObjList) {
             ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
             //query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
             query.getInBackground((String) objId, new GetCallback<Item>() {
@@ -89,14 +89,9 @@ public class YardSaleDetailActivity extends ActionBarActivity {
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(getBaseContext(), "creating item!!!", Toast.LENGTH_SHORT).show();
-                            byte[] data = "Working at Parse is great!".getBytes();
-                            ParseFile file = new ParseFile("filedata.txt", data);
-                            try {
-                                file.save();
-                            } catch (ParseException e1) {
-                                e1.printStackTrace();
-                            }
-                            client.createItem("like new chair", 12, file, sale);
+                            Intent intent = new Intent(YardSaleDetailActivity.this, AddItemActivity.class);
+                            intent.putExtra("yard_sale_id", sale.getObjectId());
+                            startActivity(intent);
                         }
                     });
 

@@ -46,7 +46,7 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
 
         if (view == null) {
             viewHolder = new ViewHolder();
-            view = inflater.inflate(R.layout.seller_item_row, parent, false);
+            view = inflater.inflate(R.layout.seller_yard_sale_row, parent, false);
             viewHolder.ivYardSaleCoverPic = (ImageView) view.findViewById(R.id.ivYardSaleCoverPic);
             viewHolder.tvYardSaleDescription = (TextView) view.findViewById(R.id.tvYardSaleDescription);
             viewHolder.tvYardSaleLoction = (TextView) view.findViewById(R.id.tvYardLocation);

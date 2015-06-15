@@ -36,9 +36,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -234,10 +231,22 @@ public class YardSaleApplication extends Application {
                     item.setDescription(description);
                     item.setPrice(price);
                     item.setPhoto(photo);
+                    if(!yardSale.getCoverPic().equals(photo))
+                        setPicForYardSale(yardSale, photo);
                     item.saveInBackground();
                 }
             }
         });
+    }
+
+    public Item getItem(final String id) {
+        ParseQuery<Item> query = Item.getQuery();
+        try {
+            return query.get(id);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void setPicForYardSale(YardSale sale, ParseFile photo) {
@@ -281,23 +290,11 @@ public class YardSaleApplication extends Application {
         Bundle data = new Bundle();
         ArrayList<String> seachItems = new ArrayList<>();
         for (Item item : items) {
-            seachItems.add(item.getDescription());
+            seachItems.add(item.getObjectId());
         }
         data.putStringArrayList("search", seachItems);
         intent.putExtras(data);
         context.startActivity(intent);
-    }
-
-    private double getLatitude(JSONObject json) {
-        return ((JSONArray) json.opt("results")).optJSONObject(0)
-                .optJSONObject("geometry").optJSONObject("location")
-                .optDouble("lat");
-    }
-
-    private double getLongitude(JSONObject json) {
-        return ((JSONArray) json.opt("results")).optJSONObject(0)
-                .optJSONObject("geometry").optJSONObject("location")
-                .optDouble("lng");
     }
 
     public void deleteSale(YardSale sale) {

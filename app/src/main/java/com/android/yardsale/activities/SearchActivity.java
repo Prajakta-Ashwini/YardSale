@@ -2,21 +2,21 @@ package com.android.yardsale.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.android.yardsale.R;
+import com.android.yardsale.adapters.ItemsArrayAdapter;
+import com.android.yardsale.helpers.GridViewScrollable;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.models.Item;
 
 import java.util.ArrayList;
 
 public class SearchActivity extends ActionBarActivity {
 
-    private ArrayAdapter<String> adapter;
-    private ArrayList<String> items;
+    private ItemsArrayAdapter adapter;
+    private ArrayList<Item> items;
     private YardSaleApplication client;
 
     @Override
@@ -27,17 +27,19 @@ public class SearchActivity extends ActionBarActivity {
         //TODO customize the toolbar later
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //TODO the list has to be changed to item
         items = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        ListView lvSearchElements = (ListView) findViewById(R.id.lvSearchElements);
-        lvSearchElements.setAdapter(adapter);
+        adapter = new ItemsArrayAdapter(this, items);
         client = new YardSaleApplication(this);
-        //TODO show items list view
-        items = getIntent().getExtras().getStringArrayList("search");
 
-        Log.d("DEBUG 2:" , items.get(0));
-        adapter.addAll(items);
+        GridViewScrollable gvSearchItems = (GridViewScrollable) findViewById(R.id.gvSearchItems);
+        gvSearchItems.setExpanded(true);
+        gvSearchItems.setAdapter(adapter);
+
+        ArrayList<String> itemIds = getIntent().getStringArrayListExtra("search");
+        for(String itemId : itemIds)
+        {
+            items.add(client.getItem(itemId));
+        }
         adapter.notifyDataSetChanged();
     }
 

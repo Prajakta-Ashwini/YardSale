@@ -22,6 +22,7 @@ import java.util.List;
 public class ItemsArrayAdapter extends ArrayAdapter<Item> {
     private YardSaleApplication client;
     private Context context;
+
     private static class ViewHolderSale {
         ImageView ivPic;
         TextView tvDescription;
@@ -31,7 +32,7 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
     }
 
     public ItemsArrayAdapter(Context context, List<Item> itemList) {
-        super(context, android.R.layout.simple_list_item_1, itemList);
+        super(context, R.layout.item_sale_item, itemList);
         client = new YardSaleApplication();
         this.context = context;
     }
@@ -70,6 +71,7 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
         });
         viewHolder.ivPic.setOnClickListener(new View.OnClickListener() {
             Item item = getItem(position);
+
             @Override
             public void onClick(View v) {
                 client.launchItemDetailActivity(getContext(), item, viewHolder.ivPic);

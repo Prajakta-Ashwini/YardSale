@@ -12,15 +12,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.android.yardsale.R;
+import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,15 +49,19 @@ public class AddItemActivity extends ActionBarActivity {
         //TODO setup action bar
 
         image = null;
+
         String yardSaleId = getIntent().getStringExtra("yard_sale_id");
-        Log.d("DEBUG 8:", yardSaleId);
         ParseQuery getQuery = YardSale.getQuery();
         try {
             yardSale = (YardSale) getQuery.get(yardSaleId);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.d("DEBUG 9:", yardSale.getAddress());
+
+        if (!isAuthorized(yardSale)) {
+            YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("add to yardsale " + yardSale.getTitle());
+            dialog.show(getFragmentManager(), "cannot_add_item");
+        }
 
         client = new YardSaleApplication(this);
 
@@ -110,7 +117,6 @@ public class AddItemActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("DEBUG: request ", requestCode + " result " + resultCode + " data " + (data != null));
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
@@ -154,6 +160,10 @@ public class AddItemActivity extends ActionBarActivity {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         // Bring up gallery to select a photo
         startActivityForResult(intent, PICK_PHOTO_CODE);
+    }
+
+    private boolean isAuthorized(YardSale yardSale) {
+        return yardSale.getSeller().equals(ParseUser.getCurrentUser());
     }
 
 

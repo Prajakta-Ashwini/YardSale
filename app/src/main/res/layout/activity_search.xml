@@ -3,9 +3,14 @@
     android:layout_height="match_parent"
     tools:context="com.android.yardsale.activities.SearchActivity">
 
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/lvSearchElements" />
+    <com.android.yardsale.helpers.GridViewScrollable
+        android:id="@+id/gvSearchItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+
+        />
 
 </RelativeLayout>
