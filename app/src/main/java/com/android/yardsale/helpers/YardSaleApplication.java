@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,8 +22,6 @@ import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
-import com.android.yardsale.helpers.image.CircleTransformation;
-import com.android.yardsale.helpers.image.ImageHelper;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.AccessToken;
@@ -44,7 +41,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -454,7 +450,7 @@ public class YardSaleApplication extends Application {
         context.startActivity(i, options.toBundle());
     }
 
-    public ParseUser getCurrentlyLoggedInUser() {
+    public static ParseUser getCurrentUser() {
         return ParseUser.getCurrentUser();
     }
 

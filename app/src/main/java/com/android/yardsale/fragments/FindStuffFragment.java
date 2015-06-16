@@ -91,6 +91,7 @@ public class FindStuffFragment extends Fragment implements
     }
 
 
+
     public void addYardSale(YardSale row) {
         SaleListFragment iif;
         if (getChildFragmentManager().findFragmentByTag("initialTag") != null) {
@@ -99,6 +100,28 @@ public class FindStuffFragment extends Fragment implements
 
             iif.addYardSale(row);
             yardSaleList.add(row);
+        }
+    }
+
+    public void removeYardSale(YardSale row) {
+        SaleListFragment iif;
+        if (getChildFragmentManager().findFragmentByTag("initialTag") != null) {
+
+            iif = (SaleListFragment) getChildFragmentManager().findFragmentByTag("initialTag");
+
+            iif.removeYardSale(row);
+            yardSaleList.remove(row);
+        }
+    }
+
+    public void editYardSale(YardSale row) {
+        SaleListFragment iif;
+        if (getChildFragmentManager().findFragmentByTag("initialTag") != null) {
+
+            iif = (SaleListFragment) getChildFragmentManager().findFragmentByTag("initialTag");
+
+            iif.editYardSale(row);
+            //yardSaleList.remove(row);
         }
     }
 

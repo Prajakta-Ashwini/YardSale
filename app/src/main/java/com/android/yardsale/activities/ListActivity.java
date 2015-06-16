@@ -1,5 +1,6 @@
 package com.android.yardsale.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
@@ -15,7 +16,9 @@ import com.android.yardsale.adapters.BuySellPagerAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.astuetz.PagerSlidingTabStrip;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.List;
@@ -58,6 +61,42 @@ public class ListActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            String title = data.getStringExtra("title");
+            String desc = data.getStringExtra("desc");
+            String objId = data.getStringExtra("obj_id");
+            if(objId == null) {
+                ParseQuery<YardSale> query = YardSale.getQuery();
+                query.whereEqualTo("title", title);
+                query.whereEqualTo("description", desc);
+                query.whereEqualTo("seller", YardSaleApplication.getCurrentUser());
+                query.findInBackground(new FindCallback<YardSale>() {
+                    @Override
+                    public void done(List<YardSale> yardSale, ParseException e) {
+                        if (e == null) {
+                            vpAdapter.getFindStuffFragment().addYardSale(yardSale.get(0));
+                        }
+                    }
+                });
+            }else{
+                ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+// Specify the object id
+                query.getInBackground(objId, new GetCallback<YardSale>() {
+                    public void done(YardSale item, ParseException e) {
+                        if (e == null) {
+//                            vpAdapter.getFindStuffFragment().removeYardSale(item);
+//                            vpAdapter.getFindStuffFragment().addYardSale(item);
+                            vpAdapter.getFindStuffFragment().editYardSale(item);
+                        } else {
+                            // something went wrong
+                        }
+                    }
+                });
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

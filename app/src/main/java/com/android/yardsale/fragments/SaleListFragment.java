@@ -29,6 +29,7 @@ public class SaleListFragment extends FindStuffFragment{
     private RecyclerView rvSales;
     private RecyclerView.Adapter rAdapter;
 
+
     public SaleListFragment() {
         super();
     }
@@ -42,6 +43,28 @@ public class SaleListFragment extends FindStuffFragment{
     public void addYardSale(YardSale row) {
         yardSalesList.add(row);
         rAdapter.notifyDataSetChanged();
+    }
+
+    public void removeYardSale(YardSale row) {
+        yardSalesList.remove(row);
+        rAdapter.notifyDataSetChanged();
+    }
+
+    public void editYardSale(YardSale row) {
+        for(YardSale sale:yardSalesList){
+            if(sale.getObjectId() == row.getObjectId()){
+                sale.setTitle(row.getTitle());
+                sale.setDescription(row.getDescription());
+                sale.setAddress(row.getAddress());
+                sale.setCoverPic(row.getCoverPic());
+                sale.setLocation(row.getLocation());
+                sale.setStartTime(row.getStartTime());
+                sale.setEndTime(row.getEndTime());
+                rAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+
     }
 
     @Override
@@ -73,7 +96,7 @@ public class SaleListFragment extends FindStuffFragment{
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "creating!!!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), AddYardSaleActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 20);
             }
         });
         return v;
@@ -84,5 +107,6 @@ public class SaleListFragment extends FindStuffFragment{
         super.onCreate(savedInstanceState);
 
     }
+
 
 }

@@ -3,6 +3,7 @@ package com.android.yardsale.activities;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
@@ -133,6 +134,11 @@ public class EditYardSaleActivity extends ActionBarActivity {
                 end,
                 String.valueOf(etEditYSAddress.getText()));
         Toast.makeText(this, "Updated Yard Sale", Toast.LENGTH_LONG).show();
+        Intent data = new Intent();
+        data.putExtra("title", String.valueOf(etEditYSTitle.getText()));
+        data.putExtra("desc", String.valueOf(etEditYSDescription.getText()));
+        data.putExtra("obj_id",yardSale.getObjectId());
+        setResult(RESULT_OK, data);
         finish();
     }
 

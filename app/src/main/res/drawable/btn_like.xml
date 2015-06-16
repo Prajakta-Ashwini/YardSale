@@ -3,8 +3,8 @@
     <!-- NOTE: order is important (the first matching state(s) is what is rendered) -->
     <item
         android:state_selected="true"
-        android:drawable="@drawable/likes_blue" />
+        android:drawable="@drawable/likes_black" />
     <item
         android:state_selected="false"
-        android:drawable="@drawable/likes_black" />
+        android:drawable="@drawable/likes_white" />
 </selector>
