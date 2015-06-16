@@ -2,6 +2,7 @@ package com.android.yardsale.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,11 +10,14 @@ import android.view.View;
 import android.widget.Button;
 
 import com.android.yardsale.R;
+import com.android.yardsale.adapters.CustomPagerAdapter;
 
 public class HowItWorksActivity extends ActionBarActivity {
 
     private Button btnSignUp;
     private Button btnLogin;
+    private CustomPagerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,10 @@ public class HowItWorksActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+        adapter = new CustomPagerAdapter(this);
+
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(adapter);
     }
 
     @Override

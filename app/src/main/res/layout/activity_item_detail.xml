@@ -6,7 +6,7 @@
     tools:context="com.android.yardsale.activities.ItemDetailActivity"
     >
 
-    <com.android.yardsale.helpers.TouchImageView
+    <com.android.yardsale.helpers.image.TouchImageView
         android:id="@+id/ivFullImage"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

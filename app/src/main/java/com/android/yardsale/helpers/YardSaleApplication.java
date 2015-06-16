@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,9 +22,16 @@ import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
+import com.android.yardsale.helpers.image.CircleTransformation;
+import com.android.yardsale.helpers.image.ImageHelper;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
+import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.widget.ProfilePictureView;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
@@ -35,11 +43,15 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,12 +63,18 @@ public class YardSaleApplication extends Application {
     private static Context context;
     private Activity callingActivity;
 
+
     public YardSaleApplication() {
         super();
     }
 
     public YardSaleApplication(Activity activity) {
         this.callingActivity = activity;
+    }
+
+    public enum TYPE_OF_PIC {
+        PROFILE_PIC,
+        COVER_PIC
     }
 
     @Override
@@ -118,8 +136,8 @@ public class YardSaleApplication extends Application {
     }
 
     public void logout() {
-        //FB.logout();
         ParseUser.logOut();
+        LoginManager.getInstance().logOut();
     }
 
     public void signUpAndLoginWithFacebook(List<String> permissions) {
@@ -130,20 +148,44 @@ public class YardSaleApplication extends Application {
                 if (user == null) {
                     Log.d("DEBUG", "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
+//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.PROFILE_PIC);
+//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.COVER_PIC);
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
-                    //showUserDetailsActivity();
                     getYardSales();
                 } else {
                     Log.d("DEBUG", "User logged in through Facebook!");
+//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.PROFILE_PIC);
+//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.COVER_PIC);
                     getYardSales();
                 }
             }
         });
     }
 
+//    private void saveUserPicForFacebookUsers(ParseUser user, TYPE_OF_PIC type) {
+//        switch (type) {
+//            case PROFILE_PIC:
+//                if (user.get("profile_pic") == null) {
+//                    Log.d("DEBUG 0", getUrlBasedOnType(type));
+//                    Bitmap bitmapUserProfilePic = getPicFromFacebook(TYPE_OF_PIC.PROFILE_PIC);
+//                    ParseFile profilePic = new ParseFile(ImageHelper.getBytesFromBitmap(bitmapUserProfilePic));
+//                    user.put("profile_pic", profilePic);
+//                    user.saveInBackground();
+//                }
+//            case COVER_PIC:
+//                if (user.get("cover_pic") == null) {
+//                    Bitmap bitmapUserProfilePic = getPicFromFacebook(TYPE_OF_PIC.COVER_PIC);
+//                    ParseFile profilePic = new ParseFile(ImageHelper.getBytesFromBitmap(bitmapUserProfilePic));
+//                    user.put("cover_pic", profilePic);
+//                    user.saveInBackground();
+//                }
+//
+//        }
+//    }
+
     public void createYardSale(String title, String description, Date startTime, Date endTime, String address) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy");
+        DateFormat dateFormat = DateFormat.getDateTimeInstance();
         String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
         Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
         //TODO get location from the given address
@@ -229,7 +271,7 @@ public class YardSaleApplication extends Application {
                     item.setDescription(description);
                     item.setPrice(price);
                     item.setPhoto(photo);
-                    if(!yardSale.getCoverPic().equals(photo))
+                    if (!yardSale.getCoverPic().equals(photo))
                         setPicForYardSale(yardSale, photo);
                     item.saveInBackground();
                 }
@@ -385,7 +427,6 @@ public class YardSaleApplication extends Application {
     public Uri getLocalBitmapUri(ParseFile image) throws ParseException {
         // Extract Bitmap from ImageView drawable
         Bitmap bmp = BitmapFactory.decodeByteArray(image.getData(), 0, image.getData().length);
-        ;
 
         // Store image to default external storage directory
         Uri bmpUri = null;
@@ -409,5 +450,97 @@ public class YardSaleApplication extends Application {
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation((Activity) context, (View) ivItemPic, "itemDetail");
         context.startActivity(i, options.toBundle());
+    }
+
+    public ParseUser getCurrentlyLoggedInUser() {
+        return ParseUser.getCurrentUser();
+    }
+
+    public void makeMeRequest(final ProfilePictureView ivUserProfileView) {
+        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                        if (jsonObject != null) {
+                            JSONObject userProfile = new JSONObject();
+                            System.out.println("response: " + jsonObject.toString());
+                            try {
+                                userProfile.put("facebookId", jsonObject.getLong("id"));
+                                userProfile.put("name", jsonObject.getString("name"));
+
+                                if (jsonObject.getString("email") != null)
+                                    userProfile.put("email", jsonObject.getString("email"));
+
+                                // Save the user profile info in a user property
+                                ParseUser currentUser = ParseUser.getCurrentUser();
+                                currentUser.put("profile", userProfile);
+                                currentUser.saveInBackground();
+
+                                // Show the user info
+                                updateViewsWithProfileInfo(ivUserProfileView);
+                            } catch (JSONException e) {
+                                Log.d("TAG",
+                                        "Error parsing returned user data. " + e);
+                            }
+                        } else if (graphResponse.getError() != null) {
+                            switch (graphResponse.getError().getCategory()) {
+                                case LOGIN_RECOVERABLE:
+                                    Log.d("TAG",
+                                            "Authentication error: " + graphResponse.getError());
+                                    break;
+
+                                case TRANSIENT:
+                                    Log.d("TAG",
+                                            "Transient error. Try again. " + graphResponse.getError());
+                                    break;
+
+                                case OTHER:
+                                    Log.d("TAG",
+                                            "Some other error: " + graphResponse.getError());
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+        request.executeAsync();
+    }
+
+    public void updateViewsWithProfileInfo(ProfilePictureView ivUserProfileView) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser.has("profile")) {
+            JSONObject userProfile = currentUser.getJSONObject("profile");
+            try {
+
+                if (userProfile.has("facebookId")) {
+                    ivUserProfileView.setProfileId(userProfile.getString("facebookId"));
+
+                } else {
+                    // Show the default, blank user profile picture
+                    ivUserProfileView.setProfileId(null);
+                }
+
+//                if (userProfile.has("name")) {
+//                    userNameView.setText(userProfile.getString("name"));
+//                } else {
+//                    userNameView.setText("");
+//                }
+//
+//                if (userProfile.has("gender")) {
+//                    userGenderView.setText(userProfile.getString("gender"));
+//                } else {
+//                    userGenderView.setText("");
+//                }
+//
+//                if (userProfile.has("email")) {
+//                    userEmailView.setText(userProfile.getString("email"));
+//                } else {
+//                    userEmailView.setText("");
+//                }
+
+            } catch (JSONException e) {
+                Log.d("TAG", "Error parsing saved user data.");
+            }
+        }
     }
 }

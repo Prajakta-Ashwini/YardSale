@@ -82,14 +82,19 @@ public class ListActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.miFlip) {
-            vpAdapter.getFindStuffFragment().replace();
+        // int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case R.id.miFlip:
+                vpAdapter.getFindStuffFragment().replace();
+                return true;
+            case R.id.miLogout:
+                client.logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

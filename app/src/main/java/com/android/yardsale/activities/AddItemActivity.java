@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.android.yardsale.R;
 import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
+import com.android.yardsale.helpers.image.ImageHelper;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
@@ -24,7 +25,6 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -138,17 +138,13 @@ public class AddItemActivity extends ActionBarActivity {
         }
     }
 
-    public byte[] getBytesFromBitmap(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        return stream.toByteArray();
-    }
+
 
 
     public void addItem(View view) {
         Number price = Double.parseDouble(etAddItemPrice.getText().toString());
         String description = String.valueOf(etAddItemDescription.getText());
-        ParseFile imageParseFile = new ParseFile(getBytesFromBitmap(image));
+        ParseFile imageParseFile = new ParseFile(ImageHelper.getBytesFromBitmap(image));
         client.createItem(description, price, imageParseFile, yardSale);
         finish();
     }

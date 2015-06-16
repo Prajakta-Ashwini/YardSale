@@ -15,7 +15,6 @@ import com.android.yardsale.R;
 import com.android.yardsale.adapters.ItemsArrayAdapter;
 import com.android.yardsale.fragments.SaleMapFragment;
 import com.android.yardsale.helpers.GridViewScrollable;
-import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.parse.GetCallback;
@@ -40,7 +39,6 @@ public class YardSaleDetailActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //TODO back button
-        final YardSaleApplication client = new YardSaleApplication();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yard_sale_detail);
         gvItems = (GridViewScrollable) findViewById(R.id.gvItems);

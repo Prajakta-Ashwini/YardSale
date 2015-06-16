@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.yardsale.R;
-import com.android.yardsale.helpers.TouchImageView;
+import com.android.yardsale.helpers.image.TouchImageView;
 import com.android.yardsale.models.Item;
 import com.parse.GetCallback;
 import com.parse.ParseException;

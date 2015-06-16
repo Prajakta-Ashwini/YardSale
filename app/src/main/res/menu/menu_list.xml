@@ -5,17 +5,18 @@
     <item
         android:id="@+id/miSearch"
         android:icon="@drawable/ic_search"
-        app:showAsAction="always"
         android:title="Search"
-        app:actionViewClass="android.support.v7.widget.SearchView">
-    </item>
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/miFlip"
         android:icon="@android:drawable/ic_media_ff"
-        app:showAsAction="always"
         android:title="Flip"
-
-        >
-    </item>
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/miLogout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout"
+        app:showAsAction="always" />
 </menu>
