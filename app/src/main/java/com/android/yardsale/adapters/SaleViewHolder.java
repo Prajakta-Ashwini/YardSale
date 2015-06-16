@@ -3,6 +3,7 @@ package com.android.yardsale.adapters;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ public class SaleViewHolder extends RecyclerView.ViewHolder {
     TextView tvTitle;
     TextView tvAddedBy;
     ImageView ivCoverPic;
+    ImageButton btLike;
     Button btEditSale;
     Button btDeleteSale;
     Button btShareSale;
@@ -24,5 +26,6 @@ public class SaleViewHolder extends RecyclerView.ViewHolder {
         btEditSale = (Button) v.findViewById(R.id.btEditSale);
         btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
         btShareSale = (Button) v.findViewById(R.id.btShareSale);
+        btLike = (ImageButton) v.findViewById(R.id.btLike);
     }
 }

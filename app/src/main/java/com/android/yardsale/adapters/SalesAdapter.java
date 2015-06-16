@@ -48,6 +48,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         else
             Picasso.with(context).load(R.drawable.placeholder).into(saleViewHolder.ivCoverPic);
 
+
         saleViewHolder.btDeleteSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +75,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "share sale!", Toast.LENGTH_SHORT).show();
-                client.shareSale(context,s);
+                client.shareSale(context, s);
             }
         });
 
@@ -86,7 +87,16 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             }
         });
 
+        client.setLikeForSale(sale, saleViewHolder.btLike,false);
+        saleViewHolder.btLike.setOnClickListener(new View.OnClickListener() {
+            YardSale s = salesList.get(position);
 
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "btn_like sale!", Toast.LENGTH_SHORT).show();
+                client.setLikeForSale(s, saleViewHolder.btLike,true);
+            }
+        });
     }
 
     @Override

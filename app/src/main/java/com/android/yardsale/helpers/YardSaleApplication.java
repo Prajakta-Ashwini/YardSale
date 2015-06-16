@@ -15,6 +15,7 @@ import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -132,6 +133,7 @@ public class YardSaleApplication extends Application {
         Intent intent = new Intent(context, ListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putCharSequenceArrayListExtra("sale_list", saleList);
+
         callingActivity.startActivity(intent);
     }
 
@@ -225,12 +227,12 @@ public class YardSaleApplication extends Application {
             public void done(List<YardSale> itemList, ParseException e) {
                 if (e == null) {
                     //String firstItemId = itemList.get(0).getObjectId();
-                    ArrayList<CharSequence> saleList = new ArrayList<>();
+                    final ArrayList<CharSequence> saleList = new ArrayList<>();
+
                     for (YardSale sale : itemList) {
                         saleList.add(sale.getObjectId());
                     }
                     launchListActivity(saleList);
-
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
                 }
@@ -295,7 +297,7 @@ public class YardSaleApplication extends Application {
     }
 
     public void getItemsForYardSale(final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
-        // Define the class we would like to query
+        // Define the class we would btn_like to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.whereEqualTo("yardsale_id", yardSale);
         query.findInBackground(new FindCallback<Item>() {
@@ -542,5 +544,32 @@ public class YardSaleApplication extends Application {
                 Log.d("TAG", "Error parsing saved user data.");
             }
         }
+    }
+
+    public void setLikeForSale(final YardSale sale,final ImageButton btLike, final boolean toggleLike) {
+        sale.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> results, ParseException e) {
+                if (e == null) {
+                    if(toggleLike){
+                        if(!results.contains(ParseUser.getCurrentUser())) {
+                            sale.addLikeForUser(ParseUser.getCurrentUser());
+                            btLike.setSelected(true);
+                        }else {
+                            sale.removeLikeForUser(ParseUser.getCurrentUser());
+                            btLike.setSelected(false);
+                        }
+                    } else {
+                        if(results.contains(ParseUser.getCurrentUser())){
+                            btLike.setSelected(true);
+                        } else {
+                            btLike.setSelected(false);
+                        }
+                    }
+
+                } else {
+                    Log.d("ff",e.toString());
+                }
+            }
+        });
     }
 }
