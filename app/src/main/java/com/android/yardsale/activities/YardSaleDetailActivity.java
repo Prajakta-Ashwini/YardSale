@@ -20,6 +20,7 @@ import com.android.yardsale.models.YardSale;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,13 @@ public class YardSaleDetailActivity extends ActionBarActivity {
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.add(R.id.flMap, SaleMapFragment.newInstance(sale));
                     ft.commit();
+
+                    ParseUser currentUser = ParseUser.getCurrentUser();
+                    ParseUser owner = sale.getSeller();
+                    if (currentUser.getObjectId().equals(owner.getObjectId())) {
+                        btCreateItem.setVisibility(View.VISIBLE);
+                    }
+
                     btCreateItem.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

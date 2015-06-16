@@ -9,19 +9,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.activities.YardSaleDetailActivity;
 import com.android.yardsale.adapters.MyYardSaleAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.login.widget.ProfilePictureView;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListingsFragment extends Fragment {
 
@@ -92,18 +97,12 @@ public class ListingsFragment extends Fragment {
         lvMyYardSales.addHeaderView(header);
         lvMyYardSales.setAdapter(adapter);
 
-
         lvMyYardSales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //TODO launch detailed activity page
-                Intent intent = new Intent(getActivity(), YardSaleDetailActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                //item Object Ids
-                //YardSaleId --> yardsale
-                //TODO figure out how to send this info
-                getActivity().startActivity(intent);
-
+                Toast.makeText(getActivity(), "onItemClick", Toast.LENGTH_SHORT).show();
+                getItemsInThisYS(adapter.getItem(position));
             }
         });
         return view;
@@ -111,5 +110,28 @@ public class ListingsFragment extends Fragment {
 
     public void addYardSale(YardSale row) {
         //TODO figure out how to add this to the listview
+    }
+
+    private ArrayList<CharSequence> getItemsInThisYS(final YardSale yardSale) {
+        final ArrayList<CharSequence> itemIds = new ArrayList<>();
+        ParseQuery<Item> searchQuery = ParseQuery.getQuery(Item.class);
+        searchQuery.whereEqualTo("yardsale_id", yardSale);
+        searchQuery.findInBackground(new FindCallback<Item>() {
+            public void done(List<Item> results, ParseException e) {
+                if (e == null) {
+                    for (Item item : results) {
+                        itemIds.add(item.getObjectId());
+                    }
+                    Intent intent = new Intent(getActivity(), YardSaleDetailActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putCharSequenceArrayListExtra("item_list", itemIds);
+                    intent.putExtra("yardsale", yardSale.getObjectId());
+                    getActivity().startActivity(intent);
+                }
+                else {
+                }
+            }
+        });
+        return itemIds;
     }
 }

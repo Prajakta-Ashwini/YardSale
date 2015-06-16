@@ -6,5 +6,5 @@
         android:drawable="@drawable/likes_blue" />
     <item
         android:state_selected="false"
-        android:drawable="@drawable/f" />
+        android:drawable="@drawable/likes_black" />
 </selector>

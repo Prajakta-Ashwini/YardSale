@@ -12,7 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
-import com.android.yardsale.activities.AddItemActivity;
+import com.android.yardsale.activities.EditYardSaleActivity;
+import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseQueryAdapter;
 import com.squareup.picasso.Picasso;
@@ -24,6 +25,7 @@ import java.util.Date;
 public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
 
     private LayoutInflater inflater;
+    private YardSaleApplication client;
 
     private static class ViewHolder {
         ImageView ivYardSaleCoverPic;
@@ -31,13 +33,15 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
         TextView tvYardSaleLoction;
         TextView tvYardSaleTime;
         Button btnAddItem;
-        Button btnEditItem;
+        Button btnEditYS;
+        Button btnDeleteYS;
     }
 
     public MyYardSaleAdapter(Context context,
                              ParseQueryAdapter.QueryFactory<YardSale> queryFactory, LayoutInflater inflater) {
         super(context, queryFactory);
         this.inflater = inflater;
+        client = new YardSaleApplication((Activity) getContext());
     }
 
     @Override
@@ -52,7 +56,8 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
             viewHolder.tvYardSaleLoction = (TextView) view.findViewById(R.id.tvYardLocation);
             viewHolder.tvYardSaleTime = (TextView) view.findViewById(R.id.tvYardSaleTime);
             viewHolder.btnAddItem = (Button) view.findViewById(R.id.btnAddItem);
-            viewHolder.btnEditItem = (Button) view.findViewById(R.id.btnEditItem);
+            viewHolder.btnEditYS = (Button) view.findViewById(R.id.btnEditYS);
+            viewHolder.btnDeleteYS = (Button) view.findViewById(R.id.btnDeleteYS);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -75,23 +80,35 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
 
         viewHolder.tvYardSaleTime.setText(constructTime(yardSale.getStartTime(), yardSale.getEndTime()));
 
-        viewHolder.btnAddItem.setOnClickListener(new View.OnClickListener() {
+//        viewHolder.btnAddItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), "Adding Item", Toast.LENGTH_LONG).show();
+//                Intent intent = new Intent(getContext(), AddItemActivity.class);
+//                intent.putExtra("yard_sale_id", yardSale.getObjectId());
+//                ((Activity) getContext()).startActivityForResult(intent, 1076);
+//            }
+//        });
+
+        viewHolder.btnEditYS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Adding Item", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getContext(), AddItemActivity.class);
-                intent.putExtra("yard_sale_id", yardSale.getObjectId());
-                ((Activity) getContext()).startActivityForResult(intent, 1076);
+                Toast.makeText(getContext(), "editing a YS", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getContext(), EditYardSaleActivity.class);
+                intent.putExtra("edit_yard_sale_id", yardSale.getObjectId());
+                getContext().startActivity(intent);
+                //TODO reflect the changes in the listview immediately
             }
         });
 
-        viewHolder.btnEditItem.setOnClickListener(new View.OnClickListener() {
+        viewHolder.btnDeleteYS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "edit", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "deleting a YS", Toast.LENGTH_LONG).show();
+                client.deleteSale(yardSale);
+                //TODO remove the item from the listview
             }
         });
-
         return view;
     }
 

@@ -15,6 +15,7 @@ import com.android.yardsale.R;
 import com.android.yardsale.activities.EditItemActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -57,6 +58,14 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
         viewHolder.tvDescription.setText(item.getDescription());
         viewHolder.tvPrice.setText(item.getPrice().toString());
         Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(viewHolder.ivPic);
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        ParseUser owner = item.getYardSale().getSeller();
+        if(currentUser.getObjectId().equals(owner.getObjectId()))
+        {
+            viewHolder.btEditItem.setVisibility(View.VISIBLE);
+            viewHolder.btDeleteItem.setVisibility(View.VISIBLE);
+        }
 
         viewHolder.btDeleteItem.setOnClickListener(new View.OnClickListener() {
             Item item = getItem(position);

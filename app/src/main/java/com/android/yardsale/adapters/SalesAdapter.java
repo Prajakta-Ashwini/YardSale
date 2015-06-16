@@ -1,7 +1,6 @@
 package com.android.yardsale.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
-import com.android.yardsale.activities.EditYardSaleActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
@@ -49,26 +47,28 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             Picasso.with(context).load(R.drawable.placeholder).into(saleViewHolder.ivCoverPic);
 
 
-        saleViewHolder.btDeleteSale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "delete sale!", Toast.LENGTH_SHORT).show();
-                client.deleteSale(sale);
-                salesList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, salesList.size());
-            }
-        });
+//        saleViewHolder.btDeleteSale.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "delete sale!", Toast.LENGTH_SHORT).show();
+//                client.deleteSale(sale);
+//                salesList.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position, salesList.size());
+//            }
+//        });
 
-        saleViewHolder.btEditSale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "edit sale!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, EditYardSaleActivity.class);
-                intent.putExtra("edit_yard_sale_id", sale.getObjectId());
-                context.startActivity(intent);
-            }
-        });
+        //TODO remove the edit and delete button
+
+//        saleViewHolder.btEditSale.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "edit sale!", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(context, EditYardSaleActivity.class);
+//                intent.putExtra("edit_yard_sale_id", sale.getObjectId());
+//                context.startActivity(intent);
+//            }
+//        });
 
         saleViewHolder.btShareSale.setOnClickListener(new View.OnClickListener() {
             YardSale s = salesList.get(position);

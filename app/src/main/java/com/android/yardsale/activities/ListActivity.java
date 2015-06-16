@@ -36,6 +36,7 @@ public class ListActivity extends ActionBarActivity {
         vpPager = (ViewPager) findViewById(R.id.vpPager);
         vpAdapter = new BuySellPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(vpAdapter);
+
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
 
