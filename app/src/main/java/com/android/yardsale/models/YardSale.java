@@ -5,6 +5,7 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import java.util.Date;
@@ -96,5 +97,17 @@ public class YardSale extends ParseObject  {
         return ParseQuery.getQuery(YardSale.class);
     }
 
+    public ParseRelation<ParseUser> getLikesRelation() {
+        return getRelation("user_likes");
+    }
 
+    public void addLikeForUser(ParseUser user) {
+        getLikesRelation().add(user);
+        saveInBackground();
+    }
+
+    public void removeLikeForUser(ParseUser user) {
+        getLikesRelation().remove(user);
+        saveInBackground();
+    }
 }

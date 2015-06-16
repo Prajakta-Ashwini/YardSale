@@ -28,6 +28,17 @@
                 android:transitionName="itemDetail"
                 />
 
+            <ImageButton
+                android:id="@+id/btLike"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/btn_like"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/white" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
