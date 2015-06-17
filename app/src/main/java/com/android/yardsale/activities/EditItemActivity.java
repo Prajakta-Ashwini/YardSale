@@ -148,8 +148,17 @@ public class EditItemActivity extends ActionBarActivity {
     public void editItem(View view) {
         Number price = Double.parseDouble(etEditItemPrice.getText().toString());
         String description = String.valueOf(etEditItemDescription.getText());
-        ParseFile imageParseFile = new ParseFile(getBytesFromBitmap(image));
+        ParseFile imageParseFile;
+        if(image != null)
+            imageParseFile = new ParseFile(getBytesFromBitmap(image));
+        else
+            imageParseFile = item.getParseFile("photo");
         client.updateItem(item.getObjectId(), description, price, imageParseFile, item.getYardSale());
+        Intent data = new Intent();
+        data.putExtra("price", String.valueOf(etEditItemPrice.getText()));
+        data.putExtra("desc", String.valueOf(etEditItemDescription.getText()));
+        data.putExtra("obj_id",item.getObjectId());
+        setResult(RESULT_OK, data);
         finish();
     }
 

@@ -1,20 +1,23 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="true"
-        android:orientation="vertical"
-        tools:context="com.android.yardsale.activities.YardSaleDetailActivity">
+    <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--xmlns:tools="http://schemas.android.com/tools"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fillViewport="true"-->
+        <!--android:orientation="vertical"-->
+        <!--tools:context="com.android.yardsale.activities.YardSaleDetailActivity">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
 
 
             <!--<ListView-->
@@ -37,60 +40,42 @@
             <!--app:column_count="2"-->
             <!--/>-->
 
-            <com.android.yardsale.helpers.GridViewScrollable
-                android:id="@+id/gvItems"
+            <!--<ListView-->
+                <!--android:id="@+id/gvItems"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center"-->
+                <!--android:numColumns="2"-->
+                <!--android:stretchMode="columnWidth"-->
+
+                <!--/>-->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvItems"
+                android:scrollbars="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:numColumns="2"
-                android:stretchMode="columnWidth"
-
-                />
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                />
-
-            <TextView
-                android:id="@+id/tvDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tvDateTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tvAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvDateTime" />
-
-            <TextView
-                android:id="@+id/tvSeller"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/btCreateItem"
-                android:visibility="invisible"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Create Item" />
+                android:layout_height="wrap_content"/>
 
 
-            <FrameLayout
-                android:id="@+id/flMap"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:minHeight="200dp">
+            <!--<Button-->
+                <!--android:id="@+id/btCreateItem"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Create Item" />-->
 
-            </FrameLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_anchor="@id/rvItems"
+        android:id="@+id/btCreateItem"
+        app:backgroundTint="@color/ruby"
+        app:layout_anchorGravity="bottom|right|end" />
 
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
+    <!--</ScrollView>-->
+<!--</LinearLayout>-->

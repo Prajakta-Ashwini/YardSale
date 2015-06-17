@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.yardsale">
+    package="com.android.yardsale" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,10 +22,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".activities.HowItWorksActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -50,7 +50,7 @@
         <activity
             android:name=".activities.YardSaleDetailActivity"
             android:label="@string/title_activity_yard_sale_detail"
-            android:parentActivityName=".activities.ListActivity">
+            android:parentActivityName=".activities.ListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.yardsale.activities.ListActivity" />
@@ -65,31 +65,40 @@
 
         <activity
             android:name=".activities.AddItemActivity"
-            android:label="@string/title_activity_add_item"/>
+            android:label="@string/title_activity_add_item" />
         <activity
             android:name=".activities.ItemDetailActivity"
             android:label="@string/title_activity_item_detail"
-            android:parentActivityName=".activities.YardSaleDetailActivity"/>
+            android:parentActivityName=".activities.YardSaleDetailActivity" />
         <activity
             android:name=".activities.EditYardSaleActivity"
-            android:label="@string/title_activity_edit_yard_sale"/>
+            android:label="@string/title_activity_edit_yard_sale" />
         <activity
             android:name=".activities.EditItemActivity"
-            android:label="@string/title_activity_edit_item"/>
+            android:label="@string/title_activity_edit_item" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1677511912467810"
-            android:exported="true"/>
+            android:exported="true" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name=".activities.YardSaleInfoActivity"
+            android:label="@string/title_activity_yard_sale_info"
+            android:parentActivityName=".activities.YardSaleDetailActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.yardsale.activities.YardSaleDetailActivity" />
+        </activity>
     </application>
 
 </manifest>

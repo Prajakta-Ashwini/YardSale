@@ -1,5 +1,6 @@
 package com.android.yardsale.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -65,6 +66,9 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
         {
             viewHolder.btEditItem.setVisibility(View.VISIBLE);
             viewHolder.btDeleteItem.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.btDeleteItem.setVisibility(View.INVISIBLE);
+            viewHolder.btEditItem.setVisibility(View.INVISIBLE);
         }
 
         viewHolder.btDeleteItem.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +96,7 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EditItemActivity.class);
                 intent.putExtra("item_id", item.getObjectId());
-                getContext().startActivity(intent);
+                ((Activity)getContext()).startActivityForResult(intent,21);
             }
         });
         return convertView;

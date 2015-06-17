@@ -26,5 +26,6 @@
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="time_out">Time Out</string>
     <string name="error_occured">Error Occurred</string>
+    <string name="title_activity_yard_sale_info">YardSaleInfoActivity</string>
 
 </resources>

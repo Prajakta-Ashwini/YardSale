@@ -40,6 +40,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import org.json.JSONException;
@@ -182,7 +183,7 @@ public class YardSaleApplication extends Application {
 //        }
 //    }
 
-    public void createYardSale(String title, String description, Date startTime, Date endTime, String address) {
+    public void createYardSale(final String title, final String description, Date startTime, Date endTime, String address) {
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
         Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
@@ -195,8 +196,20 @@ public class YardSaleApplication extends Application {
         yardSale.setSeller(ParseUser.getCurrentUser());
         yardSale.setStartTime(startTime);
         yardSale.setEndTime(startTime);
-        yardSale.saveInBackground();
-        //TODO populate the listview of the sell and load that view
+        yardSale.saveInBackground(new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    Intent data = new Intent();
+                    data.putExtra("title", String.valueOf(title));
+                    data.putExtra("desc", String.valueOf(description));
+                    ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
+                    ((Activity) context).finish();
+                } else {
+                    Toast.makeText(context, "error while saving item!!!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     public void updateYardSale(String id, final String title, final String description, final Date startTime, final Date endTime, final String address) {
@@ -253,11 +266,23 @@ public class YardSaleApplication extends Application {
     }
 
 
-    public void createItem(String description, Number price, ParseFile photo, YardSale yardSale) {
+    public void createItem(final Context context, final String description, final Number price, ParseFile photo, YardSale yardSale) {
         Item item = new Item(description, price, photo, yardSale);
+        item.saveInBackground(new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    Intent data = new Intent();
+                    data.putExtra("desc", String.valueOf(description));
+                    data.putExtra("price", String.valueOf(price));
+                    ((Activity)context).setResult(((Activity)context).RESULT_OK, data);
+                    ((Activity)context).finish();
+                } else {
+                    Toast.makeText(context, "error while saving item!!!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         if (yardSale.getCoverPic() == null)
             setPicForYardSale(yardSale, photo);
-        item.saveInBackground();
     }
 
     public void updateItem(final String id, final String description, final Number price, final ParseFile photo, final YardSale yardSale) {

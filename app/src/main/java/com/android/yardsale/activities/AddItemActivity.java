@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
@@ -138,15 +139,17 @@ public class AddItemActivity extends ActionBarActivity {
         }
     }
 
-
-
-
     public void addItem(View view) {
         Number price = Double.parseDouble(etAddItemPrice.getText().toString());
         String description = String.valueOf(etAddItemDescription.getText());
+        if(image == null){
+            Toast.makeText(this, "please add image!!!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         ParseFile imageParseFile = new ParseFile(ImageHelper.getBytesFromBitmap(image));
-        client.createItem(description, price, imageParseFile, yardSale);
-        finish();
+        client.createItem(this,description, price, imageParseFile, yardSale);
+
     }
 
     public void onPickPhoto(View view) {
