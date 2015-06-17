@@ -1,6 +1,7 @@
 package com.android.yardsale.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
@@ -42,6 +43,8 @@ public class ListActivity extends ActionBarActivity {
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
+                .getColor(R.color.ruby)));
 
         List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
 

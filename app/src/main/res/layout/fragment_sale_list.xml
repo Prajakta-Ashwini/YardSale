@@ -33,5 +33,6 @@
         android:src="@android:drawable/ic_input_add"
         app:layout_anchor="@id/rvSales"
         android:id="@+id/btCreateSale"
+        app:backgroundTint="@color/ruby"
         app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>

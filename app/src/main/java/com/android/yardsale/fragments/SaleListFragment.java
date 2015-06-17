@@ -57,7 +57,7 @@ public class SaleListFragment extends FindStuffFragment{
                 sale.setDescription(row.getDescription());
                 sale.setAddress(row.getAddress());
                 sale.setCoverPic(row.getCoverPic());
-                sale.setLocation(row.getLocation());
+                //sale.setLocation(row.getLocation());
                 sale.setStartTime(row.getStartTime());
                 sale.setEndTime(row.getEndTime());
                 rAdapter.notifyDataSetChanged();

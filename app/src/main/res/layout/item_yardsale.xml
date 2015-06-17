@@ -62,7 +62,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delete"
-                android:visibility="invisible"
                 android:id="@+id/btDeleteSale"
                 android:layout_below="@+id/tvAddedBy"
                 android:background="@android:color/transparent"
@@ -73,7 +72,6 @@
                 android:layout_height="wrap_content"
                 android:text="Edit"
                 android:id="@+id/btEditSale"
-                android:visibility="invisible"
                 android:layout_alignTop="@+id/btDeleteSale"
                 android:layout_centerHorizontal="true"
                 android:background="@android:color/transparent"/>

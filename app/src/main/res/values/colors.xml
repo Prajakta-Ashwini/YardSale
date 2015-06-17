@@ -2,4 +2,5 @@
 <resources>
     <color name="yellow">#ffbb00</color>
     <color name="white">#00ffffff</color>
+    <color name="ruby">#b50e16</color>
 </resources>
