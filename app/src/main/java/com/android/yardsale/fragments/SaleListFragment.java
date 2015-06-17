@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ import com.android.yardsale.activities.AddYardSaleActivity;
 import com.android.yardsale.adapters.SalesAdapter;
 import com.android.yardsale.helpers.CircularReveal;
 import com.android.yardsale.models.YardSale;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,19 @@ public class SaleListFragment extends FindStuffFragment{
     }
 
     public void addYardSale(YardSale row) {
-        yardSalesList.add(row);
+        boolean added =false;
+        if(yardSalesList.size() > 0) {
+            for(int i=0; i< yardSalesList.size(); i++) {
+                if (yardSalesList.get(i).getCreatedAt().before(row.getCreatedAt())) {
+                    yardSalesList.add(i, row);
+                    added= true;
+                    break;
+                }
+            }
+        }
+        if(!added)
+            yardSalesList.add(row);
+
         rAdapter.notifyDataSetChanged();
     }
 
@@ -83,6 +95,8 @@ public class SaleListFragment extends FindStuffFragment{
         rvSales.setAdapter(rAdapter);
 
         btCreateSale = (FloatingActionButton) v.findViewById(R.id.btCreateSale);
+        btCreateSale.attachToRecyclerView(rvSales);
+        btCreateSale.setColorNormal(getResources().getColor(R.color.ruby));
         v.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override

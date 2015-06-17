@@ -30,6 +30,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.ProfilePictureView;
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
@@ -37,6 +38,7 @@ import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -193,6 +195,11 @@ public class YardSaleApplication extends Application {
         yardSale.setTitle(title);
         yardSale.setDescription(description);
         yardSale.setAddress(address);
+        if(yardSale.getAddress()!=null){
+            LatLng lat = GeopointUtils.getLocationFromAddress(context, yardSale.getAddress());
+            if(lat!=null)
+                yardSale.setLocation(new ParseGeoPoint(lat.latitude,lat.longitude));
+        }
         yardSale.setSeller(ParseUser.getCurrentUser());
         yardSale.setStartTime(startTime);
         yardSale.setEndTime(startTime);
@@ -223,6 +230,11 @@ public class YardSaleApplication extends Application {
                     yardSale.setStartTime(startTime);
                     yardSale.setEndTime(endTime);
                     yardSale.setAddress(address);
+                    if(yardSale.getAddress()!=null){
+                        LatLng lat = GeopointUtils.getLocationFromAddress(context, yardSale.getAddress());
+                        if(lat!=null)
+                            yardSale.setLocation(new ParseGeoPoint(lat.latitude,lat.longitude));
+                    }
                     yardSale.saveInBackground();
                 }
             }
@@ -232,14 +244,25 @@ public class YardSaleApplication extends Application {
     public void getYardSales() {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.include("seller");
+        query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<YardSale>() {
             public void done(List<YardSale> itemList, ParseException e) {
                 if (e == null) {
                     //String firstItemId = itemList.get(0).getObjectId();
                     final ArrayList<CharSequence> saleList = new ArrayList<>();
+                    if(itemList != null) {
+                        for (int i = itemList.size() - 1; i >= 0; i--) {
+                            YardSale sale = itemList.get(i);
+                            if(sale.getLocation() == null){
+                                LatLng lat = GeopointUtils.getLocationFromAddress(context, sale.getAddress());
+                                if(lat!=null) {
+                                    sale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
+                                    sale.saveInBackground();
+                                }
+                            }
+                            saleList.add(sale.getObjectId());
+                        }
 
-                    for (YardSale sale : itemList) {
-                        saleList.add(sale.getObjectId());
                     }
                     launchListActivity(saleList);
                 } else {

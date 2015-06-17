@@ -2,7 +2,6 @@ package com.android.yardsale.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +15,7 @@ import com.android.yardsale.R;
 import com.android.yardsale.adapters.ItemsAdapter;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
+import com.melnykov.fab.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -44,6 +44,8 @@ public class YardSaleDetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_yard_sale_detail);
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         btCreateItem = (FloatingActionButton) findViewById(R.id.btCreateItem);
+        btCreateItem.attachToRecyclerView(rvItems);
+        btCreateItem.setColorNormal(getResources().getColor(R.color.ruby));
 //        tvTitle = (TextView) findViewById(R.id.tvTitle);
 //        tvDescription = (TextView) findViewById(R.id.tvDescription);
 //        tvAddress = (TextView) findViewById(R.id.tvAddress);

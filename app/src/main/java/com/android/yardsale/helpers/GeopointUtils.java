@@ -36,8 +36,8 @@ public class GeopointUtils {
             location.getLatitude();
             location.getLongitude();
 
-            p1 = new LatLng((int) (location.getLatitude()),
-                    (int) (location.getLongitude()));
+            p1 = new LatLng(location.getLatitude(),
+                    location.getLongitude());
 
             return p1;
         } catch (IOException e) {

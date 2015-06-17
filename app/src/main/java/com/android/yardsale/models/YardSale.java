@@ -27,6 +27,12 @@ public class YardSale extends ParseObject  {
         setAddress(address);
         setLocation(location);
         setSeller(seller);
+        setCreatedAt(new Date());
+    }
+
+    public Date getCreatedAt() { return getDate("createdAtDate"); }
+    public void setCreatedAt(Date endTime) {
+        put("createdAtDate",endTime);
     }
 
     public void setTitle(String title) {
