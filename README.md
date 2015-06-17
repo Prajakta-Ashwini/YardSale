@@ -52,7 +52,7 @@ Sprint 2
 --------
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+![YardSale Sprint 2 Demo](sprint2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
