@@ -56,7 +56,8 @@ public class SaleListFragment extends FindStuffFragment{
                 sale.setTitle(row.getTitle());
                 sale.setDescription(row.getDescription());
                 sale.setAddress(row.getAddress());
-                sale.setCoverPic(row.getCoverPic());
+                if(row.getCoverPic()!=null)
+                    sale.setCoverPic(row.getCoverPic());
                 //sale.setLocation(row.getLocation());
                 sale.setStartTime(row.getStartTime());
                 sale.setEndTime(row.getEndTime());
