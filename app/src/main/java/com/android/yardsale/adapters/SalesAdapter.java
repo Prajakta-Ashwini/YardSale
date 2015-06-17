@@ -14,6 +14,7 @@ import com.android.yardsale.activities.EditYardSaleActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -40,7 +41,15 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         final YardSale sale = salesList.get(position);
         saleViewHolder.tvTitle.setText(sale.getTitle());
         try {
-            saleViewHolder.tvAddedBy.setText(sale.getSeller().fetchIfNeeded().getUsername());
+            String user = sale.getSeller().fetchIfNeeded().getUsername() ;
+            saleViewHolder.tvAddedBy.setText("Added by " + user);
+            if(sale.getSeller() == ParseUser.getCurrentUser()){
+                saleViewHolder.btDeleteSale.setVisibility(View.VISIBLE);
+                saleViewHolder.btEditSale.setVisibility(View.VISIBLE);
+            }else{
+                saleViewHolder.btDeleteSale.setVisibility(View.INVISIBLE);
+                saleViewHolder.btEditSale.setVisibility(View.INVISIBLE);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
