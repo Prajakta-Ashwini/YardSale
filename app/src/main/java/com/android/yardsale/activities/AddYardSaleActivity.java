@@ -1,5 +1,6 @@
 package com.android.yardsale.activities;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -76,11 +77,11 @@ public class AddYardSaleActivity extends ActionBarActivity {
                 datePicker("end_date");
             }
         });
-
+        final Activity a = this;
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.createYardSale(String.valueOf(etAddYSTitle.getText()),
+                client.createYardSale(a, String.valueOf(etAddYSTitle.getText()),
                         String.valueOf(etAddYSDescription.getText()),
                         start,
                         end,

@@ -183,7 +183,7 @@ public class YardSaleApplication extends Application {
 //        }
 //    }
 
-    public void createYardSale(final String title, final String description, Date startTime, Date endTime, String address) {
+    public void createYardSale(final Context context, final String title, final String description, Date startTime, Date endTime, String address) {
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
         Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
