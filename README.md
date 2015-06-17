@@ -48,6 +48,22 @@ Here's a walkthrough of implemented user stories:
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
+## Sprint 2
+
+* [x] User can register and login to the app
+* [x] User can view the yard sale in list view and map view
+* [x] User can view details for items in the yard sale
+* [x] Users can search for a specific item 
+* [x] User can host a yard sale, including the following items
+	* [x] pictures of the sale items
+	* [x] time, date, location
+	* [x] title, description 
+* [x] User can edit yard sale if it belongs to him - add/remove pictures, change time, date, location, title, description
+* [x] User can delete a yard sale if it belongs to him
+* [x] User can edit/delete items in a yard sale if it belongs to him - description, price
+* [x] Users can share the yard sale information to friends
+* [x] Save/bookmark a yard sale to visit in future
+
 Sprint 2
 --------
 Here's a walkthrough of implemented user stories:
