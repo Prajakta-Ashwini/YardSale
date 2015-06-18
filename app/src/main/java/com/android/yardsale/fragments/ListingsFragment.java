@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.android.yardsale.R;
 import com.android.yardsale.activities.YardSaleDetailActivity;
 import com.android.yardsale.adapters.MyYardSaleAdapter;
+import com.android.yardsale.adapters.SalesAdapter;
+import com.android.yardsale.adapters.ThingsAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
@@ -49,7 +51,7 @@ public class ListingsFragment extends Fragment {
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        adapter = new MyYardSaleAdapter(getActivity(), factory, inflater);
+        adapter = new ThingsAdapter(getActivity(), factory, inflater);
         client = new YardSaleApplication(getActivity());
         currentUser = ParseUser.getCurrentUser();
     }

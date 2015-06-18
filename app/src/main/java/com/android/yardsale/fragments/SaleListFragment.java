@@ -22,12 +22,12 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SaleListFragment extends FindStuffFragment{
+public class SaleListFragment extends FindStuffFragment {
     public static List<YardSale> yardSalesList = new ArrayList<>();
     //private ProgressBar progressBarFooter;
     private FloatingActionButton btCreateSale;
     private RecyclerView rvSales;
-    private RecyclerView.Adapter rAdapter;
+    private static RecyclerView.Adapter rAdapter;
 
 
     public SaleListFragment() {
@@ -37,21 +37,22 @@ public class SaleListFragment extends FindStuffFragment{
     public static SaleListFragment newInstance() {
         SaleListFragment fragmentDemo = new SaleListFragment();
         yardSalesList = new ArrayList<>();
+
         return fragmentDemo;
     }
 
     public void addYardSale(YardSale row) {
-        boolean added =false;
-        if(yardSalesList.size() > 0) {
-            for(int i=0; i< yardSalesList.size(); i++) {
+        boolean added = false;
+        if (yardSalesList.size() > 0) {
+            for (int i = 0; i < yardSalesList.size(); i++) {
                 if (yardSalesList.get(i).getCreatedAt().before(row.getCreatedAt())) {
                     yardSalesList.add(i, row);
-                    added= true;
+                    added = true;
                     break;
                 }
             }
         }
-        if(!added)
+        if (!added)
             yardSalesList.add(row);
 
         rAdapter.notifyDataSetChanged();
@@ -63,12 +64,12 @@ public class SaleListFragment extends FindStuffFragment{
     }
 
     public void editYardSale(YardSale row) {
-        for(YardSale sale:yardSalesList){
-            if(sale.getObjectId() == row.getObjectId()){
+        for (YardSale sale : yardSalesList) {
+            if (sale.getObjectId() == row.getObjectId()) {
                 sale.setTitle(row.getTitle());
                 sale.setDescription(row.getDescription());
                 sale.setAddress(row.getAddress());
-                if(row.getCoverPic()!=null)
+                if (row.getCoverPic() != null)
                     sale.setCoverPic(row.getCoverPic());
                 //sale.setLocation(row.getLocation());
                 sale.setStartTime(row.getStartTime());
@@ -91,7 +92,7 @@ public class SaleListFragment extends FindStuffFragment{
         rvSales.setLayoutManager(llm);
         rvSales.setItemAnimator(new DefaultItemAnimator());
 
-        rAdapter = new SalesAdapter(getActivity(),yardSalesList);
+        //rAdapter = new SalesAdapter(getActivity(), yardSalesList);
         rvSales.setAdapter(rAdapter);
 
         btCreateSale = (FloatingActionButton) v.findViewById(R.id.btCreateSale);
@@ -120,6 +121,7 @@ public class SaleListFragment extends FindStuffFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        rAdapter = new SalesAdapter(getActivity(), yardSalesList);
 
     }
 

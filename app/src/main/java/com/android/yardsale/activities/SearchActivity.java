@@ -24,8 +24,7 @@ public class SearchActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        //TODO customize the toolbar later
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //TODO customize the toolbar later - back button
 
         items = new ArrayList<>();
         adapter = new ItemsArrayAdapter(this, items);

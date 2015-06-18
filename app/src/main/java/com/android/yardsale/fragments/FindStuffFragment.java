@@ -10,6 +10,9 @@ import android.widget.FrameLayout;
 import com.android.yardsale.R;
 import com.android.yardsale.listeners.ReplaceListener;
 import com.android.yardsale.models.YardSale;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,9 @@ public class FindStuffFragment extends Fragment implements
     private static int currentFragment;
     private static List<YardSale> yardSaleList;
 
+    public FindStuffFragment() {
+    }
+
     public static FindStuffFragment newInstance(int position) {
         FindStuffFragment wp = new FindStuffFragment();
         Bundle args = new Bundle();
@@ -27,6 +33,16 @@ public class FindStuffFragment extends Fragment implements
         wp.setArguments(args);
         currentFragment = 1;
         yardSaleList = new ArrayList<>();
+        ParseQuery<YardSale> get = YardSale.getQuery();
+        get.findInBackground(new FindCallback<YardSale>() {
+            @Override
+            public void done(List<YardSale> list, ParseException e) {
+                if(e == null){
+                    yardSaleList = list;
+                }
+
+            }
+        });
         return wp;
     }
 
@@ -40,10 +56,15 @@ public class FindStuffFragment extends Fragment implements
             Bundle args = new Bundle();
             args.putInt("position", 1);
             iif.setArguments(args);
-            getChildFragmentManager().beginTransaction()
-                                    .add(R.id.flPage, iif, "initialTag")
-                                    .addToBackStack(null)
-                                    .commit();
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.flPage,iif,"initialTag")
+                    .addToBackStack(null)
+                    .commit();
+//            getChildFragmentManager().beginTransaction()
+//                    .add(R.id.flPage, iif, "initialTag")
+//                    .addToBackStack(null)
+//                    .commit();
 
             currentFragment = 1;
         }
@@ -55,41 +76,40 @@ public class FindStuffFragment extends Fragment implements
     @Override
     public void onReplace(Bundle args) {
 
-        if(currentFragment == 1) {
+        if (currentFragment == 1) {
             SaleMapFragment iif;
             if (getChildFragmentManager().findFragmentByTag("afterTag") == null) {
                 iif = SaleMapFragment.newInstance(new YardSale());
                 args.putInt("position", 2);
                 iif.setArguments(args);
-            }else{
+            } else {
                 iif = (SaleMapFragment) getChildFragmentManager().findFragmentByTag("afterTag");
                 iif.getArguments().putInt("position", 2);
             }
 
             getChildFragmentManager().beginTransaction().replace(R.id.flPage, iif, "afterTag")
-                                                        .addToBackStack("afterTag")
-                                                        .commit();
+                    .addToBackStack("afterTag")
+                    .commit();
 
             currentFragment = 2;
-        }else{
+        } else {
             SaleListFragment iif;
             if (getChildFragmentManager().findFragmentByTag("initialTag") == null) {
                 iif = SaleListFragment.newInstance();
                 iif.setArguments(args);
-            }else{
+            } else {
                 iif = (SaleListFragment) getChildFragmentManager().findFragmentByTag("initialTag");
                 iif.getArguments().putAll(args);
             }
 
             getChildFragmentManager().beginTransaction()
-                                    .replace(R.id.flPage, iif, "initialTag")
-                                    .addToBackStack("initialTag")
-                                    .commit();
+                    .replace(R.id.flPage, iif, "initialTag")
+                    .addToBackStack("initialTag")
+                    .commit();
             currentFragment = 1;
 
         }
     }
-
 
 
     public void addYardSale(YardSale row) {
@@ -125,7 +145,7 @@ public class FindStuffFragment extends Fragment implements
         }
     }
 
-    public List<YardSale> getYardSaleList(){
+    public List<YardSale> getYardSaleList() {
         return yardSaleList;
     }
 

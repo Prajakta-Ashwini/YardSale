@@ -1,22 +1,32 @@
 package com.android.yardsale.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.BuySellPagerAdapter;
+import com.android.yardsale.fragments.ListingsFragment;
+import com.android.yardsale.fragments.SalesFragment;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
-import com.astuetz.PagerSlidingTabStrip;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -29,7 +39,12 @@ public class ListActivity extends ActionBarActivity {
     private ViewPager vpPager;
     private BuySellPagerAdapter vpAdapter;
     private YardSaleApplication client;
-
+    private DrawerLayout mDrawerLayout;
+    private NavigationView nvDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private SalesFragment salesFragment;
+    private ListingsFragment listingsFragment;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,31 +52,49 @@ public class ListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_list);
         client = new YardSaleApplication(this);
 
-        vpPager = (ViewPager) findViewById(R.id.vpPager);
-        vpAdapter = new BuySellPagerAdapter(getSupportFragmentManager());
-        vpPager.setAdapter(vpAdapter);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabStrip.setViewPager(vpPager);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        final ActionBar ab = getSupportActionBar();
+        assert ab != null;
+        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        // Find our drawer view
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        // Setup drawer view
+        setupDrawerContent(nvDrawer);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        salesFragment = SalesFragment.newInstance();
+        listingsFragment = ListingsFragment.newInstance();
+//   PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+//        tabStrip.setViewPager(vpPager);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
                 .getColor(R.color.ruby)));
 
-        List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
+       //defaultDrawerItem(0);
 
-        //TODO make this generic
-        for (CharSequence objId : yardSalesObjList) {
-            //client.queryYardSale(String objectId)
-            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-            //       query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
-            query.getInBackground((String) objId, new GetCallback<YardSale>() {
-                @Override
-                public void done(YardSale yardSale, com.parse.ParseException e) {
-                    if (e == null) {
-                        vpAdapter.addNewRow(yardSale, BuySellPagerAdapter.Type.BUYER);
-                    }
-                }
-            });
-        }
+//        List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
+//
+//        //TODO make this generic
+//        for (CharSequence objId : yardSalesObjList) {
+//            //client.queryYardSale(String objectId)
+//            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+//            //       query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
+//            query.getInBackground((String) objId, new GetCallback<YardSale>() {
+//                @Override
+//                public void done(YardSale yardSale, com.parse.ParseException e) {
+//                    if (e == null) {
+//                        saleListFragment.addYardSale(yardSale);
+//                    }
+//                }
+//            });
+//        }
     }
 
     @Override
@@ -70,7 +103,7 @@ public class ListActivity extends ActionBarActivity {
             String title = data.getStringExtra("title");
             String desc = data.getStringExtra("desc");
             String objId = data.getStringExtra("obj_id");
-            if(objId == null) {
+            if (objId == null) {
                 ParseQuery<YardSale> query = YardSale.getQuery();
                 query.whereEqualTo("title", title);
                 query.whereEqualTo("description", desc);
@@ -83,7 +116,7 @@ public class ListActivity extends ActionBarActivity {
                         }
                     }
                 });
-            }else{
+            } else {
                 ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
 // Specify the object id
                 query.getInBackground(objId, new GetCallback<YardSale>() {
@@ -126,18 +159,37 @@ public class ListActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // int id = item.getItemId();
+        //TODO clean this up
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
             case R.id.miFlip:
                 vpAdapter.getFindStuffFragment().replace();
                 return true;
-            case R.id.miLogout:
-                client.logout();
+            case R.id.home:
+                if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -155,5 +207,63 @@ public class ListActivity extends ActionBarActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+
+    public void defaultDrawerItem(int position) {
+        if (position == 0) {
+           // FindStuffFragment fragment = FindStuffFragment.newInstance(0);
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.flContent, salesFragment);
+            transaction.commit();
+
+
+            //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+            // Highlight the selected item, update the title, and close the drawer
+            mDrawerLayout.closeDrawers();
+        }
+    }
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        // Create a new fragment and specify the planet to show based on
+        // position
+        Fragment fragment = null;
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_first_fragment:
+                fragment = salesFragment;
+                break;
+            case R.id.nav_second_fragment:
+                fragment = listingsFragment;
+                break;
+            case R.id.nav_third_fragment:
+                //TODO create yard sale
+                // fragmentClass = ThirdFragment.class;
+                break;
+            default:
+                fragment = salesFragment;
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        // Highlight the selected item, update the title, and close the drawer
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        mDrawerLayout.closeDrawers();
     }
 }

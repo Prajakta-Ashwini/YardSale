@@ -14,9 +14,4 @@
         android:icon="@android:drawable/ic_media_ff"
         android:title="Flip"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/miLogout"
-        android:icon="@drawable/ic_logout"
-        android:title="Logout"
-        app:showAsAction="always" />
 </menu>
