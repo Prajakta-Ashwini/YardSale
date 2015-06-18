@@ -29,7 +29,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
-import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -195,10 +194,10 @@ public class YardSaleApplication extends Application {
         yardSale.setTitle(title);
         yardSale.setDescription(description);
         yardSale.setAddress(address);
-        if(yardSale.getAddress()!=null){
+        if (yardSale.getAddress() != null) {
             LatLng lat = GeopointUtils.getLocationFromAddress(context, yardSale.getAddress());
-            if(lat!=null)
-                yardSale.setLocation(new ParseGeoPoint(lat.latitude,lat.longitude));
+            if (lat != null)
+                yardSale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
         }
         yardSale.setSeller(ParseUser.getCurrentUser());
         yardSale.setStartTime(startTime);
@@ -230,10 +229,10 @@ public class YardSaleApplication extends Application {
                     yardSale.setStartTime(startTime);
                     yardSale.setEndTime(endTime);
                     yardSale.setAddress(address);
-                    if(yardSale.getAddress()!=null){
+                    if (yardSale.getAddress() != null) {
                         LatLng lat = GeopointUtils.getLocationFromAddress(context, yardSale.getAddress());
-                        if(lat!=null)
-                            yardSale.setLocation(new ParseGeoPoint(lat.latitude,lat.longitude));
+                        if (lat != null)
+                            yardSale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
                     }
                     yardSale.saveInBackground();
                 }
@@ -250,12 +249,12 @@ public class YardSaleApplication extends Application {
                 if (e == null) {
                     //String firstItemId = itemList.get(0).getObjectId();
                     final ArrayList<CharSequence> saleList = new ArrayList<>();
-                    if(itemList != null) {
+                    if (itemList != null) {
                         for (int i = itemList.size() - 1; i >= 0; i--) {
                             YardSale sale = itemList.get(i);
-                            if(sale.getLocation() == null){
+                            if (sale.getLocation() == null) {
                                 LatLng lat = GeopointUtils.getLocationFromAddress(context, sale.getAddress());
-                                if(lat!=null) {
+                                if (lat != null) {
                                     sale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
                                     sale.saveInBackground();
                                 }
@@ -297,8 +296,8 @@ public class YardSaleApplication extends Application {
                     Intent data = new Intent();
                     data.putExtra("desc", String.valueOf(description));
                     data.putExtra("price", String.valueOf(price));
-                    ((Activity)context).setResult(((Activity)context).RESULT_OK, data);
-                    ((Activity)context).finish();
+                    ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
+                    ((Activity) context).finish();
                 } else {
                     Toast.makeText(context, "error while saving item!!!", Toast.LENGTH_SHORT).show();
                 }
@@ -502,7 +501,7 @@ public class YardSaleApplication extends Application {
         return ParseUser.getCurrentUser();
     }
 
-    public void makeMeRequest(final ProfilePictureView ivUserProfileView) {
+    public void makeMeRequest() {
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
@@ -511,19 +510,16 @@ public class YardSaleApplication extends Application {
                             JSONObject userProfile = new JSONObject();
                             System.out.println("response: " + jsonObject.toString());
                             try {
-                                userProfile.put("facebookId", jsonObject.getLong("id"));
-                                userProfile.put("name", jsonObject.getString("name"));
 
-                                if (jsonObject.getString("email") != null)
-                                    userProfile.put("email", jsonObject.getString("email"));
-
+                                String url = "https://graph.facebook.com/" + jsonObject.getLong("id") + "/picture?type=medium";
                                 // Save the user profile info in a user property
                                 ParseUser currentUser = ParseUser.getCurrentUser();
                                 currentUser.put("profile", userProfile);
+                                currentUser.setUsername(jsonObject.getString("name"));
+                                currentUser.setEmail(jsonObject.getString("email"));
+                                currentUser.put("profile_pic_url", url);
                                 currentUser.saveInBackground();
 
-                                // Show the user info
-                                updateViewsWithProfileInfo(ivUserProfileView);
                             } catch (JSONException e) {
                                 Log.d("TAG",
                                         "Error parsing returned user data. " + e);
@@ -552,58 +548,20 @@ public class YardSaleApplication extends Application {
         request.executeAsync();
     }
 
-    public void updateViewsWithProfileInfo(ProfilePictureView ivUserProfileView) {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser.has("profile")) {
-            JSONObject userProfile = currentUser.getJSONObject("profile");
-            try {
-
-                if (userProfile.has("facebookId")) {
-                    ivUserProfileView.setProfileId(userProfile.getString("facebookId"));
-
-                } else {
-                    // Show the default, blank user profile picture
-                    ivUserProfileView.setProfileId(null);
-                }
-
-//                if (userProfile.has("name")) {
-//                    userNameView.setText(userProfile.getString("name"));
-//                } else {
-//                    userNameView.setText("");
-//                }
-//
-//                if (userProfile.has("gender")) {
-//                    userGenderView.setText(userProfile.getString("gender"));
-//                } else {
-//                    userGenderView.setText("");
-//                }
-//
-//                if (userProfile.has("email")) {
-//                    userEmailView.setText(userProfile.getString("email"));
-//                } else {
-//                    userEmailView.setText("");
-//                }
-
-            } catch (JSONException e) {
-                Log.d("TAG", "Error parsing saved user data.");
-            }
-        }
-    }
-
-    public void setLikeForSale(final YardSale sale,final ImageButton btLike, final boolean toggleLike) {
+    public void setLikeForSale(final YardSale sale, final ImageButton btLike, final boolean toggleLike) {
         sale.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> results, ParseException e) {
                 if (e == null) {
-                    if(toggleLike){
-                        if(!results.contains(ParseUser.getCurrentUser())) {
+                    if (toggleLike) {
+                        if (!results.contains(ParseUser.getCurrentUser())) {
                             sale.addLikeForUser(ParseUser.getCurrentUser());
                             btLike.setSelected(true);
-                        }else {
+                        } else {
                             sale.removeLikeForUser(ParseUser.getCurrentUser());
                             btLike.setSelected(false);
                         }
                     } else {
-                        if(results.contains(ParseUser.getCurrentUser())){
+                        if (results.contains(ParseUser.getCurrentUser())) {
                             btLike.setSelected(true);
                         } else {
                             btLike.setSelected(false);
@@ -611,7 +569,7 @@ public class YardSaleApplication extends Application {
                     }
 
                 } else {
-                    Log.d("ff",e.toString());
+                    Log.d("ff", e.toString());
                 }
             }
         });

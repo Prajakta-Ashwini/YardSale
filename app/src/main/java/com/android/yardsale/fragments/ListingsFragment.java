@@ -18,7 +18,6 @@ import com.android.yardsale.adapters.MyYardSaleAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
-import com.facebook.login.widget.ProfilePictureView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -33,7 +32,6 @@ public class ListingsFragment extends Fragment {
     private MyYardSaleAdapter adapter;
     private YardSaleApplication client;
     private ParseUser currentUser;
-    private ProfilePictureView userProfilePicture;
 
     public ListingsFragment() {
         super();
@@ -89,10 +87,12 @@ public class ListingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.listing_fragment_list, container, false);
 
         View header = inflater.inflate(R.layout.header_profile, null);
-        userProfilePicture = (ProfilePictureView) header.findViewById(R.id.userProfilePicture);
         if ((currentUser != null) && currentUser.isAuthenticated()) {
-            client.makeMeRequest(userProfilePicture);
+            client.makeMeRequest();
         }
+
+        //TODO update the views now by getting the parse user object
+
         ListView lvMyYardSales = (ListView) view.findViewById(R.id.lvMyYardSales);
         lvMyYardSales.addHeaderView(header);
         lvMyYardSales.setAdapter(adapter);
@@ -127,8 +127,7 @@ public class ListingsFragment extends Fragment {
                     intent.putCharSequenceArrayListExtra("item_list", itemIds);
                     intent.putExtra("yardsale", yardSale.getObjectId());
                     getActivity().startActivity(intent);
-                }
-                else {
+                } else {
                 }
             }
         });
