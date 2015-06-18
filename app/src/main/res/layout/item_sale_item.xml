@@ -54,7 +54,7 @@
         android:layout_below="@+id/tvPrice"
         android:id="@+id/btDeleteItem"
         android:background="@android:color/transparent"
-
+        android:visibility="invisible"
         />
 
         <Button
@@ -63,9 +63,10 @@
             android:text="Edit"
             android:id="@+id/btEditItem"
             android:background="@android:color/transparent"
-            android:layout_alignTop="@+id/btDeleteSale"
+            android:layout_alignTop="@+id/btDeleteItem"
             android:layout_below="@+id/tvPrice"
             android:layout_centerHorizontal="true"
+            android:visibility="invisible"
             />
         </RelativeLayout>
 

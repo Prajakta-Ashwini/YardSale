@@ -41,6 +41,8 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/white" />
 
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,6 +69,7 @@
                 android:id="@+id/btDeleteSale"
                 android:layout_below="@+id/tvAddedBy"
                 android:background="@android:color/transparent"
+                android:visibility="invisible"
                 />
 
             <Button
@@ -76,7 +79,8 @@
                 android:id="@+id/btEditSale"
                 android:layout_alignTop="@+id/btDeleteSale"
                 android:layout_centerHorizontal="true"
-                android:background="@android:color/transparent"/>
+                android:background="@android:color/transparent"
+                android:visibility="invisible"/>
 
             <Button
                 android:layout_width="wrap_content"

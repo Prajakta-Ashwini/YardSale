@@ -29,7 +29,6 @@ public class SaleListFragment extends FindStuffFragment{
     private RecyclerView rvSales;
     private RecyclerView.Adapter rAdapter;
 
-
     public SaleListFragment() {
         super();
     }
@@ -122,6 +121,6 @@ public class SaleListFragment extends FindStuffFragment{
         super.onCreate(savedInstanceState);
 
     }
-
-
 }
+
+

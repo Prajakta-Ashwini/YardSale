@@ -117,7 +117,7 @@ public class YardSaleApplication extends Application {
                 if (user != null) {
                     // Hooray! The user is logged in.
                     Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                    getYardSales();
+                    getYardSales(false);
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
                     Toast.makeText(context, "Login failed :(", Toast.LENGTH_LONG).show();
@@ -152,12 +152,12 @@ public class YardSaleApplication extends Application {
 //                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.COVER_PIC);
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
-                    getYardSales();
+                    getYardSales(false);
                 } else {
                     Log.d("DEBUG", "User logged in through Facebook!");
 //                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.PROFILE_PIC);
 //                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.COVER_PIC);
-                    getYardSales();
+                    getYardSales(false);
                 }
             }
         });
@@ -240,9 +240,13 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void getYardSales() {
+    public void getYardSales(boolean getAllSales) {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.include("seller");
+        if(!getAllSales){
+            //get only sales that dont belong to me
+            query.whereNotEqualTo("seller",getCurrentUser());
+        }
         query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<YardSale>() {
             public void done(List<YardSale> itemList, ParseException e) {
