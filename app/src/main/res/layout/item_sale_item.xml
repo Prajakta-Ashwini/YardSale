@@ -11,6 +11,8 @@
         android:layout_margin="10dp"
         card_view:cardElevation="5dp"
         card_view:cardCornerRadius="3dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:id="@+id/cvSales">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -52,7 +54,7 @@
         android:layout_below="@+id/tvPrice"
         android:id="@+id/btDeleteItem"
         android:background="@android:color/transparent"
-
+        android:visibility="invisible"
         />
 
         <Button
@@ -61,9 +63,10 @@
             android:text="Edit"
             android:id="@+id/btEditItem"
             android:background="@android:color/transparent"
-            android:layout_alignTop="@+id/btDeleteSale"
+            android:layout_alignTop="@+id/btDeleteItem"
             android:layout_below="@+id/tvPrice"
             android:layout_centerHorizontal="true"
+            android:visibility="invisible"
             />
         </RelativeLayout>
 

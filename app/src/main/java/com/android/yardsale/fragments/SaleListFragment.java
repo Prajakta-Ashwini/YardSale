@@ -29,7 +29,6 @@ public class SaleListFragment extends FindStuffFragment {
     private RecyclerView rvSales;
     private static RecyclerView.Adapter rAdapter;
 
-
     public SaleListFragment() {
         super();
     }
@@ -124,6 +123,6 @@ public class SaleListFragment extends FindStuffFragment {
         rAdapter = new SalesAdapter(getActivity(), yardSalesList);
 
     }
-
-
 }
+
+

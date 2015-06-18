@@ -13,7 +13,7 @@ public class SaleViewHolder extends RecyclerView.ViewHolder {
     TextView tvTitle;
     TextView tvAddedBy;
     ImageView ivCoverPic;
-    ImageButton btLike;
+    public ImageButton btLike;
     Button btEditSale;
     Button btDeleteSale;
     Button btShareSale;
