@@ -3,6 +3,7 @@ package com.android.yardsale.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -35,7 +36,6 @@ import com.android.yardsale.models.YardSale;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
@@ -87,56 +87,7 @@ public class ListActivity extends ActionBarActivity {
                 .getColor(R.color.ruby)));
 
         defaultDrawerItem(0);
-
-        //Header of the drawer
-        headerOfTheDrawer();
-    }
-
-
-    private View headerOfTheDrawer() {
-        View view = LayoutInflater.from(this).inflate(R.layout.nav_header, null);
-        ImageView ivUserProfilePic = (ImageView) view.findViewById(R.id.ivUserProfilePic);
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        String url;
-        if (currentUser.get("profile_pic") == null) {
-            url = String.valueOf(currentUser.get("profile_pic_url"));
-            if (String.valueOf(currentUser.get("profile_pic_url")) == null) {
-                Picasso.with(this).load(R.drawable.com_facebook_profile_picture_blank_square)
-                        .transform(new CircleTransformation())
-                        .into(ivUserProfilePic);
-
-            } else {
-                loadImage(this, url, ivUserProfilePic);
-            }
-        } else {
-            url = ((ParseFile) currentUser.get("profile_pic")).getUrl();
-            loadImage(this, url, ivUserProfilePic);
-        }
-        Picasso.with(this)
-                .load(url)
-                .transform(new CircleTransformation())
-                .into(ivUserProfilePic);
-
-        TextView tvUserName = (TextView) view.findViewById(R.id.tvUserName);
-        tvUserName.setText(currentUser.getUsername());
-
-        TextView tvWishList = (TextView) view.findViewById(R.id.tvWishList);
-        tvWishList.setClickable(true);
-
-        tvWishList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getParent(), "Wishlist clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-        return view;
-    }
-
-    private void loadImage(Context context, String url, ImageView ivUserProfilePic) {
-        Picasso.with(context)
-                .load(url)
-                .transform(new CircleTransformation())
-                .into(ivUserProfilePic);
+        nvDrawer.addHeaderView(getHeaderForNavDrawer());
     }
 
     @Override
@@ -288,5 +239,53 @@ public class ListActivity extends ActionBarActivity {
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawerLayout.closeDrawers();
+    }
+
+    private View getHeaderForNavDrawer() {
+        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+        View convertView = inflater.inflate(R.layout.nav_header, null);
+
+        ImageView ivUserProfilePic = (ImageView) convertView.findViewById(R.id.ivUserProfilePic);
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser.getParseFile("profile_pic") == null) {
+            if (currentUser.getString("profile_pic_url") == null) {
+                Picasso.with(this)
+                        .load(R.drawable.com_facebook_profile_picture_blank_square)
+                        .transform(new CircleTransformation())
+                        .into(ivUserProfilePic);
+            } else {
+                Picasso.with(this)
+                        .load(currentUser.getString("profile_pic_url"))
+                        .transform(new CircleTransformation())
+                        .into(ivUserProfilePic);
+            }
+        } else {
+            Picasso.with(this)
+                    .load(currentUser.getParseFile("profile_pic").getUrl())
+                    .transform(new CircleTransformation())
+                    .into(ivUserProfilePic);
+        }
+
+        TextView tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
+        tvUserName.setTextColor(Color.DKGRAY);
+        tvUserName.setText(currentUser.getUsername());
+
+        TextView tvWishList = (TextView) convertView.findViewById(R.id.tvWishList);
+        tvWishList.setClickable(true);
+
+        tvWishList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getBaseContext(), "Wishlist clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return convertView;
+    }
+
+    private void loadImage(Context context, String url, ImageView ivUserProfilePic) {
+        Picasso.with(context)
+                .load(url)
+                .transform(new CircleTransformation())
+                .into(ivUserProfilePic);
     }
 }

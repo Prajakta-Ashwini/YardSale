@@ -148,8 +148,7 @@ public class YardSaleApplication extends Application {
                 if (user == null) {
                     Log.d("DEBUG", "Uh oh. The user cancelled the Facebook login.");
                 } else if (user.isNew()) {
-//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.PROFILE_PIC);
-//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.COVER_PIC);
+                    makeMeRequest();
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
                     getYardSales(false);
@@ -157,6 +156,7 @@ public class YardSaleApplication extends Application {
                     Log.d("DEBUG", "User logged in through Facebook!");
 //                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.PROFILE_PIC);
 //                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.COVER_PIC);
+                    makeMeRequest();
                     getYardSales(false);
                 }
             }
@@ -515,7 +515,7 @@ public class YardSaleApplication extends Application {
                             System.out.println("response: " + jsonObject.toString());
                             try {
 
-                                String url = "https://graph.facebook.com/" + jsonObject.getLong("id") + "/picture?type=medium";
+                                String url = "https://graph.facebook.com/" + jsonObject.getLong("id") + "/picture?type=large";
                                 // Save the user profile info in a user property
                                 ParseUser currentUser = ParseUser.getCurrentUser();
                                 currentUser.put("profile", userProfile);

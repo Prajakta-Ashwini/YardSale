@@ -17,6 +17,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
+            android:paddingBottom="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/com_facebook_profile_picture_blank_square" />
 
@@ -25,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ivUserProfilePic"
-            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:textSize="18sp"
             android:text="User name"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@android:color/white" />
@@ -36,13 +38,14 @@
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:layout_below="@id/userPersonalSection"
+        android:paddingTop="10dp"
         android:layout_centerVertical="true"
-        android:background="#000000" />
+        android:background="#757575" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_below="@id/line1"
-        android:layout_height="80dp">
+        android:layout_height="40dp">
 
         <TextView
             android:id="@+id/tvWishList"
@@ -53,20 +56,13 @@
             android:background="@drawable/btn_like"
             android:clickable="true" />
 
-        <View
-            android:id="@+id/line2"
-            android:layout_width="fill_parent"
-            android:layout_height="1dip"
-            android:layout_centerHorizontal="true"
-            android:background="#000" />
-
         <TextView
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/tvWishList"
             android:layout_marginEnd="75dp"
-            android:background="@drawable/ic_setting_dark" />
+            android:background="@drawable/ic_setting_light" />
     </RelativeLayout>
 
 </RelativeLayout>
