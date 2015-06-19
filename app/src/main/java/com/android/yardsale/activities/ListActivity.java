@@ -1,5 +1,6 @@
 package com.android.yardsale.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
@@ -10,34 +11,38 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
-import com.android.yardsale.adapters.BuySellPagerAdapter;
 import com.android.yardsale.fragments.ListingsFragment;
+import com.android.yardsale.fragments.MyFavoritesFragment;
 import com.android.yardsale.fragments.SalesFragment;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.helpers.image.CircleTransformation;
 import com.android.yardsale.models.YardSale;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ListActivity extends ActionBarActivity {
-
-    private ViewPager vpPager;
-    private BuySellPagerAdapter vpAdapter;
     private YardSaleApplication client;
     private DrawerLayout mDrawerLayout;
     private NavigationView nvDrawer;
@@ -48,8 +53,10 @@ public class ListActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
         client = new YardSaleApplication(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -59,7 +66,7 @@ public class ListActivity extends ActionBarActivity {
 
         final ActionBar ab = getSupportActionBar();
         assert ab != null;
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+        ab.setHomeAsUpIndicator(R.drawable.ic_profile);
         ab.setDisplayHomeAsUpEnabled(true);
 
         // Find our drawer view
@@ -67,34 +74,69 @@ public class ListActivity extends ActionBarActivity {
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout,
+                toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         salesFragment = SalesFragment.newInstance();
         listingsFragment = ListingsFragment.newInstance();
-//   PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-//        tabStrip.setViewPager(vpPager);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
                 .getColor(R.color.ruby)));
 
-       //defaultDrawerItem(0);
+        defaultDrawerItem(0);
 
-//        List<CharSequence> yardSalesObjList = getIntent().getCharSequenceArrayListExtra("sale_list");
-//
-//        //TODO make this generic
-//        for (CharSequence objId : yardSalesObjList) {
-//            //client.queryYardSale(String objectId)
-//            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-//            //       query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK); // or CACHE_ONLY
-//            query.getInBackground((String) objId, new GetCallback<YardSale>() {
-//                @Override
-//                public void done(YardSale yardSale, com.parse.ParseException e) {
-//                    if (e == null) {
-//                        saleListFragment.addYardSale(yardSale);
-//                    }
-//                }
-//            });
-//        }
+        //Header of the drawer
+        headerOfTheDrawer();
+    }
+
+
+    private View headerOfTheDrawer() {
+        View view = LayoutInflater.from(this).inflate(R.layout.nav_header, null);
+        ImageView ivUserProfilePic = (ImageView) view.findViewById(R.id.ivUserProfilePic);
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        String url;
+        if (currentUser.get("profile_pic") == null) {
+            url = String.valueOf(currentUser.get("profile_pic_url"));
+            if (String.valueOf(currentUser.get("profile_pic_url")) == null) {
+                Picasso.with(this).load(R.drawable.com_facebook_profile_picture_blank_square)
+                        .transform(new CircleTransformation())
+                        .into(ivUserProfilePic);
+
+            } else {
+                loadImage(this, url, ivUserProfilePic);
+            }
+        } else {
+            url = ((ParseFile) currentUser.get("profile_pic")).getUrl();
+            loadImage(this, url, ivUserProfilePic);
+        }
+        Picasso.with(this)
+                .load(url)
+                .transform(new CircleTransformation())
+                .into(ivUserProfilePic);
+
+        TextView tvUserName = (TextView) view.findViewById(R.id.tvUserName);
+        tvUserName.setText(currentUser.getUsername());
+
+        TextView tvWishList = (TextView) view.findViewById(R.id.tvWishList);
+        tvWishList.setClickable(true);
+
+        tvWishList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getParent(), "Wishlist clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return view;
+    }
+
+    private void loadImage(Context context, String url, ImageView ivUserProfilePic) {
+        Picasso.with(context)
+                .load(url)
+                .transform(new CircleTransformation())
+                .into(ivUserProfilePic);
     }
 
     @Override
@@ -112,7 +154,7 @@ public class ListActivity extends ActionBarActivity {
                     @Override
                     public void done(List<YardSale> yardSale, ParseException e) {
                         if (e == null) {
-                            vpAdapter.getFindStuffFragment().addYardSale(yardSale.get(0));
+                            listingsFragment.addYardSale(yardSale.get(0));
                         }
                     }
                 });
@@ -124,7 +166,7 @@ public class ListActivity extends ActionBarActivity {
                         if (e == null) {
 //                            vpAdapter.getFindStuffFragment().removeYardSale(item);
 //                            vpAdapter.getFindStuffFragment().addYardSale(item);
-                            vpAdapter.getFindStuffFragment().editYardSale(item);
+                            listingsFragment.editYardSale(item);
                         } else {
                             // something went wrong
                         }
@@ -164,13 +206,14 @@ public class ListActivity extends ActionBarActivity {
             case R.id.action_settings:
                 return true;
             case R.id.miFlip:
-                vpAdapter.getFindStuffFragment().replace();
+                //TODO the flip to mapview
+                //vpAdapter.getFindStuffFragment().replace();
                 return true;
             case R.id.home:
-                if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
-                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    mDrawerLayout.closeDrawer(GravityCompat.END);
                 } else {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
+                    mDrawerLayout.openDrawer(GravityCompat.END);
                 }
                 return true;
             default:
@@ -192,23 +235,6 @@ public class ListActivity extends ActionBarActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (vpPager.getCurrentItem() == 1) {
-                vpPager.setCurrentItem(0);
-                return true;
-            }
-        }
-        if (vpPager.getCurrentItem() == 0) {
-            FragmentManager childFm = vpAdapter.getFindStuffFragment().getChildFragmentManager();
-            if (childFm.getBackStackEntryCount() > 0) {
-                childFm.popBackStack();
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -222,14 +248,12 @@ public class ListActivity extends ActionBarActivity {
 
     public void defaultDrawerItem(int position) {
         if (position == 0) {
-           // FindStuffFragment fragment = FindStuffFragment.newInstance(0);
+            // FindStuffFragment fragment = FindStuffFragment.newInstance(0);
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.flContent, salesFragment);
             transaction.commit();
-
-
             //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
             // Highlight the selected item, update the title, and close the drawer
@@ -240,7 +264,7 @@ public class ListActivity extends ActionBarActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the planet to show based on
         // position
-        Fragment fragment = null;
+        Fragment fragment;
 
         switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
@@ -250,8 +274,7 @@ public class ListActivity extends ActionBarActivity {
                 fragment = listingsFragment;
                 break;
             case R.id.nav_third_fragment:
-                //TODO create yard sale
-                // fragmentClass = ThirdFragment.class;
+                fragment = MyFavoritesFragment.newInstance();
                 break;
             default:
                 fragment = salesFragment;

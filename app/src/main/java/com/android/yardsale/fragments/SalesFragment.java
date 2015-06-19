@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ThingsAdapter;
-import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -32,7 +30,7 @@ public class SalesFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private ThingsAdapter adapter;
     public  List<YardSale> yardSales = new ArrayList<>();
-    private YardSaleApplication client;
+
 
     public SalesFragment() {
         super();
@@ -46,17 +44,6 @@ public class SalesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         yardSales = new ArrayList<>();
-
-        ParseQuery<YardSale> get = YardSale.getQuery();
-       // get.whereNotEqualTo("seller", ParseUser.getCurrentUser());
-        get.findInBackground(new FindCallback<YardSale>() {
-            @Override
-            public void done(List<YardSale> list, ParseException e) {
-                yardSales = list;
-            }
-        });
-
-
     }
 
     @Nullable

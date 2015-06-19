@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -48,8 +47,6 @@ public class AddYardSaleActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_yard_sale);
-
-        setupActionBar();
         client = new YardSaleApplication(this);
 
 
@@ -204,11 +201,6 @@ public class AddYardSaleActivity extends ActionBarActivity {
                 Log.d("Debug: on timeset", end.toString());
             }
         }
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }
 

@@ -1,17 +1,72 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
-    android:background="?attr/colorPrimaryDark"
-    android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:orientation="vertical"
-    android:gravity="bottom">
+    android:layout_height="200dp"
+    android:gravity="top"
+    android:orientation="vertical">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/userPersonalSection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Header"
-        android:textColor="@android:color/white"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:layout_height="120dp"
+        android:gravity="top">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/ivUserProfilePic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivUserProfilePic"
+            android:layout_marginTop="30dp"
+            android:text="User name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/userPersonalSection"
+        android:layout_centerVertical="true"
+        android:background="#000000" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_below="@id/line1"
+        android:layout_height="80dp">
+
+        <TextView
+            android:id="@+id/tvWishList"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_like"
+            android:clickable="true" />
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:layout_centerHorizontal="true"
+            android:background="#000" />
+
+        <TextView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/tvWishList"
+            android:layout_marginEnd="75dp"
+            android:background="@drawable/ic_setting_dark" />
+    </RelativeLayout>
+
+</RelativeLayout>

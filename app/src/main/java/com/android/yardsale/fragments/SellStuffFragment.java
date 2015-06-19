@@ -64,11 +64,11 @@ public class SellStuffFragment extends Fragment {
     }
 
     public void addYardSale(YardSale row) {
-        ListingsFragment fragment;
-        if (getChildFragmentManager().findFragmentByTag("sellTag") != null) {
-            fragment = (ListingsFragment) getChildFragmentManager().findFragmentByTag("sellTag");
-            fragment.addYardSale(row);
-        }
+//        ListingsFragment fragment;
+//        if (getChildFragmentManager().findFragmentByTag("sellTag") != null) {
+//            fragment = (ListingsFragment) getChildFragmentManager().findFragmentByTag("sellTag");
+//            fragment.addYardSale(row);
+//        }
     }
 
 }

@@ -26,12 +26,19 @@ import java.util.List;
 
 public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 
-    private ParseQueryAdapter<YardSale> parseAdapter;
+    public ParseQueryAdapter<YardSale> parseAdapter;
     private ViewGroup parseParent;
-    private ThingsAdapter thingsAdapter = this;
+    public ThingsAdapter thingsAdapter = this;
     private YardSaleApplication client;
+    private YardSale yardSale;
+    private ImageView ivCoverPic;
+    private ImageButton btLike;
+    private Button btShareSale;
+    private Button btDeleteSale;
+    private Button btEditSale;
+    private Context myContext;
 
-    public ThingsAdapter(Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
+    public ThingsAdapter(final Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
 
         parseParent = parentIn;
         client = new YardSaleApplication();
@@ -44,14 +51,15 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 }
                 super.getItemView(sale, v, parent);
 
-                final YardSale yardSale = sale;
+                myContext = context;
+                yardSale = sale;
                 TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
                 TextView tvAddedBy = (TextView) v.findViewById(R.id.tvAddedBy);
-                Button btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
-                Button btEditSale = (Button) v.findViewById(R.id.btEditSale);
-                Button btShareSale = (Button) v.findViewById(R.id.btShareSale);
-                final ImageButton btLike = (ImageButton) v.findViewById(R.id.btLike);
-                ImageView ivCoverPic = (ImageView) v.findViewById(R.id.ivCoverPic);
+                btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
+                btEditSale = (Button) v.findViewById(R.id.btEditSale);
+                btShareSale = (Button) v.findViewById(R.id.btShareSale);
+                btLike = (ImageButton) v.findViewById(R.id.btLike);
+                ivCoverPic = (ImageView) v.findViewById(R.id.ivCoverPic);
 
 
                 tvTitle.setText(sale.getTitle());
@@ -74,64 +82,9 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 else
                     Picasso.with(getContext()).load(R.drawable.placeholder).into(ivCoverPic);
 
-
-                btDeleteSale.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getContext(), "delete sale!", Toast.LENGTH_SHORT).show();
-                        client.deleteSale(yardSale);
-                        thingsAdapter.parseAdapter.loadObjects();
-//                        salesList.remove(position);
-//                        notifyItemRemoved(position);
-//                        notifyItemRangeChanged(position, salesList.size());
-                    }
-                });
-
                 //TODO remove the edit and delete button
 
-                btEditSale.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getContext(), "edit sale!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getContext(), EditYardSaleActivity.class);
-                        intent.putExtra("edit_yard_sale_id", yardSale.getObjectId());
-                        ((Activity) getContext()).startActivityForResult(intent, 20);
-                        thingsAdapter.parseAdapter.loadObjects();
-                    }
-                });
 
-                btShareSale.setOnClickListener(new View.OnClickListener() {
-                    // YardSale s = salesList.get(position);
-
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getContext(), "share sale!", Toast.LENGTH_SHORT).show();
-                        client.shareSale(getContext(), yardSale);
-                        thingsAdapter.parseAdapter.loadObjects();
-                        thingsAdapter.notifyDataSetChanged();
-                    }
-                });
-
-                ivCoverPic.setOnClickListener(new View.OnClickListener() {
-                    // YardSale s = salesList.get(position);
-
-                    @Override
-                    public void onClick(View v) {
-                        //client.getItemsForYardSale(getContext(), s, ivCoverPic);
-                    }
-                });
-
-                client.setLikeForSale(yardSale, btLike, false);
-                btLike.setOnClickListener(new View.OnClickListener() {
-                    //   YardSale s = salesList.get(position);
-
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getContext(), "btn_like sale!", Toast.LENGTH_SHORT).show();
-                        client.setLikeForSale(yardSale, btLike, true);
-                        thingsAdapter.notifyDataSetChanged();
-                    }
-                });
                 return v;
             }
         };
@@ -149,8 +102,73 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(SaleViewHolder holder, int position) {
+    public void onBindViewHolder(SaleViewHolder holder, final int position) {
         parseAdapter.getView(position, holder.itemView, parseParent);
+        client.setLikeForSale(yardSale, btLike, false);
+        btLike.setOnClickListener(new View.OnClickListener() {
+            YardSale s = parseAdapter.getItem(position);
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(myContext, "btn_like sale!", Toast.LENGTH_SHORT).show();
+                client.setLikeForSale(s, btLike, true);
+                parseAdapter.loadObjects();
+                thingsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        btShareSale.setOnClickListener(new View.OnClickListener() {
+            YardSale s = parseAdapter.getItem(position);
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(myContext, "share sale!", Toast.LENGTH_SHORT).show();
+                client.shareSale(myContext, s);
+                parseAdapter.loadObjects();
+                thingsAdapter.notifyDataSetChanged();
+            }
+        });
+
+        ivCoverPic.setOnClickListener(new View.OnClickListener() {
+            // YardSale s = salesList.get(position);
+
+            @Override
+            public void onClick(View v) {
+                YardSale s = parseAdapter.getItem(position);
+                client.getItemsForYardSale(myContext, s, ivCoverPic);
+            }
+        });
+
+        btDeleteSale.setOnClickListener(new View.OnClickListener() {
+            YardSale s = parseAdapter.getItem(position);
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(myContext, "delete sale!", Toast.LENGTH_SHORT).show();
+                client.deleteSale(s);
+                thingsAdapter.parseAdapter.loadObjects();
+                thingsAdapter.notifyDataSetChanged();
+//                        salesList.remove(position);
+//                        notifyItemRemoved(position);
+//                        notifyItemRangeChanged(position, salesList.size());
+            }
+        });
+
+        btEditSale.setOnClickListener(new View.OnClickListener() {
+            YardSale s = parseAdapter.getItem(position);
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(myContext, "edit sale!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(myContext, EditYardSaleActivity.class);
+                intent.putExtra("edit_yard_sale_id", s.getObjectId());
+                editYardSale(s);
+                ((Activity) myContext).startActivityForResult(intent, 20);
+                parseAdapter.loadObjects();
+                thingsAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     @Override
@@ -167,5 +185,39 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         public void onLoaded(List<YardSale> objects, Exception e) {
             thingsAdapter.notifyDataSetChanged();
         }
+    }
+
+    public void editYardSale(YardSale row) {
+        for (int i = 0; i < parseAdapter.getCount(); i++) {
+            if (yardSale.getObjectId().equals(row.getObjectId())) {
+                yardSale.setTitle(row.getTitle());
+                yardSale.setDescription(row.getDescription());
+                yardSale.setAddress(row.getAddress());
+                if (row.getCoverPic() != null)
+                    yardSale.setCoverPic(row.getCoverPic());
+                //sale.setLocation(row.getLocation());
+                yardSale.setStartTime(row.getStartTime());
+                yardSale.setEndTime(row.getEndTime());
+                parseAdapter.loadObjects();
+                thingsAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
+    }
+
+    public void addYardSale(YardSale addedYardSale) {
+        boolean added = false;
+        if (parseAdapter.getCount() > 0) {
+            added = true;
+            parseAdapter.notifyDataSetChanged();
+        }
+        if (!added)
+            parseAdapter.notifyDataSetChanged();
+
+        parseAdapter.notifyDataSetChanged();
+    }
+
+    public void removeYardSale(YardSale row) {
+        parseAdapter.notifyDataSetChanged();
     }
 }

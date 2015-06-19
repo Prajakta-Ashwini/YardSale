@@ -5,6 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_profile</item>
     </style>
 
 </resources>
