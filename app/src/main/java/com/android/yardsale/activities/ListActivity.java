@@ -1,6 +1,5 @@
 package com.android.yardsale.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -277,15 +276,9 @@ public class ListActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getBaseContext(), "Wishlist clicked", Toast.LENGTH_SHORT).show();
+
             }
         });
         return convertView;
-    }
-
-    private void loadImage(Context context, String url, ImageView ivUserProfilePic) {
-        Picasso.with(context)
-                .load(url)
-                .transform(new CircleTransformation())
-                .into(ivUserProfilePic);
     }
 }
