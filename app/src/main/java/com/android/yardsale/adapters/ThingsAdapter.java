@@ -81,10 +81,6 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                     Picasso.with(getContext()).load(sale.getCoverPic().getUrl()).placeholder(R.drawable.placeholder).into(ivCoverPic);
                 else
                     Picasso.with(getContext()).load(R.drawable.placeholder).into(ivCoverPic);
-
-                //TODO remove the edit and delete button
-
-
                 return v;
             }
         };
@@ -130,8 +126,6 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         });
 
         ivCoverPic.setOnClickListener(new View.OnClickListener() {
-            // YardSale s = salesList.get(position);
-
             @Override
             public void onClick(View v) {
                 YardSale s = parseAdapter.getItem(position);
@@ -148,9 +142,6 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 client.deleteSale(s);
                 thingsAdapter.parseAdapter.loadObjects();
                 thingsAdapter.notifyDataSetChanged();
-//                        salesList.remove(position);
-//                        notifyItemRemoved(position);
-//                        notifyItemRangeChanged(position, salesList.size());
             }
         });
 
