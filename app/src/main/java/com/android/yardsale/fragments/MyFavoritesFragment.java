@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ThingsAdapter;
 import com.android.yardsale.models.YardSale;
+import com.melnykov.fab.FloatingActionButton;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -50,6 +51,9 @@ public class MyFavoritesFragment extends Fragment {
         rvSales.setHasFixedSize(true);
         rvSales.setLayoutManager(mLayoutManager);
         rvSales.setItemAnimator(new DefaultItemAnimator());
+
+        FloatingActionButton btCreateSale = (FloatingActionButton) view.findViewById(R.id.btCreateSale);
+        btCreateSale.setVisibility(View.INVISIBLE);
 
         ParseQueryAdapter.QueryFactory<YardSale> factory = getYardSaleQueryFactory();
         adapter = new ThingsAdapter(getActivity(), factory, container);

@@ -35,6 +35,7 @@ import com.android.yardsale.models.YardSale;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
@@ -72,6 +73,7 @@ public class ListActivity extends ActionBarActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
+        ParseInstallation.getCurrentInstallation().saveInBackground();
 
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
