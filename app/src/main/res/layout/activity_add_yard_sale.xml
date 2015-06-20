@@ -29,31 +29,31 @@
 
         <EditText
             android:id="@+id/etYSTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
             android:hint="Title" />
 
 
         <EditText
             android:id="@+id/etYSDescription"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/etYSTitle"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="15dp"
             android:layout_below="@+id/etYSTitle"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
             android:hint="Description" />
 
 
         <EditText
             android:id="@+id/etYSAddress"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/etYSDescription"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
             android:hint="Address" />
 
     </RelativeLayout>
@@ -79,7 +79,8 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Start" />
+            android:text="Start"
+            android:textColor="@color/ruby" />
 
         <View
             android:layout_width="1dp"
@@ -93,7 +94,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:onClick="selectEndDate"
-            android:text="End" />
+            android:text="End"
+            android:textColor="@color/ruby" />
     </LinearLayout>
 
     <View

@@ -12,7 +12,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:adjustViewBounds="true"
-        android:src="@drawable/login_background_1"
+        android:src="@drawable/background_image_1"
         android:scaleType="fitXY"
         android:layout_alignParentTop="true" />
 

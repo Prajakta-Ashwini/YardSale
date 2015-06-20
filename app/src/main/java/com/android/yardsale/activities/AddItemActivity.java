@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +20,8 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
-import com.android.yardsale.helpers.image.ImageHelper;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.helpers.image.ImageHelper;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -28,6 +30,7 @@ import com.parse.ParseUser;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 
 public class AddItemActivity extends ActionBarActivity {
 
@@ -68,6 +71,37 @@ public class AddItemActivity extends ActionBarActivity {
         ivItemPreview = (ImageView) findViewById(R.id.ivItemPreview);
         etAddItemDescription = (EditText) findViewById(R.id.etItemDescription);
         etAddItemPrice = (EditText) findViewById(R.id.etItemPrice);
+        etAddItemPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String current = "";
+                if (!s.toString().equals(current)) {
+                    etAddItemPrice.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[$,.]", "");
+
+                    double parsed = Double.parseDouble(cleanString);
+                    String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
+
+                    current = formatted;
+                    etAddItemPrice.setText(formatted);
+                    etAddItemPrice.setSelection(formatted.length());
+
+                    etAddItemPrice.addTextChangedListener(this);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -142,13 +176,13 @@ public class AddItemActivity extends ActionBarActivity {
     public void addItem(View view) {
         Number price = Double.parseDouble(etAddItemPrice.getText().toString());
         String description = String.valueOf(etAddItemDescription.getText());
-        if(image == null){
+        if (image == null) {
             Toast.makeText(this, "please add image!!!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         ParseFile imageParseFile = new ParseFile(ImageHelper.getBytesFromBitmap(image));
-        client.createItem(this,description, price, imageParseFile, yardSale);
+        client.createItem(this, description, price, imageParseFile, yardSale);
 
     }
 

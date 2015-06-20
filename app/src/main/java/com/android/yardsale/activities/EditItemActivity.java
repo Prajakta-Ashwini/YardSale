@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 
 public class EditItemActivity extends ActionBarActivity {
 
@@ -45,7 +48,6 @@ public class EditItemActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         client = new YardSaleApplication(this);
 
@@ -64,6 +66,36 @@ public class EditItemActivity extends ActionBarActivity {
         Picasso.with(this).load(item.getPhoto().getUrl()).into(ivItemPreview);
         etEditItemDescription.setText(item.getDescription());
         etEditItemPrice.setText(item.getPrice().toString());
+        etEditItemPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String current = "";
+                if (!s.toString().equals(current)) {
+                    etEditItemPrice.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[$,.]", "");
+
+                    double parsed = Double.parseDouble(cleanString);
+                    String formatted = NumberFormat.getCurrencyInstance().format((parsed / 100));
+
+                    current = formatted;
+                    etEditItemPrice.setText(formatted);
+                    etEditItemPrice.setSelection(formatted.length());
+
+                    etEditItemPrice.addTextChangedListener(this);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override

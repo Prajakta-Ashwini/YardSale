@@ -44,10 +44,10 @@ public class LoginActivity extends ActionBarActivity {
 //        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
         Picasso.with(this)
-                .load(R.drawable.login_background_1)
+                .load(R.drawable.background_image_1)
                 .fit().centerInside()
                 .skipMemoryCache()
-                .transform(new BlurTransformation(getBaseContext(), 10))
+                .transform(new BlurTransformation(getBaseContext(), 25))
                 .into((ImageView) findViewById(R.id.background_image));
 
         client = new YardSaleApplication(this);
@@ -89,7 +89,8 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void onBack(View view) {
-        finish();
+        Intent intent = new Intent(this, HowItWorksActivity.class);
+        startActivity(intent);
     }
 
     public void onSignUp(View view) {

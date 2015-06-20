@@ -9,24 +9,30 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/btnSignUp">
+        android:layout_alignParentBottom="true">
     </android.support.v4.view.ViewPager>
 
     <Button
         android:id="@+id/btnSignUp"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:text="Sign Up"
-        android:layout_alignTop="@+id/btnLogin" />
+        android:background="@drawable/button_border"
+        android:textAllCaps="false"
+        android:layout_alignTop="@+id/btnLogin"
+        android:textColor="@color/image_foreground_color"
+        android:textStyle="bold"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:background="@drawable/button_border"
+        android:textAllCaps="false"
+        android:textColor="@color/image_foreground_color"
+        android:textStyle="bold"
         android:layout_alignParentRight="true"
         android:text="Login"
         android:layout_alignParentBottom="true" />

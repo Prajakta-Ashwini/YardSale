@@ -7,15 +7,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.CustomPagerAdapter;
 
 public class HowItWorksActivity extends ActionBarActivity {
 
-    private Button btnSignUp;
-    private Button btnLogin;
+    private TextView btnSignUp;
+    private TextView btnLogin;
     private CustomPagerAdapter adapter;
 
     @Override
@@ -23,8 +23,8 @@ public class HowItWorksActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_how_it_works);
 
-        btnSignUp = (Button) findViewById(R.id.btnSignUp);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnSignUp = (TextView) findViewById(R.id.btnSignUp);
+        btnLogin = (TextView) findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

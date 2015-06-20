@@ -77,7 +77,8 @@ public class SignUpActivity extends ActionBarActivity {
     }
 
     public void onBack(View view) {
-        finish();
+        Intent intent = new Intent(this, HowItWorksActivity.class);
+        startActivity(intent);
     }
 
     public void onLogin(View view) {
