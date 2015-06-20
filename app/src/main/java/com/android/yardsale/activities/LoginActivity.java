@@ -7,9 +7,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.android.yardsale.R;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.helpers.image.BlurTransformation;
+import com.squareup.picasso.Picasso;
 
 
 public class LoginActivity extends ActionBarActivity {
@@ -17,6 +20,7 @@ public class LoginActivity extends ActionBarActivity {
     private EditText etEmail;
     private EditText etPassword;
     private Button btnLogin;
+    private ImageView backgroundImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,13 @@ public class LoginActivity extends ActionBarActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        backgroundImage = (ImageView) findViewById(R.id.background_image);
+
+        Picasso.with(getBaseContext())
+                .load(getResources().getDrawable(R.id.login_background))
+                .transform(new BlurTransformation(getBaseContext(), 25F))
+                .into(backgroundImage);
+
         final YardSaleApplication client = new YardSaleApplication(this);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

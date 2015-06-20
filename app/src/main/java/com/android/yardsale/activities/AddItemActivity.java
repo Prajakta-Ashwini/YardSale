@@ -66,8 +66,8 @@ public class AddItemActivity extends ActionBarActivity {
         client = new YardSaleApplication(this);
 
         ivItemPreview = (ImageView) findViewById(R.id.ivItemPreview);
-        etAddItemDescription = (EditText) findViewById(R.id.etAddItemDescription);
-        etAddItemPrice = (EditText) findViewById(R.id.etAddItemPrice);
+        etAddItemDescription = (EditText) findViewById(R.id.etItemDescription);
+        etAddItemPrice = (EditText) findViewById(R.id.etItemPrice);
     }
 
     @Override
@@ -165,4 +165,7 @@ public class AddItemActivity extends ActionBarActivity {
     }
 
 
+    public void onClose(View view) {
+        finish();
+    }
 }

@@ -276,6 +276,15 @@ public class ListActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getBaseContext(), "Wishlist clicked", Toast.LENGTH_SHORT).show();
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.flContent, MyFavoritesFragment.newInstance());
+                transaction.commit();
+                //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+                // Highlight the selected item, update the title, and close the drawer
+                mDrawerLayout.closeDrawers();
 
             }
         });

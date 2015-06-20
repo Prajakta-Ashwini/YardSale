@@ -49,17 +49,17 @@ public class EditYardSaleActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_yard_sale);
+        setContentView(R.layout.activity_add_yard_sale);
 
         client = new YardSaleApplication(this);
         String yardSaleId = getIntent().getStringExtra("edit_yard_sale_id");
 
         //TODO allow edit only If its my yard sale - ACL in parse
-        etEditYSTitle = (EditText) findViewById(R.id.etEditTitle);
-        etEditYSDescription = (EditText) findViewById(R.id.etEditYSDescription);
-        etEditYSAddress = (EditText) findViewById(R.id.etEditYSAddress);
-        tvEditYSStart = (TextView) findViewById(R.id.tvEditYSStart);
-        tvEditYSEnd = (TextView) findViewById(R.id.tvEditYSEnd);
+        etEditYSTitle = (EditText) findViewById(R.id.etYSTitle);
+        etEditYSDescription = (EditText) findViewById(R.id.etYSDescription);
+        etEditYSAddress = (EditText) findViewById(R.id.etYSAddress);
+        tvEditYSStart = (TextView) findViewById(R.id.tvYSStart);
+        tvEditYSEnd = (TextView) findViewById(R.id.tvYSEnd);
 
         ParseQuery getQuery = YardSale.getQuery();
         try {

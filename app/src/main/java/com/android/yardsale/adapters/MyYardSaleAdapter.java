@@ -55,7 +55,7 @@ public class MyYardSaleAdapter extends ParseQueryAdapter<YardSale> {
             viewHolder.tvYardSaleDescription = (TextView) view.findViewById(R.id.tvYardSaleDescription);
             viewHolder.tvYardSaleLoction = (TextView) view.findViewById(R.id.tvYardLocation);
             viewHolder.tvYardSaleTime = (TextView) view.findViewById(R.id.tvYardSaleTime);
-            viewHolder.btnAddItem = (Button) view.findViewById(R.id.btnAddItem);
+            //viewHolder.btnAddItem = (Button) view.findViewById(R.id.btnAddItem);
             viewHolder.btnEditYS = (Button) view.findViewById(R.id.btnEditYS);
             viewHolder.btnDeleteYS = (Button) view.findViewById(R.id.btnDeleteYS);
             view.setTag(viewHolder);

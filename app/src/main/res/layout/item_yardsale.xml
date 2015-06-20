@@ -1,96 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v7.widget.CardView
+        android:id="@+id/cvSales"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        card_view:cardElevation="5dp"
-        card_view:cardCornerRadius="3dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:id="@+id/cvSales">
+        card_view:cardCornerRadius="3dp"
+        card_view:cardElevation="5dp">
         <!--<card_view:contentPadding="@dimen/activity_horizontal_margin"-->
         <RelativeLayout
+            android:id="@+id/rlCardView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/rlCardView">
+            android:layout_height="match_parent">
+
             <ImageView
+                android:id="@+id/ivCoverPic"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/ivCoverPic"
-                android:scaleType="fitXY"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:transitionName="itemDetail"
-                />
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                android:transitionName="itemDetail" />
 
             <ImageButton
                 android:id="@+id/btLike"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/btn_like"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/white" />
-
+                android:background="@color/white"
+                android:src="@drawable/btn_like" />
 
 
             <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvTitle"
                 android:layout_below="@+id/ivCoverPic"
-                android:gravity="center"
                 android:layout_centerHorizontal="true"
+                android:gravity="center"
                 android:textAlignment="center" />
 
             <TextView
+                android:id="@+id/tvAddedBy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvAddedBy"
                 android:layout_below="@+id/tvTitle"
-                android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:textAlignment="center"/>
+                android:gravity="center"
+                android:textAlignment="center" />
 
 
             <Button
+                android:id="@+id/btDeleteSale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delete"
-                android:id="@+id/btDeleteSale"
                 android:layout_below="@+id/tvAddedBy"
                 android:background="@android:color/transparent"
-                android:visibility="invisible"
-                />
+                android:text="Delete"
+                android:visibility="invisible" />
 
             <Button
+                android:id="@+id/btEditSale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Edit"
-                android:id="@+id/btEditSale"
                 android:layout_alignTop="@+id/btDeleteSale"
                 android:layout_centerHorizontal="true"
                 android:background="@android:color/transparent"
-                android:visibility="invisible"/>
+                android:text="Edit"
+                android:visibility="invisible" />
 
             <Button
+                android:id="@+id/btShareSale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Share"
-                android:id="@+id/btShareSale"
-                android:layout_alignTop="@+id/btEditSale"
                 android:layout_alignParentEnd="true"
-                android:background="@android:color/transparent"/>
+                android:layout_alignTop="@+id/btEditSale"
+                android:background="@android:color/transparent"
+                android:text="Share" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:id="@+id/rlNoWishListView"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/no_wish_list_image" />
+
+        <TextView
+            android:layout_width="220dp"
+            android:layout_height="120dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="#CFD8DC"
+            android:gravity="center"
+            android:text="No Wish Lists Yet"
+            android:textColor="#9E9E9E"
+            android:textSize="25sp" />
+    </RelativeLayout>
 </LinearLayout>

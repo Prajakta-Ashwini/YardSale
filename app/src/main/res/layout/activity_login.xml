@@ -2,33 +2,52 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"  tools:context="com.android.yardsale.activities.LoginActivity">
 
-
-    <EditText
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/etEmail"
-        android:hint="Email"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:id="@+id/background_image"
+        android:src="@drawable/no_wish_list_image"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_marginTop="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="100dp"
+        android:background="#ffffff"
+        android:id="@+id/textView" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/etEmail"
+        android:hint="User name" />
+
+    <EditText
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:ems="10"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
         android:id="@+id/etPassword"
         android:hint="Password"
-        android:layout_below="@+id/etEmail"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/etEmail"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="Login"
         android:id="@+id/btnLogin"
-        android:layout_below="@+id/etPassword"
-        android:layout_toLeftOf="@+id/etEmail"
-        android:layout_toStartOf="@+id/etEmail"
-        android:layout_marginTop="92dp" />
+        android:layout_alignStart="@id/etPassword"
+        android:layout_alignEnd="@id/etPassword"
+        android:layout_below="@id/etPassword"/>
 
 </RelativeLayout>

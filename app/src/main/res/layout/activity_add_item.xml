@@ -4,57 +4,91 @@
     android:layout_height="match_parent"
     tools:context="com.android.yardsale.activities.AddItemActivity">
 
+    <ImageButton
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/ibClose"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_close"
+        android:onClick="onClose" />
+
+    <Button
+        android:id="@+id/btnSaveItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:onClick="addItem"
+        android:text="save" />
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_below="@+id/ibClose"
+        android:id="@+id/rlEnterDataSection">
+
+    <EditText
+        android:id="@+id/etItemDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:maxLines="4"
+        android:hint="What's this sale?" />
+
+    <EditText
+        android:id="@+id/etItemPrice"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etItemDescription"
+        android:ems="10"
+        android:hint="Price ?"
+        android:inputType="number" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/ivItemPreview"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_below="@id/rlEnterDataSection"/>
 
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#E0E0E0"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
 
     <TextView
         android:id="@+id/tvCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/ic_camera"
         android:clickable="true"
-        android:onClick="onTakePicture" />
+        android:onClick="onTakePicture"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="84dp" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/tvGallery"
-        android:layout_toStartOf="@id/tvCamera"
+        android:layout_alignTop="@id/tvCamera"
+        android:layout_alignBottom="@id/tvCamera"
         android:background="@drawable/ic_gallery"
         android:clickable="true"
-        android:onClick="onPickPhoto"/>
-
-    <EditText
-        android:id="@+id/etAddItemDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ivItemPreview"
-        android:hint="Description" />
-
-    <EditText
-        android:id="@+id/etAddItemPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:onClick="onPickPhoto"
+        android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/etAddItemDescription"
-        android:ems="10"
-        android:hint="Price"
-        android:inputType="number" />
+        android:layout_marginStart="99dp" />
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnAddItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/etAddItemPrice"
-        android:onClick="addItem"
-        android:layout_centerHorizontal="true"
-        android:text="add" />
 
 </RelativeLayout>

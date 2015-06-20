@@ -9,13 +9,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/etSignUpUserName"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:hint="User Name"
         android:layout_marginTop="88dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
+        android:hint="Password"
         android:ems="10"
         android:id="@+id/etSignUpPassword"
         android:layout_centerVertical="true"

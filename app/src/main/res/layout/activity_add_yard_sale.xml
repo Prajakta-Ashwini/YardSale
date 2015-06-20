@@ -3,56 +3,82 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/etAddYSTitle"
+    <TextView
+        android:id="@+id/tvCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:hint="title"/>
+        android:background="@drawable/ic_close"
+        android:onClick="onCancel" />
 
-    <EditText
-        android:id="@+id/etAddYSDescription"
+    <Button
+        android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/etAddYSTitle"
-        android:layout_below="@+id/etAddYSTitle"
-        android:hint="description" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:text="Save" />
 
-    <EditText
-        android:id="@+id/etAddYSAddress"
+    <RelativeLayout
+        android:id="@+id/rlDetailsSection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etAddYSDescription"
-        android:hint="address"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/btnSave"
+        android:layout_marginBottom="20dp">
+
+        <EditText
+            android:id="@+id/etYSTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:hint="Title" />
+
+
+        <EditText
+            android:id="@+id/etYSDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/etYSTitle"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@+id/etYSTitle"
+            android:hint="Description" />
+
+
+        <EditText
+            android:id="@+id/etYSAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etYSDescription"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:hint="Address" />
+
+    </RelativeLayout>
 
     <View
-        android:layout_width="1dp"
         android:id="@+id/line1"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/etAddYSAddress"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/rlDetailsSection"
+        android:layout_centerVertical="true"
         android:background="#000000" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/llCalendarSecion"
-        android:orientation="horizontal"
-        android:layout_alignTop="@+id/line1"
-        android:layout_alignEnd="@+id/btnCancel">
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="#000000" />
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/line1"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tvYSStart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/tvAddYSStart"
             android:text="Start" />
 
         <View
@@ -61,39 +87,20 @@
             android:background="#000000" />
 
         <TextView
+            android:id="@+id/tvYSEnd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:id="@+id/tvAddYSEnd"
             android:onClick="selectEndDate"
             android:text="End" />
     </LinearLayout>
 
     <View
-        android:layout_width="1dp"
         android:id="@+id/line2"
-        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/llCalendarSecion"
         android:layout_centerVertical="true"
         android:background="#000000" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/btnSave"
-        android:layout_below="@id/llCalendarSecion"
-        android:layout_alignParentStart="true"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:id="@+id/btnCancel"
-        android:layout_alignTop="@+id/btnSave"
-        android:layout_alignBottom="@+id/btnSave"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/btnSave" />
-
-
 </RelativeLayout>

@@ -1,16 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.android.yardsale.activities.SearchActivity">
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <com.android.yardsale.helpers.GridViewScrollable
-        android:id="@+id/gvSearchItems"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvItems"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:numColumns="2"
-        android:stretchMode="columnWidth"
+        android:layout_height="wrap_content"/>
 
-        />
+</android.support.design.widget.CoordinatorLayout>
 
-</RelativeLayout>

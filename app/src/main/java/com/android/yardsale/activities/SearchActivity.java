@@ -2,20 +2,25 @@ package com.android.yardsale.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.yardsale.R;
-import com.android.yardsale.adapters.ItemsArrayAdapter;
-import com.android.yardsale.helpers.GridViewScrollable;
+import com.android.yardsale.adapters.ItemsAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 
 public class SearchActivity extends ActionBarActivity {
 
-    private ItemsArrayAdapter adapter;
+    private ItemsAdapter adapter;
     private ArrayList<Item> items;
     private YardSaleApplication client;
 
@@ -27,19 +32,33 @@ public class SearchActivity extends ActionBarActivity {
         //TODO customize the toolbar later - back button
 
         items = new ArrayList<>();
-        adapter = new ItemsArrayAdapter(this, items);
         client = new YardSaleApplication(this);
 
-        GridViewScrollable gvSearchItems = (GridViewScrollable) findViewById(R.id.gvSearchItems);
-        gvSearchItems.setExpanded(true);
-        gvSearchItems.setAdapter(adapter);
+        ArrayList<String> seachObjectIds = getIntent().getStringArrayListExtra("search");
 
-        ArrayList<String> itemIds = getIntent().getStringArrayListExtra("search");
-        for(String itemId : itemIds)
-        {
-            items.add(client.getItem(itemId));
+        RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvItems);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        rvItems.setHasFixedSize(true);
+        rvItems.setLayoutManager(llm);
+        rvItems.setItemAnimator(new DefaultItemAnimator());
+        adapter = new ItemsAdapter(this, items);
+        rvItems.setAdapter(adapter);
+
+
+        if (seachObjectIds != null) {
+            for (String objId : seachObjectIds) {
+                ParseQuery<Item> query = Item.getQuery();
+                query.getInBackground(objId, new GetCallback<Item>() {
+                    public void done(Item item, ParseException e) {
+                        if (e == null) {
+                            items.add(item);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+            }
         }
-        adapter.notifyDataSetChanged();
     }
 
     @Override

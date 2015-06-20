@@ -29,7 +29,7 @@ import java.io.IOException;
 
 public class EditItemActivity extends ActionBarActivity {
 
-    private ImageView ivEditItemPreview;
+    private ImageView ivItemPreview;
     private EditText etEditItemDescription;
     private EditText etEditItemPrice;
     private Item item;
@@ -44,15 +44,15 @@ public class EditItemActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_item);
+        setContentView(R.layout.activity_add_item);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         client = new YardSaleApplication(this);
 
         String itemId = getIntent().getStringExtra("item_id");
-        ivEditItemPreview = (ImageView) findViewById(R.id.ivEditItemPreview);
-        etEditItemDescription = (EditText) findViewById(R.id.etEditItemDescription);
-        etEditItemPrice = (EditText) findViewById(R.id.etEditItemPrice);
+        ivItemPreview = (ImageView) findViewById(R.id.ivItemPreview);
+        etEditItemDescription = (EditText) findViewById(R.id.etItemDescription);
+        etEditItemPrice = (EditText) findViewById(R.id.etItemPrice);
 
         ParseQuery getItemQuery = Item.getQuery();
         try {
@@ -61,7 +61,7 @@ public class EditItemActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        Picasso.with(this).load(item.getPhoto().getUrl()).into(ivEditItemPreview);
+        Picasso.with(this).load(item.getPhoto().getUrl()).into(ivItemPreview);
         etEditItemDescription.setText(item.getDescription());
         etEditItemPrice.setText(item.getPrice().toString());
     }
@@ -98,7 +98,7 @@ public class EditItemActivity extends ActionBarActivity {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
                 image = BitmapFactory.decodeFile(takenPhotoUri.getPath());
                 Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
-                ivEditItemPreview.setImageBitmap(bMapScaled);
+                ivItemPreview.setImageBitmap(bMapScaled);
             }
         } else if (requestCode == PICK_PHOTO_CODE) {
             Uri photoUri = data.getData();
@@ -111,7 +111,7 @@ public class EditItemActivity extends ActionBarActivity {
             }
             // Load the selected image into a preview
             Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
-            ivEditItemPreview.setImageBitmap(bMapScaled);
+            ivItemPreview.setImageBitmap(bMapScaled);
         }
     }
 

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.DateFormat;
@@ -29,10 +30,12 @@ public class AddYardSaleActivity extends ActionBarActivity {
     private EditText etAddYSTitle;
     private EditText etAddYSDescription;
     private EditText etAddYSAddress;
+    private TextInputLayout tiYSTitle;
+    private TextInputLayout tiYSDescription;
+    private TextInputLayout tiYSAddress;
     private static TextView tvAddYSStart;
     private static TextView tvAddYSEnd;
     private Button btnSave;
-    private Button btnCancel;
     private static Date start;
     private static Date end;
     private YardSaleApplication client;
@@ -49,14 +52,21 @@ public class AddYardSaleActivity extends ActionBarActivity {
         setContentView(R.layout.activity_add_yard_sale);
         client = new YardSaleApplication(this);
 
+//        tiYSTitle = (TextInputLayout) findViewById(R.id.tiYSTitle);
+//        tiYSTitle.setHint("Title");
+//
+//        tiYSDescription = (TextInputLayout) findViewById(R.id.tiYSDescription);
+//        tiYSDescription.setHint("Description");
+//
+//        tiYSAddress = (TextInputLayout) findViewById(R.id.tiYSAddress);
+//        tiYSAddress.setHint("Address");
 
-        etAddYSTitle = (EditText) findViewById(R.id.etAddYSTitle);
-        etAddYSDescription = (EditText) findViewById(R.id.etAddYSDescription);
-        etAddYSAddress = (EditText) findViewById(R.id.etAddYSAddress);
-        tvAddYSStart = (TextView) findViewById(R.id.tvAddYSStart);
-        tvAddYSEnd = (TextView) findViewById(R.id.tvAddYSEnd);
+        etAddYSTitle = (EditText) findViewById(R.id.etYSTitle);
+        etAddYSDescription = (EditText) findViewById(R.id.etYSDescription);
+        etAddYSAddress = (EditText) findViewById(R.id.etYSAddress);
+        tvAddYSStart = (TextView) findViewById(R.id.tvYSStart);
+        tvAddYSEnd = (TextView) findViewById(R.id.tvYSEnd);
         btnSave = (Button) findViewById(R.id.btnSave);
-        btnCancel = (Button) findViewById(R.id.btnCancel);
 
         tvAddYSStart.setClickable(true);
         tvAddYSStart.setOnClickListener(new View.OnClickListener() {
@@ -87,12 +97,6 @@ public class AddYardSaleActivity extends ActionBarActivity {
             }
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override
@@ -133,6 +137,10 @@ public class AddYardSaleActivity extends ActionBarActivity {
         }
         DialogFragment timeFragment = new TimePickerFragment();
         timeFragment.show(getSupportFragmentManager(), time);
+    }
+
+    public void onCancel(View view) {
+        finish();
     }
 
     public static class DatePickerFragment extends DialogFragment implements
@@ -202,6 +210,8 @@ public class AddYardSaleActivity extends ActionBarActivity {
             }
         }
     }
+
+
 }
 
 
