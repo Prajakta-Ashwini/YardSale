@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
@@ -36,7 +37,8 @@ public class SignUpActivity extends ActionBarActivity {
                         String.valueOf(etSignUpPassword.getText()));
             }
         });
-        Button btnLoginWithFB = (Button) findViewById(R.id.btnLoginWithFB);
+
+        ImageButton btnLoginWithFB = (ImageButton) findViewById(R.id.btnLoginWithFB);
         btnLoginWithFB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,5 +74,14 @@ public class SignUpActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onBack(View view) {
+        finish();
+    }
+
+    public void onLogin(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }

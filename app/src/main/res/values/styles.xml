@@ -8,4 +8,13 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_profile</item>
     </style>
 
+    <style name="white_background_wh">
+        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+        <item name="android:layout_marginTop">@dimen/card_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_margin_top</item>
+        <item name="android:padding">@dimen/white_background_padding</item>
+    </style>
+
+
+
 </resources>

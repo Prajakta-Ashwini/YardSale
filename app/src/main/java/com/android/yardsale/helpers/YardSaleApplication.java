@@ -71,10 +71,6 @@ public class YardSaleApplication extends Application {
         this.callingActivity = activity;
     }
 
-    public enum TYPE_OF_PIC {
-        PROFILE_PIC,
-        COVER_PIC
-    }
 
     @Override
     public void onCreate() {
@@ -131,7 +127,6 @@ public class YardSaleApplication extends Application {
         Intent intent = new Intent(context, ListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putCharSequenceArrayListExtra("sale_list", saleList);
-
         callingActivity.startActivity(intent);
     }
 
@@ -141,23 +136,27 @@ public class YardSaleApplication extends Application {
     }
 
     public void signUpAndLoginWithFacebook(List<String> permissions) {
+        //TODO check why this is not working
         ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 //TODO Progress bars
                 if (user == null) {
+                    Toast.makeText(callingActivity, "signUpAndLoginWithFB called user is null", Toast.LENGTH_SHORT).show();
                     Log.d("DEBUG", "Uh oh. The user cancelled the Facebook login.");
+
                 } else if (user.isNew()) {
-                    makeMeRequest();
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
-                    getYardSales(false);
+                    Intent intent = new Intent(callingActivity, ListActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    callingActivity.startActivity(intent);
                 } else {
                     Log.d("DEBUG", "User logged in through Facebook!");
-//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.PROFILE_PIC);
-//                    saveUserPicForFacebookUsers(user, TYPE_OF_PIC.COVER_PIC);
-                    makeMeRequest();
-                    getYardSales(false);
+                    Toast.makeText(callingActivity, "signUpAndLoginWithFB called already exisiting user", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(callingActivity, ListActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    callingActivity.startActivity(intent);
                 }
             }
         });

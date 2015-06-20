@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"  tools:context="com.android.yardsale.activities.LoginActivity">
 
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:id="@+id/background_image"
-        android:src="@drawable/no_wish_list_image"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:layout_alignParentStart="true"
@@ -18,9 +18,33 @@
         android:layout_width="250dp"
         android:layout_marginTop="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_height="100dp"
+        android:layout_height="112dp"
         android:background="#ffffff"
         android:id="@+id/textView" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+        android:onClick="onBack"
+        android:layout_alignStart="@id/textView"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="Sign Up"
+        android:textColor="@color/image_foreground_color"
+        android:clickable="true"
+        android:onClick="onSignUp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:layout_alignEnd="@id/textView"
+        android:background="@android:color/transparent" />
 
     <EditText
         android:layout_width="250dp"
@@ -34,7 +58,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/etPassword"
         android:hint="Password"
@@ -42,12 +66,31 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginTop="20dp"
+        android:background="@drawable/button_border"
+        android:textColor="@color/image_foreground_color"
+        android:textStyle="bold"
+        android:textAllCaps="false"
         android:text="Login"
         android:id="@+id/btnLogin"
         android:layout_alignStart="@id/etPassword"
         android:layout_alignEnd="@id/etPassword"
         android:layout_below="@id/etPassword"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnLoginWithFB"
+        android:src="@drawable/login_facebook_button"
+        android:onClick="loginWithFB"
+        android:text="Login with Facebook"
+        android:scaleType="fitCenter"
+        android:background="@null"
+        android:layout_below="@id/btnLogin"
+        android:layout_alignStart="@id/btnLogin"
+        android:layout_alignEnd="@id/btnLogin"
+        android:layout_marginTop="20dp"
+        />
 
 </RelativeLayout>
