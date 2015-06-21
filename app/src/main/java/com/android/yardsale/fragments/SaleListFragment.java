@@ -28,6 +28,7 @@ public class SaleListFragment extends FindStuffFragment {
     private FloatingActionButton btCreateSale;
     private RecyclerView rvSales;
     private static RecyclerView.Adapter rAdapter;
+    private FloatingActionButton btFlip;
 
     public SaleListFragment() {
         super();
@@ -114,6 +115,8 @@ public class SaleListFragment extends FindStuffFragment {
                 startActivityForResult(intent, 20);
             }
         });
+
+
         return v;
     }
 

@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class SaleMapFragment extends SupportMapFragment implements
     private static YardSale yardSale;
     private static List<YardSale> yardSaleList;
     private static BitmapDescriptor defaultMarker ;
+    private FloatingActionButton btFlip;
     /*
      * Define a request code to send to Google Play services This code is
      * returned in Activity.onActivityResult
@@ -73,6 +75,25 @@ public class SaleMapFragment extends SupportMapFragment implements
     public View onCreateView(final LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         defaultMarker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
         View v = super.onCreateView(inflater, parent, savedInstanceState);
+//        View view = inflater.inflate(R.layout.fragment_map, parent, false);
+//        btFlip = (FloatingActionButton) view.findViewById(R.id.fab);
+//        btFlip.setImageDrawable((getResources().getDrawable(R.drawable.list_bulleted)));
+////        btFlip.setColorNormal(R.color.amber);
+////        btFlip.setColorPressed(R.color.amber);
+////
+////        btFlip.setColorRipple(R.color.amber);
+//        btFlip.setColorNormal(getResources().getColor(R.color.amber));
+//        btFlip.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                List<YardSale> list = new ArrayList<YardSale>();
+//                SalesFragment frag = SalesFragment.newInstance();
+//                transaction.replace(R.id.flContent, frag).commit();
+//
+//            }
+//        });
         initMap();
         return v;
     }
@@ -88,19 +109,19 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-        if(yardSale!=null) {
-            if (yardSale.getTitle() == null) {
+
+            if (yardSaleList!=null && yardSaleList.size() >0 ) {
                 //List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
 
                 for (YardSale s : yardSaleList) {
                     addYardSale(s);
                 }
-            } else {
+            } else if(yardSale!=null){
                 addYardSale(yardSale);
                 settings.setAllGesturesEnabled(false);
                 settings.setMyLocationButtonEnabled(false);
             }
-        }
+
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -128,9 +149,10 @@ public class SaleMapFragment extends SupportMapFragment implements
         LatLng loc = new LatLng(row.getLocation().getLatitude(),row.getLocation().getLongitude());
         //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12));
         Marker marker = getMap().addMarker(new MarkerOptions()
-                .position(loc)
-                .title(row.getTitle())
-                .icon(defaultMarker));
+                    .position(loc)
+                    .title(row.getTitle())
+                    .icon(defaultMarker));
+
     }
 
     @Override
@@ -224,10 +246,12 @@ public class SaleMapFragment extends SupportMapFragment implements
     }
 
     public void addMarker(YardSale ys){
-        UiSettings settings = getMap().getUiSettings();
-        addYardSale(ys);
-        settings.setAllGesturesEnabled(false);
-        settings.setMyLocationButtonEnabled(false);
         yardSale = ys;
+        addYardSale(ys);
+    }
+
+    public void addSaleToList(YardSale s){
+        yardSaleList.add(s);
+        addYardSale(s);
     }
 }

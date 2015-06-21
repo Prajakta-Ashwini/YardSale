@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ThingsAdapter;
+import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
 import com.parse.ParseException;
@@ -33,8 +34,7 @@ public class SalesFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private ThingsAdapter adapter;
     public  List<YardSale> yardSales = new ArrayList<>();
-    public FloatingActionButton btFlip;
-
+    private FloatingActionButton btFlip;
 
     public SalesFragment() {
         super();
@@ -74,23 +74,28 @@ public class SalesFragment extends Fragment {
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
 
-        btFlip = (FloatingActionButton) view.findViewById(R.id.btFlip);
+        btFlip = (FloatingActionButton) view.findViewById(R.id.fab);
         btFlip.setImageDrawable((getResources().getDrawable(R.drawable.map)));
-        btFlip.setColorNormal(R.color.amber);
-        btFlip.setColorPressed(R.color.amber);
-
-        btFlip.setColorRipple(R.color.amber);
+//        btFlip.setColorNormal(R.color.amber);
+//        btFlip.setColorPressed(R.color.amber);
+//
+//        btFlip.setColorRipple(R.color.amber);
         btFlip.attachToRecyclerView(rvSales);
+        btFlip.setColorNormal(getResources().getColor(R.color.amber));
         btFlip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.flContent, SaleMapFragment.newInstance(yardSales) );
-                transaction.commit();
+                List<YardSale> list = new ArrayList<YardSale>();
+                SaleMapFragment frag = SaleMapFragment.newInstance(list);
+                transaction.replace(R.id.flContent, frag).commit();
+                YardSaleApplication client = new YardSaleApplication();
+                client.addYardSalesToMap(frag, false);
 
             }
         });
+
         return view;
     }
 
