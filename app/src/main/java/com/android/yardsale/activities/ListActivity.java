@@ -85,7 +85,7 @@ public class ListActivity extends ActionBarActivity {
         salesFragment = SalesFragment.newInstance();
         listingsFragment = ListingsFragment.newInstance();
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
-                .getColor(R.color.ruby)));
+                .getColor(R.color.primary_color)));
 
         defaultDrawerItem(0);
         nvDrawer.addHeaderView(getHeaderForNavDrawer());
@@ -157,10 +157,7 @@ public class ListActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
-            case R.id.miFlip:
-                //TODO the flip to mapview
-                //vpAdapter.getFindStuffFragment().replace();
-                return true;
+
             case R.id.home:
                 if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
                     mDrawerLayout.closeDrawer(GravityCompat.END);

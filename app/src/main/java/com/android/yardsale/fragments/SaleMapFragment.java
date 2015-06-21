@@ -41,6 +41,7 @@ public class SaleMapFragment extends SupportMapFragment implements
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private static YardSale yardSale;
+    private static List<YardSale> yardSaleList;
     private static BitmapDescriptor defaultMarker ;
     /*
      * Define a request code to send to Google Play services This code is
@@ -52,6 +53,16 @@ public class SaleMapFragment extends SupportMapFragment implements
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
         yardSale = sale;
+        //Bundle args = new Bundle();
+        //args.putInt("sale_list", list);
+        //fragmentDemo.setArguments(args);
+        return fragmentDemo;
+    }
+
+    public static SaleMapFragment newInstance(List<YardSale> saleList){
+
+        SaleMapFragment fragmentDemo = new SaleMapFragment();
+        yardSaleList = saleList;
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
@@ -79,8 +90,9 @@ public class SaleMapFragment extends SupportMapFragment implements
         }
         if(yardSale!=null) {
             if (yardSale.getTitle() == null) {
-                List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
-                for (YardSale s : sales) {
+                //List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
+
+                for (YardSale s : yardSaleList) {
                     addYardSale(s);
                 }
             } else {

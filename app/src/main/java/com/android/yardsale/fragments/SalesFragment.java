@@ -4,6 +4,8 @@ package com.android.yardsale.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ThingsAdapter;
 import com.android.yardsale.models.YardSale;
+import com.melnykov.fab.FloatingActionButton;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -30,6 +33,7 @@ public class SalesFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private ThingsAdapter adapter;
     public  List<YardSale> yardSales = new ArrayList<>();
+    public FloatingActionButton btFlip;
 
 
     public SalesFragment() {
@@ -44,6 +48,7 @@ public class SalesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         yardSales = new ArrayList<>();
+
     }
 
     @Nullable
@@ -69,6 +74,23 @@ public class SalesFragment extends Fragment {
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
 
+        btFlip = (FloatingActionButton) view.findViewById(R.id.btFlip);
+        btFlip.setImageDrawable((getResources().getDrawable(R.drawable.map)));
+        btFlip.setColorNormal(R.color.amber);
+        btFlip.setColorPressed(R.color.amber);
+
+        btFlip.setColorRipple(R.color.amber);
+        btFlip.attachToRecyclerView(rvSales);
+        btFlip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.flContent, SaleMapFragment.newInstance(yardSales) );
+                transaction.commit();
+
+            }
+        });
         return view;
     }
 
