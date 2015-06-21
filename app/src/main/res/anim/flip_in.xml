@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Before rotating, immediately set the alpha to 0. -->
+    <alpha
+        android:duration="100"
+        android:fromAlpha="1.0"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toAlpha="0.0" />
+
+
+    <rotate
+        android:duration="@integer/card_flip_time_full"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromDegrees="-180"
+        android:toDegrees="0" />
+
+    <!-- Half-way through the rotation (see startOffset), set the alpha to 1. -->
+
+
+    <alpha
+        android:duration="100"
+        android:fromAlpha="0.0"
+        android:startOffset="@integer/card_flip_time_half"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toAlpha="1.0" />
+</set>

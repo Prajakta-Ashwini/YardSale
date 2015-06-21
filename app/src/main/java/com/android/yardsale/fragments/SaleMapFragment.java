@@ -102,8 +102,21 @@ public class SaleMapFragment extends SupportMapFragment implements
                 public void onClick(View v) {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    SalesFragment frag = SalesFragment.newInstance();
-                    transaction.replace(R.id.flContent, frag).commit();
+                    transaction.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
+
+//                    ViewAnimator viewFlipper = new FlipAnimation(getActivity());
+//                    AnimationFactory.flipTransition(viewFlipper, AnimationFactory.FlipDirection.RIGHT_LEFT);
+                    SalesFragment frag;
+                    if (fragmentManager.findFragmentByTag("list_frag") == null) {
+                        frag = SalesFragment.newInstance();
+                    } else {
+                        frag = (SalesFragment) fragmentManager.findFragmentByTag("list_frag");
+                    }
+                    //frag.setEnterTransition();//R.anim.new Slide(Gravity.RIGHT));
+                    //frag.setExitTransition();
+//                    transaction.setCustomAnimations(new com.daimajia.androidanimations.library.flippers.FlipInXAnimator(), R.anim.flip_in);
+
+                    transaction.replace(R.id.flContent, frag).addToBackStack("list_frag").commit();
                 }
             });
         }else{

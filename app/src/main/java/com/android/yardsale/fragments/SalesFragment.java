@@ -85,10 +85,33 @@ public class SalesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                SaleMapFragment frag;
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                List<YardSale> list = new ArrayList<YardSale>();
-                SaleMapFragment frag = SaleMapFragment.newInstance(list,getActivity());
-                transaction.replace(R.id.flContent, frag).commit();
+                if (fragmentManager.findFragmentByTag("map_frag") == null) {
+                    List<YardSale> list = new ArrayList<YardSale>();
+                    frag = SaleMapFragment.newInstance(list, getActivity());
+                } else {
+                    frag = (SaleMapFragment) fragmentManager.findFragmentByTag("map_frag");
+                }
+
+                //transaction.setCustomAnimations(R.animator.abc_slide_in_bottom, R.anim.abc_slide_out_top);
+//                Animator anim = AnimatorInflater.loadAnimator(getActivity(), R.animator.flip_in);
+//                anim.setDuration(1000);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//
+//                }
+                transaction.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
+//                ft.setCustomAnimations(R.animator.fragment_slide_left_enter,
+//                        R.animator.fragment_slide_left_exit,
+//                        R.animator.fragment_slide_right_enter,
+//                        R.animator.fragment_slide_right_exit);
+                //transaction.setCustomAnimations(R.anim.flip_in, R.anim.flip_in);
+//                frag.setEnterTransition(new com.daimajia.androidanimations.library.flippers.FlipInXAnimator());//R.anim.new Slide(Gravity.RIGHT));
+//                    frag.setExitTransition(new com.daimajia.androidanimations.library.flippers.FlipOutYAnimator());
+//                ViewFlipper viewFlipper = new ViewFlipper(getActivity());
+//                AnimationFactory.flipTransition(viewFlipper, AnimationFactory.FlipDirection.LEFT_RIGHT);
+                transaction.replace(R.id.flContent, frag).addToBackStack("map_frag").commit();
                 YardSaleApplication client = new YardSaleApplication();
                 client.addYardSalesToMap(frag, false);
 

@@ -23,6 +23,6 @@
         app:backgroundTint="@color/amber"
         fab:fab_colorNormal="@color/amber"
         fab:fab_colorPressed="@color/amber"
-        fab:fab_colorRipple="@color/amber" />
+        />
 
 </RelativeLayout>
