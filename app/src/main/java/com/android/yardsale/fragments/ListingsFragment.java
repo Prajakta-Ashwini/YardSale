@@ -82,9 +82,9 @@ public class ListingsFragment extends Fragment {
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
 
-        btCreateSale = (FloatingActionButton) view.findViewById(R.id.btCreateSale);
+        btCreateSale = (FloatingActionButton) view.findViewById(R.id.fab);
         btCreateSale.attachToRecyclerView(rvSales);
-        btCreateSale.setColorNormal(getResources().getColor(R.color.ruby));
+        btCreateSale.setColorNormal(getResources().getColor(R.color.amber));
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override

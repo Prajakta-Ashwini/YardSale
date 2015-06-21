@@ -16,14 +16,13 @@
 
 
     <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/btCreateSale"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/ruby"
-        fab:fab_colorNormal="@color/ruby"
-        fab:fab_colorPressed="@color/ruby"
-        fab:fab_colorRipple="@color/ruby" />
+        app:backgroundTint="@color/amber"
+        fab:fab_colorNormal="@color/amber"
+        fab:fab_colorPressed="@color/amber"
+        fab:fab_colorRipple="@color/amber" />
 </android.support.design.widget.CoordinatorLayout>

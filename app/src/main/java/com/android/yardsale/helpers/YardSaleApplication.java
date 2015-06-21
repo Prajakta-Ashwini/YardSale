@@ -23,6 +23,7 @@ import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
+import com.android.yardsale.fragments.SaleMapFragment;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.AccessToken;
@@ -288,6 +289,23 @@ public class YardSaleApplication extends Application {
                     Log.d("item", "Error: " + e.getMessage());
                 }
 
+            }
+        });
+    }
+
+    public void addYardSalesToMap(final SaleMapFragment mapFragment, boolean getAllSales) {
+        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+        query.include("seller");
+        if(!getAllSales){
+            //get only sales that dont belong to me
+            query.whereNotEqualTo("seller",getCurrentUser());
+        }
+        query.findInBackground(new FindCallback<YardSale>() {
+            public void done(List<YardSale> itemList, ParseException e) {
+                if (e == null) {
+                    for(YardSale ys:itemList)
+                        mapFragment.addSaleToList(ys);
+                }
             }
         });
     }
