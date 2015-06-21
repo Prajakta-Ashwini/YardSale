@@ -77,15 +77,17 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-        if(yardSale.getTitle() == null){
-            List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
-            for (YardSale s : sales) {
-                addYardSale(s);
+        if(yardSale!=null) {
+            if (yardSale.getTitle() == null) {
+                List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
+                for (YardSale s : sales) {
+                    addYardSale(s);
+                }
+            } else {
+                addYardSale(yardSale);
+                settings.setAllGesturesEnabled(false);
+                settings.setMyLocationButtonEnabled(false);
             }
-        } else {
-            addYardSale(yardSale);
-            settings.setAllGesturesEnabled(false);
-            settings.setMyLocationButtonEnabled(false);
         }
     }
 
@@ -207,5 +209,13 @@ public class SaleMapFragment extends SupportMapFragment implements
             Toast.makeText(getActivity(),
                     "Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void addMarker(YardSale ys){
+        UiSettings settings = getMap().getUiSettings();
+        addYardSale(ys);
+        settings.setAllGesturesEnabled(false);
+        settings.setMyLocationButtonEnabled(false);
+        yardSale = ys;
     }
 }
