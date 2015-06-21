@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.yardsale.activities.HowItWorksActivity;
 import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
@@ -40,6 +41,7 @@ import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.PushService;
@@ -76,7 +78,6 @@ public class YardSaleApplication extends Application {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         context = getBaseContext();
         FacebookSdk.sdkInitialize(getApplicationContext());
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
@@ -85,9 +86,21 @@ public class YardSaleApplication extends Application {
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(this, YARDSALE_APPLICATION_ID, YARDSALE_CLIENT_KEY);
         ParseUser.enableAutomaticUser();
-        PushService.setDefaultPushCallback(this, ListActivity.class);
+        PushService.setDefaultPushCallback(context, HowItWorksActivity.class);
         ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseFacebookUtils.initialize(this);
+
+        ParsePush.subscribeInBackground("", new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.e("com.parse.push", "successfully subscribed to the broadcast channel.");
+                } else {
+                    Log.e("com.parse.push", "failed to subscribe for push", e);
+                }
+            }
+        });
+        super.onCreate();
     }
 
     public void manualSignUp(final String userName, final String password) {
