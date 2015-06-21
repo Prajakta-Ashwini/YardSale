@@ -76,10 +76,9 @@ public class SalesFragment extends Fragment {
 
         btFlip = (FloatingActionButton) view.findViewById(R.id.fab);
         btFlip.setImageDrawable((getResources().getDrawable(R.drawable.map)));
-//        btFlip.setColorNormal(R.color.amber);
-//        btFlip.setColorPressed(R.color.amber);
-//
-//        btFlip.setColorRipple(R.color.amber);
+        btFlip.setColorNormal(R.color.amber);
+        btFlip.setColorPressed(R.color.amber);
+        //btFlip.setColorRipple(R.color.amber);
         btFlip.attachToRecyclerView(rvSales);
         btFlip.setColorNormal(getResources().getColor(R.color.amber));
         btFlip.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +87,7 @@ public class SalesFragment extends Fragment {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 List<YardSale> list = new ArrayList<YardSale>();
-                SaleMapFragment frag = SaleMapFragment.newInstance(list);
+                SaleMapFragment frag = SaleMapFragment.newInstance(list,getActivity());
                 transaction.replace(R.id.flContent, frag).commit();
                 YardSaleApplication client = new YardSaleApplication();
                 client.addYardSalesToMap(frag, false);
