@@ -309,7 +309,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+
         // inflate menu here
         menu.setHeaderTitle("Select action:");
         menu.add(Menu.NONE, R.id.edit_item, Menu.NONE, "EDIT");

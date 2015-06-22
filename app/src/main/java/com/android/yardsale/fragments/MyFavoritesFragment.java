@@ -6,9 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ThingsAdapter;
@@ -18,6 +23,8 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 public class MyFavoritesFragment extends Fragment {
 
@@ -60,7 +67,7 @@ public class MyFavoritesFragment extends Fragment {
         adapter = new ThingsAdapter(getActivity(), factory, container);
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
-
+        registerForContextMenu(rvSales);
         return view;
     }
 
@@ -78,5 +85,58 @@ public class MyFavoritesFragment extends Fragment {
                 return query;
             }
         };
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        //MyView.RecyclerContextMenuInfo info = (MyView.RecyclerContextMenuInfo) item.getMenuInfo();
+        int position = -1;
+        try {
+            position = adapter.getPosition() ;
+
+        } catch (Exception e) {
+            Log.d("Error", e.getLocalizedMessage(), e);
+            return super.onContextItemSelected(item);
+        }
+        switch (item.getItemId()) {
+            case R.id.delete_sale:
+                Toast.makeText(getActivity(), "delete sale!", Toast.LENGTH_SHORT).show();
+                adapter.fireDelete(getActivity(), position);
+                break;
+            case R.id.edit_sale:
+                Toast.makeText(getActivity(), "edit sale!", Toast.LENGTH_SHORT).show();
+                adapter.fireEdit(getActivity(), position);
+                break;
+
+            case R.id.share_sale:
+                Toast.makeText(getActivity(), "share sale!", Toast.LENGTH_SHORT).show();
+                adapter.fireShare(getActivity(), position);
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        int position = -1;
+        try {
+            position = adapter.getPosition() ;
+
+        } catch (Exception e) {
+            Log.d("Error", e.getLocalizedMessage(), e);
+            super.onCreateContextMenu(menu, v, menuInfo);
+            return;
+        }
+        // inflate menu here
+        menu.setHeaderTitle("Select action:");
+        List<YardSale> list = adapter.getListSales();
+        if(list!=null) {
+            YardSale s = list.get(position);
+            if (s.getSeller() == ParseUser.getCurrentUser()) {
+                menu.add(Menu.NONE, R.id.edit_sale, Menu.NONE, "Edit Sale");
+                menu.add(Menu.NONE, R.id.delete_sale, Menu.NONE, "Delete Sale");
+            }
+        }
+        menu.add(Menu.NONE, R.id.share_sale, Menu.NONE, "Share Sale");
     }
 }

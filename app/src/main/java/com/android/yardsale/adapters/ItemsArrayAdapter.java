@@ -1,8 +1,6 @@
 package com.android.yardsale.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.yardsale.R;
-import com.android.yardsale.activities.EditItemActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.parse.ParseUser;
@@ -50,8 +46,8 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
             viewHolder.ivPic = (ImageView) convertView.findViewById(R.id.ivPic);
             viewHolder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
             viewHolder.tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
-            viewHolder.btDeleteItem = (Button) convertView.findViewById(R.id.btDeleteItem);
-            viewHolder.btEditItem = (Button) convertView.findViewById(R.id.btEditItem);
+//            viewHolder.btDeleteItem = (Button) convertView.findViewById(R.id.btDeleteItem);
+//            viewHolder.btEditItem = (Button) convertView.findViewById(R.id.btEditItem);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolderSale) convertView.getTag();
@@ -62,26 +58,26 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         ParseUser owner = item.getYardSale().getSeller();
-        if(currentUser.getObjectId().equals(owner.getObjectId()))
-        {
-            viewHolder.btEditItem.setVisibility(View.VISIBLE);
-            viewHolder.btDeleteItem.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.btDeleteItem.setVisibility(View.INVISIBLE);
-            viewHolder.btEditItem.setVisibility(View.INVISIBLE);
-        }
+//        if(currentUser.getObjectId().equals(owner.getObjectId()))
+//        {
+//            viewHolder.btEditItem.setVisibility(View.VISIBLE);
+//            viewHolder.btDeleteItem.setVisibility(View.VISIBLE);
+//        } else {
+//            viewHolder.btDeleteItem.setVisibility(View.INVISIBLE);
+//            viewHolder.btEditItem.setVisibility(View.INVISIBLE);
+//        }
 
-        viewHolder.btDeleteItem.setOnClickListener(new View.OnClickListener() {
-            Item item = getItem(position);
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "delete item!!!", Toast.LENGTH_SHORT).show();
-                client.deleteItem(item);
-                remove(item);
-                notifyDataSetChanged();
-            }
-        });
+//        viewHolder.btDeleteItem.setOnClickListener(new View.OnClickListener() {
+//            Item item = getItem(position);
+//
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), "delete item!!!", Toast.LENGTH_SHORT).show();
+//                client.deleteItem(item);
+//                remove(item);
+//                notifyDataSetChanged();
+//            }
+//        });
         viewHolder.ivPic.setOnClickListener(new View.OnClickListener() {
             Item item = getItem(position);
 
@@ -91,14 +87,14 @@ public class ItemsArrayAdapter extends ArrayAdapter<Item> {
             }
         });
 
-        viewHolder.btEditItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), EditItemActivity.class);
-                intent.putExtra("item_id", item.getObjectId());
-                ((Activity)getContext()).startActivityForResult(intent,21);
-            }
-        });
+//        viewHolder.btEditItem.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), EditItemActivity.class);
+//                intent.putExtra("item_id", item.getObjectId());
+//                ((Activity)getContext()).startActivityForResult(intent,21);
+//            }
+//        });
         return convertView;
     }
 }

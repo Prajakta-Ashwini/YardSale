@@ -49,12 +49,17 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 //    private Button btDeleteSale;
 //    private Button btEditSale;
     private Context myContext;
+
     private List<YardSale> listSales;
     ImageView[] arrIv = {ivPic1,ivPic2,ivPic3,ivPic4};
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
     HashMap<SaleViewHolder, AnimatorSet> likeAnimations = new HashMap<>();
     long then;
+
+    public List<YardSale> getListSales() {
+        return listSales;
+    }
 
     public ThingsAdapter(final Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
 

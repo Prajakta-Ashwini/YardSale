@@ -3,7 +3,6 @@ package com.android.yardsale.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,8 +11,8 @@ import com.android.yardsale.R;
 public class ItemViewHolder extends RecyclerView.ViewHolder{
     ImageView ivPic;
     TextView tvPrice;
-    Button btEditItem;
-    Button btDeleteItem;
+//    Button btEditItem;
+//    Button btDeleteItem;
     Context context;
     View v;
 
@@ -21,8 +20,8 @@ public class ItemViewHolder extends RecyclerView.ViewHolder{
         super(v);
         ivPic = (ImageView) v.findViewById(R.id.ivPic);
         tvPrice = (TextView) v.findViewById(R.id.tvPrice);
-        btEditItem = (Button) v.findViewById(R.id.btEditItem);
-        btDeleteItem = (Button) v.findViewById(R.id.btDeleteItem);
+//        btEditItem = (Button) v.findViewById(R.id.btEditItem);
+//        btDeleteItem = (Button) v.findViewById(R.id.btDeleteItem);
         this.context = context;
         this.v = v;
         //v.setOnCreateContextMenuListener(this);

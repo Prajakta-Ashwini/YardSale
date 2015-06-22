@@ -134,8 +134,6 @@ public class ListingsFragment extends Fragment {
         };
     }
 
-
-
     public void editYardSale(YardSale sale) {
         adapter.editYardSale(sale);
     }

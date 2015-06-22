@@ -9,9 +9,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ThingsAdapter;
@@ -73,7 +78,7 @@ public class SalesFragment extends Fragment {
         adapter = new ThingsAdapter(getActivity(), factory, container);
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
-
+        registerForContextMenu(rvSales);
         btFlip = (FloatingActionButton) view.findViewById(R.id.fab);
         btFlip.setImageDrawable((getResources().getDrawable(R.drawable.map)));
         btFlip.setColorNormal(R.color.amber);
@@ -137,6 +142,32 @@ public class SalesFragment extends Fragment {
         };
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        //MyView.RecyclerContextMenuInfo info = (MyView.RecyclerContextMenuInfo) item.getMenuInfo();
+        int position = -1;
+        try {
+            position = adapter.getPosition() ;
 
+        } catch (Exception e) {
+            Log.d("Error", e.getLocalizedMessage(), e);
+            return super.onContextItemSelected(item);
+        }
+        switch (item.getItemId()) {
+            case R.id.share_sale:
+                Toast.makeText(getActivity(), "share sale!", Toast.LENGTH_SHORT).show();
+                adapter.fireShare(getActivity(), position);
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        // inflate menu here
+        menu.setHeaderTitle("Select action:");
+        //since we only see sales not created by us here so only share
+        menu.add(Menu.NONE, R.id.share_sale, Menu.NONE, "Share Sale");
+    }
 }
