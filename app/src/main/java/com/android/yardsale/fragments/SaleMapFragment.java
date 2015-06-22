@@ -1,14 +1,19 @@
 package com.android.yardsale.fragments;
 
+import android.content.Context;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.android.yardsale.R;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.google.android.gms.common.ConnectionResult;
@@ -45,13 +50,15 @@ public class SaleMapFragment extends SupportMapFragment implements
     private static List<YardSale> yardSaleList;
     private static BitmapDescriptor defaultMarker ;
     private FloatingActionButton btFlip;
+    static Context context;
+    FrameLayout flMap;
     /*
      * Define a request code to send to Google Play services This code is
      * returned in Activity.onActivityResult
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    public static SaleMapFragment newInstance(YardSale sale){
+    public static SaleMapFragment newInstance(YardSale sale,Context c){
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
         yardSale = sale;
@@ -61,39 +68,60 @@ public class SaleMapFragment extends SupportMapFragment implements
         return fragmentDemo;
     }
 
-    public static SaleMapFragment newInstance(List<YardSale> saleList){
+    public static SaleMapFragment newInstance(List<YardSale> saleList,Context c){
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
         yardSaleList = saleList;
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
+        context = c;
         return fragmentDemo;
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         defaultMarker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
-//        View view = inflater.inflate(R.layout.fragment_map, parent, false);
-//        btFlip = (FloatingActionButton) view.findViewById(R.id.fab);
-//        btFlip.setImageDrawable((getResources().getDrawable(R.drawable.list_bulleted)));
-////        btFlip.setColorNormal(R.color.amber);
-////        btFlip.setColorPressed(R.color.amber);
-////
-////        btFlip.setColorRipple(R.color.amber);
-//        btFlip.setColorNormal(getResources().getColor(R.color.amber));
-//        btFlip.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                List<YardSale> list = new ArrayList<YardSale>();
-//                SalesFragment frag = SalesFragment.newInstance();
-//                transaction.replace(R.id.flContent, frag).commit();
+       View v;
 //
-//            }
-//        });
+        if(yardSaleList!=null ) {
+            //btFlip = new FloatingActionButton(context);
+            v = inflater.inflate(R.layout.fragment_map, parent, false);
+            btFlip = (FloatingActionButton) v.findViewById(R.id.fab);
+            flMap = (FrameLayout) v.findViewById(R.id.flMap);
+
+            View map = super.onCreateView(inflater, parent, savedInstanceState);
+            flMap.addView(map);
+
+            btFlip.setImageDrawable((getResources().getDrawable(R.drawable.list_bulleted)));
+            btFlip.setColorNormal(R.color.amber);
+            btFlip.setColorPressed(R.color.amber);
+            btFlip.setColorNormal(getResources().getColor(R.color.amber));
+            btFlip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out);
+
+//                    ViewAnimator viewFlipper = new FlipAnimation(getActivity());
+//                    AnimationFactory.flipTransition(viewFlipper, AnimationFactory.FlipDirection.RIGHT_LEFT);
+                    SalesFragment frag;
+                    if (fragmentManager.findFragmentByTag("list_frag") == null) {
+                        frag = SalesFragment.newInstance();
+                    } else {
+                        frag = (SalesFragment) fragmentManager.findFragmentByTag("list_frag");
+                    }
+                    //frag.setEnterTransition();//R.anim.new Slide(Gravity.RIGHT));
+                    //frag.setExitTransition();
+//                    transaction.setCustomAnimations(new com.daimajia.androidanimations.library.flippers.FlipInXAnimator(), R.anim.flip_in);
+
+                    transaction.replace(R.id.flContent, frag).addToBackStack("list_frag").commit();
+                }
+            });
+        }else{
+             v = super.onCreateView(inflater, parent, savedInstanceState);
+        }
         initMap();
         return v;
     }

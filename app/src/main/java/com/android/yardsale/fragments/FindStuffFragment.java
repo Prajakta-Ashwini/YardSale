@@ -79,7 +79,7 @@ public class FindStuffFragment extends Fragment implements
         if (currentFragment == 1) {
             SaleMapFragment iif;
             if (getChildFragmentManager().findFragmentByTag("afterTag") == null) {
-                iif = SaleMapFragment.newInstance(new YardSale());
+                iif = SaleMapFragment.newInstance(new YardSale(),getActivity());
                 args.putInt("position", 2);
                 iif.setArguments(args);
             } else {
