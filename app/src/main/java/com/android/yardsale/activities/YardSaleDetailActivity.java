@@ -127,23 +127,27 @@ public class YardSaleDetailActivity extends FragmentActivity {
                         tvDateTime.setText(DateUtils.getRelativeTimeSpanString(startDate.getTime()));
                         tvAddress.setText(sale.getAddress());
                         if (sale.getSeller() != null) {
-                            tvSeller.setText("Hosted by " + sale.getSeller().getUsername());
-                            if (sale.getSeller().getString("profile_pic_url") != null) {
-                                Picasso.with(getBaseContext())
-                                        .load(sale.getSeller().getString("profile_pic_url"))
-                                        .transform(new CircleTransformation())
-                                        .into(ivUserPic);
-                            }
-                            if (sale.getSeller().getString("profile_pic") != null) {
-                                Picasso.with(getBaseContext())
-                                        .load(sale.getSeller().getParseFile("profile_pic").getUrl())
-                                        .transform(new CircleTransformation())
-                                        .into(ivUserPic);
-                            } else {
-                                Picasso.with(getBaseContext())
-                                        .load(R.drawable.com_facebook_profile_picture_blank_square)
-                                        .transform(new CircleTransformation())
-                                        .into(ivUserPic);
+                            try {
+                                tvSeller.setText("Hosted by " + sale.getSeller().fetchIfNeeded().getUsername());
+                                if (sale.getSeller().getString("profile_pic_url") != null) {
+                                    Picasso.with(getBaseContext())
+                                            .load(sale.getSeller().getString("profile_pic_url"))
+                                            .transform(new CircleTransformation())
+                                            .into(ivUserPic);
+                                }
+                                if (sale.getSeller().getString("profile_pic") != null) {
+                                    Picasso.with(getBaseContext())
+                                            .load(sale.getSeller().getParseFile("profile_pic").getUrl())
+                                            .transform(new CircleTransformation())
+                                            .into(ivUserPic);
+                                } else {
+                                    Picasso.with(getBaseContext())
+                                            .load(R.drawable.com_facebook_profile_picture_blank_square)
+                                            .transform(new CircleTransformation())
+                                            .into(ivUserPic);
+                                }
+                            }catch (ParseException ex){
+                                ex.printStackTrace();
                             }
                         }
 
