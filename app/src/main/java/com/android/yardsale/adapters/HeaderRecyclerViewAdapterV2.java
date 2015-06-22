@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//Wrapper class for ItemAdapter; displays header and footer
 public class HeaderRecyclerViewAdapterV2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int HEADERS_START = Integer.MIN_VALUE;

@@ -53,11 +53,27 @@
             android:layout_below="@+id/tvDateTime"
             />
 
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/ivUserPic"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/com_facebook_profile_picture_blank_square"
+            android:adjustViewBounds="true"
+            />
+
         <TextView
             android:id="@+id/tvSeller"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvAddress"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:text="seller"/>
 
     </RelativeLayout>

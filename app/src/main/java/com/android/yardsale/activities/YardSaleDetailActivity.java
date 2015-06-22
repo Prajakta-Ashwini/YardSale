@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.android.yardsale.adapters.ItemsAdapter;
 import com.android.yardsale.fragments.SaleMapFragment;
 import com.android.yardsale.helpers.MyView;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.helpers.image.CircleTransformation;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
@@ -31,6 +33,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +50,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
     private TextView tvDateTime;
     private TextView tvAddress;
     private TextView tvSeller;
+    private ImageView ivUserPic;
     LinearLayoutManager llm;
     Activity thisactivity;
     YardSaleApplication client;
@@ -114,12 +118,33 @@ public class YardSaleDetailActivity extends FragmentActivity {
                         tvAddress = (TextView) head.findViewById(R.id.tvAddress);
                         tvDateTime = (TextView) head.findViewById(R.id.tvDateTime);
                         tvSeller = (TextView) head.findViewById(R.id.tvSeller);
+                        ivUserPic = (ImageView) head.findViewById(R.id.ivUserPic);
                         //cvHeader = (CardView) findViewById(R.id.cvHeader);
                         tvTitle.setText(sale.getTitle());
                         tvDescription.setText(sale.getDescription());
                         tvDateTime.setText(sale.getStartTime().toString() + " to " + sale.getEndTime().toString());
                         tvAddress.setText("Location: " + sale.getAddress());
-                        tvSeller.setText("Added By: " + sale.getSeller().getUsername());
+                        if(sale.getSeller() != null) {
+                            tvSeller.setText(sale.getSeller().getUsername());
+                            if (sale.getSeller().getString("profile_pic_url") != null) {
+                                Picasso.with(getBaseContext())
+                                        .load(sale.getSeller().getString("profile_pic_url"))
+                                        .transform(new CircleTransformation())
+                                        .into(ivUserPic);
+                            }
+                            if (sale.getSeller().getString("profile_pic") != null) {
+                                Picasso.with(getBaseContext())
+                                        .load(sale.getSeller().getParseFile("profile_pic").getUrl())
+                                        .transform(new CircleTransformation())
+                                        .into(ivUserPic);
+                            }else{
+                                Picasso.with(getBaseContext())
+                                        .load(R.drawable.com_facebook_profile_picture_blank_square)
+                                        .transform(new CircleTransformation())
+                                        .into(ivUserPic);
+                            }
+                        }
+
                         hAdapter.addHeaderView(head);
 
                         View footer = inflater.inflate(R.layout.item_list_footer, null);
