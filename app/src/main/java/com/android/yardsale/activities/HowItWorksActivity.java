@@ -1,6 +1,7 @@
 package com.android.yardsale.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -25,6 +26,7 @@ public class HowItWorksActivity extends ActionBarActivity {
 
         btnSignUp = (TextView) findViewById(R.id.btnSignUp);
         btnLogin = (TextView) findViewById(R.id.btnLogin);
+        btnLogin.setTextColor(Color.WHITE);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,6 +34,7 @@ public class HowItWorksActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         });
+        btnSignUp.setTextColor(Color.WHITE);
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

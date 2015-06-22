@@ -3,6 +3,7 @@ package com.android.yardsale.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,10 +41,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         final Item item = itemList.get(position);
         Log.d("SEARCH", item.getDescription() + "\t" + item.getObjectId() + "\t" + item.getYardSale().getSeller());
         final YardSale sale = item.getYardSale();
-        viewHolder.tvDescription.setText(item.getDescription());
-        viewHolder.tvPrice.setText(String.valueOf(item.getPrice()));
+        viewHolder.tvPrice.setTextColor(Color.WHITE);
+        viewHolder.tvPrice.setText("$" + String.valueOf(item.getPrice()));
 
-        //String user = sale.getSeller().fetchIfNeeded().getUsername() ;
         if (sale.getSeller() == ParseUser.getCurrentUser()) {
             viewHolder.btDeleteItem.setVisibility(View.VISIBLE);
             viewHolder.btEditItem.setVisibility(View.VISIBLE);
@@ -79,7 +79,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "edit item!", Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent(context, EditItemActivity.class);
                 intent.putExtra("item_id", i.getObjectId());
                 ((Activity) context).startActivityForResult(intent, 21);
@@ -98,6 +97,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
         viewHolder.ivPic.setOnTouchListener(new View.OnTouchListener() {
             Item i = itemList.get(position);
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -135,7 +135,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 from(viewGroup.getContext()).
                 inflate(R.layout.item_sale_item, viewGroup, false);
 
-        return new ItemViewHolder(itemView,context);
+        return new ItemViewHolder(itemView, context);
     }
 
     private int position;
@@ -154,16 +154,15 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         super.onViewRecycled(holder);
     }
 
-    public void edit(Activity newContext, int position){
+    public void edit(Activity newContext, int position) {
         Item i = itemList.get(position);
         Toast.makeText(context, "edit item!", Toast.LENGTH_SHORT).show();
-
         Intent intent = new Intent(context, EditItemActivity.class);
         intent.putExtra("item_id", i.getObjectId());
         newContext.startActivityForResult(intent, 21);
     }
 
-    public void delete(Activity newContext, int position){
+    public void delete(Activity newContext, int position) {
         Item i = itemList.get(position);
         Toast.makeText(newContext, "delete item!", Toast.LENGTH_SHORT).show();
         client.deleteItem(i);

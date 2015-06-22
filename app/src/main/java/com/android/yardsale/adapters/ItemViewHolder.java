@@ -11,7 +11,6 @@ import com.android.yardsale.R;
 
 public class ItemViewHolder extends RecyclerView.ViewHolder{
     ImageView ivPic;
-    TextView tvDescription;
     TextView tvPrice;
     Button btEditItem;
     Button btDeleteItem;
@@ -21,7 +20,6 @@ public class ItemViewHolder extends RecyclerView.ViewHolder{
     public ItemViewHolder(View v,final Context context) {
         super(v);
         ivPic = (ImageView) v.findViewById(R.id.ivPic);
-        tvDescription = (TextView) v.findViewById(R.id.tvDescription);
         tvPrice = (TextView) v.findViewById(R.id.tvPrice);
         btEditItem = (Button) v.findViewById(R.id.btEditItem);
         btDeleteItem = (Button) v.findViewById(R.id.btDeleteItem);

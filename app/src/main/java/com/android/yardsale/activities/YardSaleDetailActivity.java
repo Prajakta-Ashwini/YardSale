@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class YardSaleDetailActivity extends FragmentActivity {
@@ -108,8 +110,6 @@ public class YardSaleDetailActivity extends FragmentActivity {
             query.getInBackground(yardsaleObj, new GetCallback<YardSale>() {
                 public void done(final YardSale sale, ParseException e) {
                     if (e == null) {
-
-
                         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View head = inflater.inflate(R.layout.item_list_header, null);
 
@@ -122,10 +122,11 @@ public class YardSaleDetailActivity extends FragmentActivity {
                         //cvHeader = (CardView) findViewById(R.id.cvHeader);
                         tvTitle.setText(sale.getTitle());
                         tvDescription.setText(sale.getDescription());
-                        tvDateTime.setText(sale.getStartTime().toString() + " to " + sale.getEndTime().toString());
-                        tvAddress.setText("Location: " + sale.getAddress());
-                        if(sale.getSeller() != null) {
-                            tvSeller.setText(sale.getSeller().getUsername());
+                        Date startDate = sale.getStartTime();
+                        tvDateTime.setText(DateUtils.getRelativeTimeSpanString(startDate.getTime()));
+                        tvAddress.setText(sale.getAddress());
+                        if (sale.getSeller() != null) {
+                            tvSeller.setText("Hosted by " + sale.getSeller().getUsername());
                             if (sale.getSeller().getString("profile_pic_url") != null) {
                                 Picasso.with(getBaseContext())
                                         .load(sale.getSeller().getString("profile_pic_url"))
@@ -137,7 +138,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
                                         .load(sale.getSeller().getParseFile("profile_pic").getUrl())
                                         .transform(new CircleTransformation())
                                         .into(ivUserPic);
-                            }else{
+                            } else {
                                 Picasso.with(getBaseContext())
                                         .load(R.drawable.com_facebook_profile_picture_blank_square)
                                         .transform(new CircleTransformation())
@@ -164,6 +165,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
                         btCreateItem.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                //TODO this would be broken because of linking add ys adn add item. Fix this!
                                 Toast.makeText(getBaseContext(), "creating item!!!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(YardSaleDetailActivity.this, AddItemActivity.class);
                                 intent.putExtra("yard_sale_id", sale.getObjectId());
@@ -263,7 +265,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
         int position = -1;
         try {
             int numHeaders = hAdapter.getHeaderCount();
-            position = aItems.getPosition()-numHeaders;
+            position = aItems.getPosition() - numHeaders;
 
         } catch (Exception e) {
             Log.d("Error", e.getLocalizedMessage(), e);

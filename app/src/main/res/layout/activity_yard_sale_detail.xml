@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:src="@drawable/ic_action_content_add"
+        android:src="@drawable/abc_btn_rating_star_on_mtrl_alpha"
         android:layout_margin="16dp"
         app:backgroundTint="@color/amber"
         fab:fab_colorNormal="@color/amber"

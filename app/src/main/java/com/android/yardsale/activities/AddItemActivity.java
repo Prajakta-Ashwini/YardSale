@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -69,6 +70,7 @@ public class AddItemActivity extends ActionBarActivity {
 
         client = new YardSaleApplication(this);
 
+        Button btnSaveItem = (Button) findViewById(R.id.btnSaveItem);
         ivItemPreview = (ImageView) findViewById(R.id.ivItemPreview);
         etAddItemDescription = (EditText) findViewById(R.id.etItemDescription);
         etAddItemPrice = (EditText) findViewById(R.id.etItemPrice);
@@ -101,6 +103,13 @@ public class AddItemActivity extends ActionBarActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        btnSaveItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem(v);
             }
         });
     }

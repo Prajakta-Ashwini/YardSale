@@ -1,6 +1,7 @@
 package com.android.yardsale.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
@@ -26,7 +28,7 @@ public class LoginActivity extends ActionBarActivity {
     private EditText etEmail;
     private EditText etPassword;
     private Button btnLogin;
-    private ImageView backgroundImage;
+    private TextView tvSignUpText;
     private YardSaleApplication client;
 
     @Override
@@ -37,11 +39,8 @@ public class LoginActivity extends ActionBarActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
-
-//        DisplayMetrics displayMetrics = getBaseContext().getResources().getDisplayMetrics();
-//
-//        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-//        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        tvSignUpText = (TextView) findViewById(R.id.tvSignUpText);
+        tvSignUpText.setTextColor(Color.WHITE);
 
         Picasso.with(this)
                 .load(R.drawable.background_image_1)
@@ -51,6 +50,8 @@ public class LoginActivity extends ActionBarActivity {
                 .into((ImageView) findViewById(R.id.background_image));
 
         client = new YardSaleApplication(this);
+
+        btnLogin.setTextColor(Color.WHITE);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

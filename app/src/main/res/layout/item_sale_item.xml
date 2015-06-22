@@ -1,73 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v7.widget.CardView
+        android:id="@+id/cvSales"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_gravity="center"
-        card_view:cardElevation="5dp"
-        card_view:cardCornerRadius="3dp"
         android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:id="@+id/cvSales">
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/ivPic"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/login_background_1"
+            android:transitionName="itemDetail" />
+
         <RelativeLayout
+            android:id="@+id/rlCardViewItem"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/rlCardViewItem">
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ivPic"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:scaleType="fitXY"
-        android:transitionName="itemDetail"/>
+            android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvDescription"
-        android:layout_below="@+id/ivPic"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"
-         />
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:padding="3dp"
+                android:layout_marginBottom="10dp"
+                android:background="#D9727272"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvPrice"
-        android:layout_below="@+id/tvDescription"
-        android:gravity="center"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"/>
+            <Button
+                android:id="@+id/btDeleteItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvPrice"
+                android:background="@android:color/transparent"
+                android:text="Delete"
+                android:visibility="invisible" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        android:layout_below="@+id/tvPrice"
-        android:id="@+id/btDeleteItem"
-        android:background="@android:color/transparent"
-        android:visibility="invisible"
-        />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            android:id="@+id/btEditItem"
-            android:background="@android:color/transparent"
-            android:layout_alignTop="@+id/btDeleteItem"
-            android:layout_below="@+id/tvPrice"
-            android:layout_centerHorizontal="true"
-            android:visibility="invisible"
-            />
+            <Button
+                android:id="@+id/btEditItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/btDeleteItem"
+                android:layout_below="@+id/tvPrice"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:text="Edit"
+                android:visibility="invisible" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#EEEEEE" />
         </RelativeLayout>
+
+
 
     </android.support.v7.widget.CardView>
 

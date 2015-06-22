@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -55,6 +56,7 @@ public class EditItemActivity extends ActionBarActivity {
         ivItemPreview = (ImageView) findViewById(R.id.ivItemPreview);
         etEditItemDescription = (EditText) findViewById(R.id.etItemDescription);
         etEditItemPrice = (EditText) findViewById(R.id.etItemPrice);
+        Button btnSaveItem = (Button) findViewById(R.id.btnSaveItem);
 
         ParseQuery getItemQuery = Item.getQuery();
         try {
@@ -65,7 +67,7 @@ public class EditItemActivity extends ActionBarActivity {
 
         Picasso.with(this).load(item.getPhoto().getUrl()).into(ivItemPreview);
         etEditItemDescription.setText(item.getDescription());
-        etEditItemPrice.setText(item.getPrice().toString());
+        etEditItemPrice.setText("$" + item.getPrice().toString());
         etEditItemPrice.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -94,6 +96,13 @@ public class EditItemActivity extends ActionBarActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        btnSaveItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem(v);
             }
         });
     }
@@ -177,19 +186,20 @@ public class EditItemActivity extends ActionBarActivity {
         return Uri.fromFile(new File(mediaStorageDir.getPath() + File.separator + fileName));
     }
 
-    public void editItem(View view) {
-        Number price = Double.parseDouble(etEditItemPrice.getText().toString());
+    public void addItem(View view) {
+        Number price = Double.parseDouble(etEditItemPrice.getText().toString().replace("$", ""));
         String description = String.valueOf(etEditItemDescription.getText());
         ParseFile imageParseFile;
-        if(image != null)
+        if (image != null)
             imageParseFile = new ParseFile(getBytesFromBitmap(image));
         else
             imageParseFile = item.getParseFile("photo");
         client.updateItem(item.getObjectId(), description, price, imageParseFile, item.getYardSale());
+
         Intent data = new Intent();
         data.putExtra("price", String.valueOf(etEditItemPrice.getText()));
         data.putExtra("desc", String.valueOf(etEditItemDescription.getText()));
-        data.putExtra("obj_id",item.getObjectId());
+        data.putExtra("obj_id", item.getObjectId());
         setResult(RESULT_OK, data);
         finish();
     }
