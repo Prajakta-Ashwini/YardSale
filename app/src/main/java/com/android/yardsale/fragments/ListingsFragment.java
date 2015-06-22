@@ -62,7 +62,7 @@ public class ListingsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.sales_fragment, container, false);
         view.setTag(TAG);
         rvSales = (RecyclerView) view.findViewById(R.id.rvSales);
@@ -77,10 +77,12 @@ public class ListingsFragment extends Fragment {
         rvSales.setLayoutManager(mLayoutManager);
         rvSales.setItemAnimator(new DefaultItemAnimator());
 
+
         ParseQueryAdapter.QueryFactory<YardSale> factory = getYardSaleQueryFactory();
         adapter = new ThingsAdapter(getActivity(), factory, container);
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
+
 
         btCreateSale = (FloatingActionButton) view.findViewById(R.id.fab);
         btCreateSale.setImageDrawable((getResources().getDrawable(R.drawable.ic_action_content_add)));
@@ -117,6 +119,7 @@ public class ListingsFragment extends Fragment {
             public ParseQuery<YardSale> create() {
                 ParseQuery<YardSale> query = YardSale.getQuery();
                 query.whereEqualTo("seller", ParseUser.getCurrentUser());
+
                 try {
                     query.find();
                 } catch (ParseException e) {
@@ -126,6 +129,7 @@ public class ListingsFragment extends Fragment {
             }
         };
     }
+
 
 
     public void editYardSale(YardSale sale) {

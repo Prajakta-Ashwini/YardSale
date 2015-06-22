@@ -32,7 +32,7 @@ public class YardSale extends ParseObject  {
 
     public Date getCreatedAt() { return getDate("createdAtDate"); }
     public void setCreatedAt(Date endTime) {
-        put("createdAtDate",endTime);
+        put("createdAtDate", endTime);
     }
 
     public void setTitle(String title) {
@@ -114,6 +114,20 @@ public class YardSale extends ParseObject  {
 
     public void removeLikeForUser(ParseUser user) {
         getLikesRelation().remove(user);
+        saveInBackground();
+    }
+
+    public ParseRelation<Item> getItemsRelation() {
+        return getRelation("items");
+    }
+
+    public void addItem(Item tag) {
+        getItemsRelation().add(tag);
+        saveInBackground();
+    }
+
+    public void removeItem(Item tag) {
+        getItemsRelation().remove(tag);
         saveInBackground();
     }
 }

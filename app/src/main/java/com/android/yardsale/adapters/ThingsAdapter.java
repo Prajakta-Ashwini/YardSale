@@ -23,9 +23,11 @@ import android.widget.Toast;
 import com.android.yardsale.R;
 import com.android.yardsale.activities.EditYardSaleActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -39,12 +41,16 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     public ThingsAdapter thingsAdapter = this;
     private YardSaleApplication client;
     private YardSale yardSale;
-    private ImageView ivCoverPic;
+    private ImageView ivPic1;
+    private ImageView ivPic2;
+    private ImageView ivPic3;
+    private ImageView ivPic4;
     private ImageButton btLike;
     private Button btShareSale;
     private Button btDeleteSale;
     private Button btEditSale;
     private Context myContext;
+    ImageView[] arrIv = {ivPic1,ivPic2,ivPic3,ivPic4};
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
     HashMap<SaleViewHolder, AnimatorSet> likeAnimations = new HashMap<>();
@@ -65,14 +71,18 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 
                 myContext = context;
                 yardSale = sale;
+
+
                 TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
                 TextView tvAddedBy = (TextView) v.findViewById(R.id.tvAddedBy);
                 btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
                 btEditSale = (Button) v.findViewById(R.id.btEditSale);
                 btShareSale = (Button) v.findViewById(R.id.btShareSale);
                 btLike = (ImageButton) v.findViewById(R.id.btLike);
-                ivCoverPic = (ImageView) v.findViewById(R.id.ivCoverPic);
-
+                ivPic1 = (ImageView) v.findViewById(R.id.ivPic1);
+                ivPic2 = (ImageView) v.findViewById(R.id.ivPic2);
+                ivPic3 = (ImageView) v.findViewById(R.id.ivPic3);
+                ivPic4 = (ImageView) v.findViewById(R.id.ivPic4);
 
                 tvTitle.setText(sale.getTitle());
                 try {
@@ -89,10 +99,42 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                if (sale.getCoverPic() != null)
-                    Picasso.with(getContext()).load(sale.getCoverPic().getUrl()).placeholder(R.drawable.placeholder).into(ivCoverPic);
-                else
-                    Picasso.with(getContext()).load(R.drawable.placeholder).into(ivCoverPic);
+
+                Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic1);
+                Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic2);
+                Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic3);
+                Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic4);
+                int i=0;
+                ParseRelation<Item> rel = sale.getItemsRelation();
+                try {
+                    List<Item> itemList = rel.getQuery().find();
+                    for(Item item:itemList) {
+                        if(i==4)
+                            break;
+                        if (item.getPhoto() != null) {
+                            if (i == 0) {
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic1);
+                            }
+                            if (i == 1) {
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic2);
+                            }
+                            if (i == 2) {
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic3);
+                            }
+                            if (i == 3) {
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic4);
+                            }
+                            i++;
+                        }
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+//
+
+
+
                 return v;
             }
         };
@@ -146,29 +188,39 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 //            }
 //        });
 
+        for(int i=0;i<arrIv.length;i++) {
+            final int bkI = i;
+            if(i==0)
+                arrIv[i] = ivPic1;
+            if(i==1)
+                arrIv[i] = ivPic2;
+            if(i==2)
+                arrIv[i] = ivPic3;
+            if(i==3)
+                arrIv[i] = ivPic4;
+            arrIv[i].setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
 
-        ivCoverPic.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    then = (long) System.currentTimeMillis();
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if ((System.currentTimeMillis() - then) > 500) {
-            /* Implement long click behavior here */
-                        System.out.println("Long Click has happened!");
-                        return false;
-                    } else {
-            /* Implement short click behavior here or do nothing */
-                        System.out.println("Short Click has happened...");
-                        YardSale s = parseAdapter.getItem(position);
-                        client.getItemsForYardSale(myContext, s, ivCoverPic);
-                        return true;
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        then = (long) System.currentTimeMillis();
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        if ((System.currentTimeMillis() - then) > 500) {
+                /* Implement long click behavior here */
+                            System.out.println("Long Click has happened!");
+                            return false;
+                        } else {
+                /* Implement short click behavior here or do nothing */
+                            System.out.println("Short Click has happened...");
+                            YardSale s = parseAdapter.getItem(position);
+                            client.getItemsForYardSale(myContext, s, arrIv[bkI]);
+                            return true;
+                        }
                     }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
 
         btDeleteSale.setOnClickListener(new View.OnClickListener() {
             YardSale s = parseAdapter.getItem(position);

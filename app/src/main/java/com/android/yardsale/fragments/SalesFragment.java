@@ -126,6 +126,7 @@ public class SalesFragment extends Fragment {
             public ParseQuery<YardSale> create() {
                 ParseQuery<YardSale> query = YardSale.getQuery();
                 query.whereNotEqualTo("seller", ParseUser.getCurrentUser());
+
                 try {
                     query.find();
                 } catch (ParseException e) {

@@ -8,7 +8,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cvSales"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:clickable="true"
@@ -20,16 +20,57 @@
             android:id="@+id/rlCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/ivCoverPic"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:scaleType="fitXY"
-                android:transitionName="itemDetail" />
+                android:orientation="horizontal"
+                android:id="@+id/llImagesTop">
+                <ImageView
+                    android:id="@+id/ivPic1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:transitionName="itemDetail" />
+
+                <ImageView
+                    android:id="@+id/ivPic2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:transitionName="itemDetail" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/llImagesBottom"
+                android:orientation="horizontal"
+                android:layout_below="@+id/llImagesTop">
+                <ImageView
+                    android:id="@+id/ivPic3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_alignParentLeft="true"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:transitionName="itemDetail" />
+
+                <ImageView
+                    android:id="@+id/ivPic4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:transitionName="itemDetail" />
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/btLike"
@@ -47,7 +88,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ivCoverPic"
+                android:layout_below="@+id/llImagesBottom"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textAlignment="center" />

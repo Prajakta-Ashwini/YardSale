@@ -32,6 +32,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
@@ -195,8 +196,14 @@ public class YardSaleDetailActivity extends FragmentActivity {
                     @Override
                     public void done(List<Item> items, ParseException e) {
                         if (e == null) {
-                            itemList.add(items.get(0));
+                            Item item = items.get(0);
+                            itemList.add(item);
                             aItems.notifyDataSetChanged();
+
+                            // itemlist add
+                            YardSale s = item.getYardSale();
+                            s.getItemsRelation().add(item);
+                            s.saveInBackground();
                         }
                     }
                 });
@@ -208,9 +215,18 @@ public class YardSaleDetailActivity extends FragmentActivity {
                         if (e == null) {
                             for (Item i : itemList) {
                                 if (i.getObjectId().equals(objId)) {
+                                    //if photo changed then update itemlist
+                                    YardSale s = i.getYardSale();
+                                    if(i.getPhoto()!=item.getPhoto()) {
+                                        s.getItemsRelation().remove(i);
+                                        s.getItemsRelation().add(item);
+                                        s.saveInBackground();
+                                    }
                                     i.setDescription(item.getDescription());
+                                    ParseFile old = i.getPhoto();
                                     i.setPhoto(item.getPhoto());
                                     i.setPrice(item.getPrice());
+
                                     aItems.notifyDataSetChanged();
                                 }
                             }
