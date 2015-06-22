@@ -13,7 +13,6 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -527,12 +526,13 @@ public class YardSaleApplication extends Application {
         return bmpUri;
     }
 
+    //todo fix this
     public static void launchItemDetailActivity(Context context, Item item, ImageView ivItemPic) {
         Intent i = new Intent(context, ItemDetailActivity.class);
         i.putExtra("selected_item", item.getObjectId());
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation((Activity) context, (View) ivItemPic, "itemDetail");
-        context.startActivity(i, options.toBundle());
+//        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                makeSceneTransitionAnimation((Activity) context, (View) ivItemPic, "itemDetail");
+//        context.startActivity(i, options.toBundle());
     }
 
     public static ParseUser getCurrentUser() {

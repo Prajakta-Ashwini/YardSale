@@ -16,6 +16,7 @@ public class HeaderRecyclerViewAdapterV2 extends RecyclerView.Adapter<RecyclerVi
     private static final int ITEMS_START = Integer.MIN_VALUE + 20;
     private static final int ADAPTER_MAX_TYPES = 100;
 
+
     private RecyclerView.Adapter mWrappedAdapter;
     private List<View> mHeaderViews, mFooterViews;
     private Map<Class, Integer> mItemTypesOffset;
@@ -179,4 +180,13 @@ public class HeaderRecyclerViewAdapterV2 extends RecyclerView.Adapter<RecyclerVi
             super(itemView);
         }
     }
+
+    public RecyclerView.Adapter getmWrappedAdapter() {
+        return mWrappedAdapter;
+    }
+
+    public void setmWrappedAdapter(RecyclerView.Adapter mWrappedAdapter) {
+        this.mWrappedAdapter = mWrappedAdapter;
+    }
+
 }

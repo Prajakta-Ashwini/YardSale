@@ -1,12 +1,19 @@
 package com.android.yardsale.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,6 +29,7 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
@@ -37,6 +45,10 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     private Button btDeleteSale;
     private Button btEditSale;
     private Context myContext;
+    private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
+    private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
+    HashMap<SaleViewHolder, AnimatorSet> likeAnimations = new HashMap<>();
+    long then;
 
     public ThingsAdapter(final Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
 
@@ -98,7 +110,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(SaleViewHolder holder, final int position) {
+    public void onBindViewHolder(final SaleViewHolder holder, final int position) {
         parseAdapter.getView(position, holder.itemView, parseParent);
         client.setLikeForSale(yardSale, btLike, false);
         btLike.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +119,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(myContext, "btn_like sale!", Toast.LENGTH_SHORT).show();
+                updateHeartButton(s, holder, true);
                 client.setLikeForSale(s, btLike, true);
                 parseAdapter.loadObjects();
                 thingsAdapter.notifyDataSetChanged();
@@ -125,11 +138,35 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             }
         });
 
-        ivCoverPic.setOnClickListener(new View.OnClickListener() {
+//        ivCoverPic.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                YardSale s = parseAdapter.getItem(position);
+//                client.getItemsForYardSale(myContext, s, ivCoverPic);
+//            }
+//        });
+
+
+        ivCoverPic.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                YardSale s = parseAdapter.getItem(position);
-                client.getItemsForYardSale(myContext, s, ivCoverPic);
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    then = (long) System.currentTimeMillis();
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if ((System.currentTimeMillis() - then) > 500) {
+            /* Implement long click behavior here */
+                        System.out.println("Long Click has happened!");
+                        return false;
+                    } else {
+            /* Implement short click behavior here or do nothing */
+                        System.out.println("Short Click has happened...");
+                        YardSale s = parseAdapter.getItem(position);
+                        client.getItemsForYardSale(myContext, s, ivCoverPic);
+                        return true;
+                    }
+                }
+                return true;
             }
         });
 
@@ -216,5 +253,54 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 
     public void removeYardSale(YardSale row) {
         parseAdapter.notifyDataSetChanged();
+    }
+
+    private void updateHeartButton(final YardSale sale, final SaleViewHolder holder, boolean animated) {
+        if (animated) {
+            if (!likeAnimations.containsKey(holder)) {
+                AnimatorSet animatorSet = new AnimatorSet();
+                likeAnimations.put(holder, animatorSet);
+
+                ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(holder.btLike, "rotation", 0f, 360f);
+                rotationAnim.setDuration(300);
+                rotationAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
+
+                ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(holder.btLike, "scaleX", 0.2f, 1f);
+                bounceAnimX.setDuration(300);
+                bounceAnimX.setInterpolator(OVERSHOOT_INTERPOLATOR);
+
+                ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(holder.btLike, "scaleY", 0.2f, 1f);
+                bounceAnimY.setDuration(300);
+                bounceAnimY.setInterpolator(OVERSHOOT_INTERPOLATOR);
+//                bounceAnimY.addListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationStart(Animator animation) {
+//                        if(sale.li)
+//                        holder.btLike.setImageResource(R.drawable.ic_heart_red);
+//                    }
+//                });
+                animatorSet.play(rotationAnim);
+                animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
+
+                animatorSet.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        //resetLikeAnimationState(holder);
+                        likeAnimations.remove(holder);
+                        //holder.vBgLike.setVisibility(View.GONE);
+                        //holder.ivLike.setVisibility(View.GONE);
+                    }
+                });
+
+                animatorSet.start();
+            }
+        }else {
+            if (likeAnimations.containsKey(holder.getPosition())) {
+                holder.btLike.setImageResource(R.drawable.ic_heart_red);
+            } else {
+                holder.btLike.setImageResource(R.drawable.ic_heart_outline_grey);
+            }
+        }
+
     }
 }

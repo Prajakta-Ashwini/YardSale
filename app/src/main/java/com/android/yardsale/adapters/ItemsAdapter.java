@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -22,9 +23,11 @@ import java.util.List;
 
 public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
+
     private List<Item> itemList;
     private Context context;
     private YardSaleApplication client;
+    long then;
 
     public ItemsAdapter(Context context, List<Item> contactList) {
         this.itemList = contactList;
@@ -84,12 +87,37 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         });
 
 
-        viewHolder.ivPic.setOnClickListener(new View.OnClickListener() {
-            Item i = itemList.get(position);
+//        viewHolder.ivPic.setOnClickListener(new View.OnClickListener() {
+//            Item i = itemList.get(position);
+//
+//            @Override
+//            public void onClick(View v) {
+//                client.launchItemDetailActivity(context, i, viewHolder.ivPic);
+//            }
+//        });
 
+        viewHolder.ivPic.setOnTouchListener(new View.OnTouchListener() {
+            Item i = itemList.get(position);
             @Override
-            public void onClick(View v) {
-                client.launchItemDetailActivity(context, i, viewHolder.ivPic);
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    then = (long) System.currentTimeMillis();
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if ((System.currentTimeMillis() - then) > 500) {
+            /* Implement long click behavior here */
+                        System.out.println("Long Click has happened!");
+                        setPosition(viewHolder.getPosition());
+                        viewHolder.showMenu();
+                        return false;
+                    } else {
+            /* Implement short click behavior here or do nothing */
+                        System.out.println("Short Click has happened...");
+                        client.launchItemDetailActivity(context, i, viewHolder.ivPic);
+                        return true;
+                    }
+                }
+                return true;
             }
         });
 
@@ -107,8 +135,43 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
                 from(viewGroup.getContext()).
                 inflate(R.layout.item_sale_item, viewGroup, false);
 
-        return new ItemViewHolder(itemView);
+        return new ItemViewHolder(itemView,context);
     }
+
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    @Override
+    public void onViewRecycled(ItemViewHolder holder) {
+        //holder.ivPic.setOn(null);
+        super.onViewRecycled(holder);
+    }
+
+    public void edit(Activity newContext, int position){
+        Item i = itemList.get(position);
+        Toast.makeText(context, "edit item!", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(context, EditItemActivity.class);
+        intent.putExtra("item_id", i.getObjectId());
+        newContext.startActivityForResult(intent, 21);
+    }
+
+    public void delete(Activity newContext, int position){
+        Item i = itemList.get(position);
+        Toast.makeText(newContext, "delete item!", Toast.LENGTH_SHORT).show();
+        client.deleteItem(i);
+        itemList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, itemList.size());
+    }
+
 }
 
 

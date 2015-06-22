@@ -8,7 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,8 @@ import com.android.yardsale.R;
 import com.android.yardsale.adapters.HeaderRecyclerViewAdapterV2;
 import com.android.yardsale.adapters.ItemsAdapter;
 import com.android.yardsale.fragments.SaleMapFragment;
+import com.android.yardsale.helpers.MyView;
+import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
@@ -33,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class YardSaleDetailActivity extends FragmentActivity {
-    private RecyclerView rvItems;
+    private MyView rvItems;
     private ItemsAdapter aItems;
     HeaderRecyclerViewAdapterV2 hAdapter;
     private List<Item> itemList;
@@ -46,18 +49,20 @@ public class YardSaleDetailActivity extends FragmentActivity {
     private TextView tvSeller;
     LinearLayoutManager llm;
     Activity thisactivity;
+    YardSaleApplication client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //TODO back button
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yard_sale_detail);
-        rvItems = (RecyclerView) findViewById(R.id.rvItems);
+        rvItems = (MyView) findViewById(R.id.rvItems);
         btCreateItem = (FloatingActionButton) findViewById(R.id.btCreateItem);
         btCreateItem.attachToRecyclerView(rvItems);
-        btCreateItem.setColorNormal(getResources().getColor(R.color.ruby));
+        btCreateItem.setColorNormal(getResources().getColor(R.color.amber));
 
         itemList = new ArrayList<>();
+        client = new YardSaleApplication();
 
         final List<CharSequence> itemsObjList = getIntent().getCharSequenceArrayListExtra("item_list");
         final String yardsaleObj = getIntent().getStringExtra("yardsale");
@@ -71,6 +76,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
         hAdapter = new HeaderRecyclerViewAdapterV2(aItems);
 
         rvItems.setAdapter(hAdapter);
+        registerForContextMenu(rvItems);
         thisactivity = this;
 
 //        aItems = new ItemsAdapter(this, itemList);
@@ -222,6 +228,47 @@ public class YardSaleDetailActivity extends FragmentActivity {
 
     public void setSale(YardSale sale) {
         this.sale = sale;
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        MyView.RecyclerContextMenuInfo info = (MyView.RecyclerContextMenuInfo) item.getMenuInfo();
+        int position = -1;
+        try {
+            int numHeaders = hAdapter.getHeaderCount();
+            position = aItems.getPosition()-numHeaders;
+
+        } catch (Exception e) {
+            Log.d("Error", e.getLocalizedMessage(), e);
+            return super.onContextItemSelected(item);
+        }
+        switch (item.getItemId()) {
+            case R.id.delete_item:
+                Toast.makeText(this, "delete item!", Toast.LENGTH_SHORT).show();
+                aItems.delete(this, position);
+                break;
+            case R.id.edit_item:
+                Toast.makeText(this, "edit item!", Toast.LENGTH_SHORT).show();
+                aItems.edit(this, position);
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        mRecyclerView = view.findViewById(R.id.recyclerview);
+//        registerForContextMenu(mRecyclerView);
+//    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        // inflate menu here
+        menu.setHeaderTitle("Select action:");
+        menu.add(Menu.NONE, R.id.edit_item, Menu.NONE, "EDIT");
+        menu.add(Menu.NONE, R.id.delete_item, Menu.NONE, "DELETE");
     }
 
 
