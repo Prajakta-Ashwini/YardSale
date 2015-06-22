@@ -37,16 +37,16 @@
         <!--app:layout_behavior="com.android.yardsale.helpers.ScrollAwareFABBehavior"/>-->
 
     <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/btCreateItem"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
+        android:src="@drawable/ic_action_content_add"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add"
-        fab:fab_colorNormal="@color/ruby"
-        fab:fab_colorPressed="@color/ruby"
-        fab:fab_colorRipple="@color/ruby"
-        app:backgroundTint="@color/ruby"/>
+        app:backgroundTint="@color/amber"
+        fab:fab_colorNormal="@color/amber"
+        fab:fab_colorPressed="@color/amber"
+        fab:fab_colorRipple="@color/amber" />
 
 </android.support.design.widget.CoordinatorLayout>
     <!--</ScrollView>-->

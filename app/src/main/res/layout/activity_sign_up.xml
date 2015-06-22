@@ -30,6 +30,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:maxLines="1"
         android:layout_marginTop="120dp"
         android:hint="User Name" />
 
@@ -63,6 +64,7 @@
         android:layout_marginTop="15dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/etSignUpUserName"
+        android:maxLines="1"
         android:layout_centerHorizontal="true"
         android:hint="Password"
         android:inputType="textPassword" />
@@ -74,6 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/etSignUpPassword"
         android:layout_centerHorizontal="true"
+        android:maxLines="1"
         android:hint="Re-enter Password"
         android:inputType="textPassword" />
 

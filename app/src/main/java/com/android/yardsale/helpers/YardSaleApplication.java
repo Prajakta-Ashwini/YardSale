@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.yardsale.activities.AddItemActivity;
 import com.android.yardsale.activities.HowItWorksActivity;
 import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
@@ -91,16 +92,16 @@ public class YardSaleApplication extends Application {
         ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseFacebookUtils.initialize(this);
 
-        ParsePush.subscribeInBackground("", new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Log.e("com.parse.push", "successfully subscribed to the broadcast channel.");
-                } else {
-                    Log.e("com.parse.push", "failed to subscribe for push", e);
-                }
-            }
-        });
+//        ParsePush.subscribeInBackground("", new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if (e == null) {
+//                    Log.e("com.parse.push", "successfully subscribed to the broadcast channel.");
+//                } else {
+//                    Log.e("com.parse.push", "failed to subscribe for push", e);
+//                }
+//            }
+//        });
         super.onCreate();
     }
 
@@ -166,15 +167,11 @@ public class YardSaleApplication extends Application {
                 } else if (user.isNew()) {
                     Log.d("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
-                    Intent intent = new Intent(callingActivity, ListActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    callingActivity.startActivity(intent);
+                    getYardSales(false);
                 } else {
                     Log.d("DEBUG", "User logged in through Facebook!");
                     Toast.makeText(callingActivity, "signUpAndLoginWithFB called already exisiting user", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(callingActivity, ListActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    callingActivity.startActivity(intent);
+                    getYardSales(false);
                 }
             }
         });
@@ -201,13 +198,13 @@ public class YardSaleApplication extends Application {
 //        }
 //    }
 
-    public void createYardSale(final Context context, final String title, final String description, Date startTime, Date endTime, String address) {
+    public void createYardSale(final Activity activity, final String title, final String description, Date startTime, Date endTime, String address) {
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
         Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
         //TODO get location from the given address
 
-        YardSale yardSale = new YardSale();
+        final YardSale yardSale = new YardSale();
         yardSale.setTitle(title);
         yardSale.setDescription(description);
         yardSale.setAddress(address);
@@ -222,11 +219,10 @@ public class YardSaleApplication extends Application {
         yardSale.saveInBackground(new SaveCallback() {
             public void done(ParseException e) {
                 if (e == null) {
-                    Intent data = new Intent();
-                    data.putExtra("title", String.valueOf(title));
-                    data.putExtra("desc", String.valueOf(description));
-                    ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
-                    ((Activity) context).finish();
+                    Intent intent = new Intent(activity, AddItemActivity.class);
+                    intent.putExtra("yard_sale_id", yardSale.getObjectId());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(intent);
                 } else {
                     Toast.makeText(context, "error while saving item!!!", Toast.LENGTH_SHORT).show();
                 }
@@ -260,9 +256,9 @@ public class YardSaleApplication extends Application {
     public void getYardSales(boolean getAllSales) {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.include("seller");
-        if(!getAllSales){
+        if (!getAllSales) {
             //get only sales that dont belong to me
-            query.whereNotEqualTo("seller",getCurrentUser());
+            query.whereNotEqualTo("seller", getCurrentUser());
         }
         query.orderByDescending("createdAt");
         query.findInBackground(new FindCallback<YardSale>() {
@@ -296,14 +292,14 @@ public class YardSaleApplication extends Application {
     public void addYardSalesToMap(final SaleMapFragment mapFragment, boolean getAllSales) {
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.include("seller");
-        if(!getAllSales){
+        if (!getAllSales) {
             //get only sales that dont belong to me
-            query.whereNotEqualTo("seller",getCurrentUser());
+            query.whereNotEqualTo("seller", getCurrentUser());
         }
         query.findInBackground(new FindCallback<YardSale>() {
             public void done(List<YardSale> itemList, ParseException e) {
                 if (e == null) {
-                    for(YardSale ys:itemList)
+                    for (YardSale ys : itemList)
                         mapFragment.addSaleToList(ys);
                 }
             }
@@ -327,7 +323,7 @@ public class YardSaleApplication extends Application {
 
 
     public void createItem(final Context context, final String description, final Number price, ParseFile photo, YardSale yardSale) {
-        Item item = new Item(description, price, photo, yardSale);
+        final Item item = new Item(description, price, photo, yardSale);
         item.saveInBackground(new SaveCallback() {
             public void done(ParseException e) {
                 if (e == null) {
@@ -337,6 +333,7 @@ public class YardSaleApplication extends Application {
                     ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
                     ((Activity) context).finish();
                 } else {
+                    Log.e("CREATE_ITEM_ERR", "blah", e);
                     Toast.makeText(context, "error while saving item!!!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -442,6 +439,10 @@ public class YardSaleApplication extends Application {
     }
 
     public void deleteItem(Item item) {
+        ParsePush push = new ParsePush();
+        push.setChannel(item.getYardSale().getObjectId());
+        push.setMessage(item.getDescription() + " was deleted");
+        push.sendInBackground();
         item.deleteInBackground();
     }
 

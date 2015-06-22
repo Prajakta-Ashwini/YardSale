@@ -51,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
         android:layout_centerHorizontal="true"
+        android:maxLines="1"
         android:id="@+id/etEmail"
         android:hint="User name" />
 
@@ -61,6 +62,7 @@
         android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         android:id="@+id/etPassword"
+        android:maxLines="1"
         android:hint="Password"
         android:layout_below="@+id/etEmail"/>
 

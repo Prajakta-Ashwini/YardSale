@@ -53,14 +53,15 @@ public class YardSaleDetailActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yard_sale_detail);
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
-        btCreateItem = (FloatingActionButton) findViewById(R.id.btCreateItem);
+
+        btCreateItem = (FloatingActionButton) findViewById(R.id.fab);
         btCreateItem.attachToRecyclerView(rvItems);
-        btCreateItem.setColorNormal(getResources().getColor(R.color.ruby));
 
         itemList = new ArrayList<>();
 
         final List<CharSequence> itemsObjList = getIntent().getCharSequenceArrayListExtra("item_list");
         final String yardsaleObj = getIntent().getStringExtra("yardsale");
+
         llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvItems.setHasFixedSize(true);

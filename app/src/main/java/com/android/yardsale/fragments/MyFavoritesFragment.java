@@ -52,8 +52,8 @@ public class MyFavoritesFragment extends Fragment {
         rvSales.setLayoutManager(mLayoutManager);
         rvSales.setItemAnimator(new DefaultItemAnimator());
 
-        FloatingActionButton btCreateSale = (FloatingActionButton) view.findViewById(R.id.btCreateSale);
-        btCreateSale.setVisibility(View.INVISIBLE);
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
 
         ParseQueryAdapter.QueryFactory<YardSale> factory = getYardSaleQueryFactory();
         adapter = new ThingsAdapter(getActivity(), factory, container);

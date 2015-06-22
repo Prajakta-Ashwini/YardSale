@@ -83,6 +83,11 @@ public class ListingsFragment extends Fragment {
         rvSales.setAdapter(adapter);
 
         btCreateSale = (FloatingActionButton) view.findViewById(R.id.fab);
+        btCreateSale.setImageDrawable((getResources().getDrawable(R.drawable.ic_action_content_add)));
+//        btFlip.setColorNormal(R.color.amber);
+//        btFlip.setColorPressed(R.color.amber);
+//
+//        btFlip.setColorRipple(R.color.amber);
         btCreateSale.attachToRecyclerView(rvSales);
         btCreateSale.setColorNormal(getResources().getColor(R.color.amber));
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
