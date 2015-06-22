@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ItemsAdapter;
-import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -22,7 +21,6 @@ public class SearchActivity extends ActionBarActivity {
 
     private ItemsAdapter adapter;
     private ArrayList<Item> items;
-    private YardSaleApplication client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +30,6 @@ public class SearchActivity extends ActionBarActivity {
         //TODO customize the toolbar later - back button
 
         items = new ArrayList<>();
-        client = new YardSaleApplication(this);
 
         ArrayList<String> seachObjectIds = getIntent().getStringArrayListExtra("search");
 

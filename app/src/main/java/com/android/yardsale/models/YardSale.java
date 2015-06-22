@@ -1,9 +1,12 @@
 package com.android.yardsale.models;
 
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -109,11 +112,15 @@ public class YardSale extends ParseObject  {
 
     public void addLikeForUser(ParseUser user) {
         getLikesRelation().add(user);
+        ParsePush.subscribeInBackground(getObjectId());
+        Log.e("PUSH SUBSCRIBE", getObjectId() + getSeller().getUsername());
         saveInBackground();
     }
 
     public void removeLikeForUser(ParseUser user) {
         getLikesRelation().remove(user);
+        ParsePush.unsubscribeInBackground(getObjectId());
+        Log.e("PUSH UNSUBSCRIBE", getObjectId() + getSeller().getUsername());
         saveInBackground();
     }
 

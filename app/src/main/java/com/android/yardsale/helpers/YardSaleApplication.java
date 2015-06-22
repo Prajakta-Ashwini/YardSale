@@ -91,16 +91,16 @@ public class YardSaleApplication extends Application {
         ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseFacebookUtils.initialize(this);
 
-//        ParsePush.subscribeInBackground("", new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                if (e == null) {
-//                    Log.e("com.parse.push", "successfully subscribed to the broadcast channel.");
-//                } else {
-//                    Log.e("com.parse.push", "failed to subscribe for push", e);
-//                }
-//            }
-//        });
+        ParsePush.subscribeInBackground("", new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.e("com.parse.push", "successfully subscribed to the broadcast channel.");
+                } else {
+                    Log.e("com.parse.push", "failed to subscribe for push", e);
+                }
+            }
+        });
         super.onCreate();
     }
 
@@ -304,16 +304,25 @@ public class YardSaleApplication extends Application {
     }
 
 
-    public void createItem(final Context context, final String description, final Number price, ParseFile photo, YardSale yardSale) {
+    public void createItem(final Context context, final String description, final Number price, ParseFile photo, final YardSale yardSale) {
         final Item item = new Item(description, price, photo, yardSale);
         item.saveInBackground(new SaveCallback() {
             public void done(ParseException e) {
                 if (e == null) {
                     Intent data = new Intent();
+                    Log.e("PUSH ", "Start PUSH");
                     data.putExtra("desc", String.valueOf(description));
                     data.putExtra("price", String.valueOf(price));
+                    Log.e("PUSH", "Set extras done" + yardSale.getObjectId());
+
+                    Log.e("PUSH", yardSale.getObjectId() + yardSale.getSeller().getUsername());
+                    ParsePush push = new ParsePush();
+                    push.setChannel(yardSale.getObjectId());
+                    push.setMessage("blah");
+                    push.sendInBackground();
                     ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
                     ((Activity) context).finish();
+
                 } else {
                     Log.e("CREATE_ITEM_ERR", "blah", e);
                     Toast.makeText(context, "error while saving item!!!", Toast.LENGTH_SHORT).show();

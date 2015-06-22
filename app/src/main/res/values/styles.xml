@@ -29,7 +29,7 @@
         <item name="android:headerBackground">@color/dark_primary_color</item>
     </style>
 
-    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.TimePicker">
         <item name="android:headerBackground">@color/dark_primary_color</item>
     </style>
 

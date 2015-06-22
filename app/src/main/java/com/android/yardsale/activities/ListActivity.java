@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.adapters.PastHistoryFragment;
 import com.android.yardsale.fragments.ListingsFragment;
 import com.android.yardsale.fragments.MyFavoritesFragment;
 import com.android.yardsale.fragments.SalesFragment;
@@ -224,7 +225,7 @@ public class ListActivity extends ActionBarActivity {
                 fragment = listingsFragment;
                 break;
             case R.id.nav_third_fragment:
-                fragment = MyFavoritesFragment.newInstance();
+                fragment = PastHistoryFragment.newInstance();
                 break;
             default:
                 fragment = salesFragment;

@@ -24,6 +24,7 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class SalesFragment extends Fragment {
@@ -126,7 +127,9 @@ public class SalesFragment extends Fragment {
             public ParseQuery<YardSale> create() {
                 ParseQuery<YardSale> query = YardSale.getQuery();
                 query.whereNotEqualTo("seller", ParseUser.getCurrentUser());
-
+                Calendar c = Calendar.getInstance();
+                query.whereGreaterThanOrEqualTo("end_time", c.getTime());
+                query.orderByAscending("start_time");
                 try {
                     query.find();
                 } catch (ParseException e) {
