@@ -57,6 +57,7 @@
             android:label="@string/title_activity_search" />
         <activity
             android:name=".activities.AddYardSaleActivity"
+            android:noHistory="true"
             android:label="Create a Yard Sale" />
         <activity
             android:name=".activities.YardSaleDetailActivity"

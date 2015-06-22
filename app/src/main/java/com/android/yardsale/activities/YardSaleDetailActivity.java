@@ -56,8 +56,9 @@ public class YardSaleDetailActivity extends FragmentActivity {
         //TODO back button
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_yard_sale_detail);
+
         rvItems = (MyView) findViewById(R.id.rvItems);
-        btCreateItem = (FloatingActionButton) findViewById(R.id.btCreateItem);
+        btCreateItem = (FloatingActionButton) findViewById(R.id.fab);
         btCreateItem.attachToRecyclerView(rvItems);
         btCreateItem.setColorNormal(getResources().getColor(R.color.amber));
 
@@ -66,6 +67,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
 
         final List<CharSequence> itemsObjList = getIntent().getCharSequenceArrayListExtra("item_list");
         final String yardsaleObj = getIntent().getStringExtra("yardsale");
+
         llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvItems.setHasFixedSize(true);

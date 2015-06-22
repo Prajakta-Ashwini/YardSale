@@ -20,6 +20,7 @@ import com.android.yardsale.activities.EditYardSaleActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
+import com.parse.ParsePush;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -77,6 +78,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 salesList.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, salesList.size());
+
             }
         });
 
@@ -119,6 +121,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             public void onClick(View v) {
                 Toast.makeText(context, "btn_like sale!", Toast.LENGTH_SHORT).show();
                 updateHeartButton(s, saleViewHolder, true);
+                ParsePush.subscribeInBackground(s.getObjectId());
                 client.setLikeForSale(s, saleViewHolder.btLike, true);
             }
         });

@@ -1,6 +1,7 @@
 package com.android.yardsale.activities;
 
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -29,7 +30,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.text.NumberFormat;
 
 public class AddItemActivity extends ActionBarActivity {
@@ -154,17 +155,42 @@ public class AddItemActivity extends ActionBarActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-                image = BitmapFactory.decodeFile(takenPhotoUri.getPath());
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+
+                AssetFileDescriptor fileDescriptor;
+                try {
+                    fileDescriptor =
+                            this.getContentResolver().openAssetFileDescriptor(takenPhotoUri, "r");
+                    image = BitmapFactory.decodeFileDescriptor(
+                            fileDescriptor.getFileDescriptor(), null, options);
+                    Log.e("'4-sample' method"
+                            , image.getWidth() + " "
+                            + image.getHeight());
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
                 Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
                 ivItemPreview.setImageBitmap(bMapScaled);
             }
         } else if (requestCode == PICK_PHOTO_CODE) {
             Uri photoUri = data.getData();
             // Do something with the photo based on Uri
-            try {
-                image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
 
-            } catch (IOException e) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 4;
+
+            AssetFileDescriptor fileDescriptor = null;
+            try {
+                fileDescriptor =
+                        this.getContentResolver().openAssetFileDescriptor(photoUri, "r");
+                image = BitmapFactory.decodeFileDescriptor(
+                        fileDescriptor.getFileDescriptor(), null, options);
+                Log.e("'4-sample' method"
+                        , image.getWidth() + " "
+                        + image.getHeight());
+            } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
             // Load the selected image into a preview
@@ -173,8 +199,9 @@ public class AddItemActivity extends ActionBarActivity {
         }
     }
 
-    public void addItem(View view) {
-        Number price = Double.parseDouble(etAddItemPrice.getText().toString());
+    public void addItem(View view)
+    {
+        Number price = Double.parseDouble(etAddItemPrice.getText().toString().replace("$",""));
         String description = String.valueOf(etAddItemDescription.getText());
         if (image == null) {
             Toast.makeText(this, "please add image!!!", Toast.LENGTH_SHORT).show();
