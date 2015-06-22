@@ -108,33 +108,33 @@
                 android:textAlignment="center" />
 
 
-            <Button
-                android:id="@+id/btDeleteSale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvAddedBy"
-                android:background="@android:color/transparent"
-                android:text="Delete"
-                android:visibility="invisible" />
+            <!--<Button-->
+                <!--android:id="@+id/btDeleteSale"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/tvAddedBy"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:text="Delete"-->
+                <!--android:visibility="invisible" />-->
 
-            <Button
-                android:id="@+id/btEditSale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/btDeleteSale"
-                android:layout_centerHorizontal="true"
-                android:background="@android:color/transparent"
-                android:text="Edit"
-                android:visibility="invisible" />
+            <!--<Button-->
+                <!--android:id="@+id/btEditSale"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignTop="@+id/btDeleteSale"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:text="Edit"-->
+                <!--android:visibility="invisible" />-->
 
-            <Button
-                android:id="@+id/btShareSale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/btEditSale"
-                android:background="@android:color/transparent"
-                android:text="Share" />
+            <!--<Button-->
+                <!--android:id="@+id/btShareSale"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignTop="@+id/btEditSale"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:text="Share" />-->
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class EditYardSaleActivity extends ActionBarActivity {
     private static TextView tvEditYSStart;
     private static TextView tvEditYSEnd;
     private YardSale yardSale;
+    private Button btnSave;
     private static DateFormat format = DateFormat.getDateTimeInstance();
     YardSaleApplication client;
     static final int DATE_DIALOG_ID_START = 1;
@@ -60,6 +62,7 @@ public class EditYardSaleActivity extends ActionBarActivity {
         etEditYSAddress = (EditText) findViewById(R.id.etYSAddress);
         tvEditYSStart = (TextView) findViewById(R.id.tvYSStart);
         tvEditYSEnd = (TextView) findViewById(R.id.tvYSEnd);
+        btnSave = (Button) findViewById(R.id.btnSave);
 
         ParseQuery getQuery = YardSale.getQuery();
         try {
@@ -101,6 +104,13 @@ public class EditYardSaleActivity extends ActionBarActivity {
             public void onClick(View v) {
                 timePicker("end_time", endCal.get(Calendar.HOUR), endCal.get(Calendar.MINUTE));
                 datePicker("end_date", endCal.get(Calendar.YEAR), endCal.get(Calendar.MONTH), endCal.get(Calendar.DATE));
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSave(v);
             }
         });
     }

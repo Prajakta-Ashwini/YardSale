@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,9 +27,9 @@ import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseRelation;
-import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,20 +45,27 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     private ImageView ivPic3;
     private ImageView ivPic4;
     private ImageButton btLike;
-    private Button btShareSale;
-    private Button btDeleteSale;
-    private Button btEditSale;
+//    private Button btShareSale;
+//    private Button btDeleteSale;
+//    private Button btEditSale;
     private Context myContext;
+
+    private List<YardSale> listSales;
     ImageView[] arrIv = {ivPic1,ivPic2,ivPic3,ivPic4};
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
     HashMap<SaleViewHolder, AnimatorSet> likeAnimations = new HashMap<>();
     long then;
 
+    public List<YardSale> getListSales() {
+        return listSales;
+    }
+
     public ThingsAdapter(final Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
 
         parseParent = parentIn;
         client = new YardSaleApplication();
+        listSales = new ArrayList<>();
         parseAdapter = new ParseQueryAdapter<YardSale>(context, queryFactory) {
 
             @Override
@@ -71,13 +77,13 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 
                 myContext = context;
                 yardSale = sale;
-
+                listSales.add(sale);
 
                 TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
                 TextView tvAddedBy = (TextView) v.findViewById(R.id.tvAddedBy);
-                btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
-                btEditSale = (Button) v.findViewById(R.id.btEditSale);
-                btShareSale = (Button) v.findViewById(R.id.btShareSale);
+//                btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
+//                btEditSale = (Button) v.findViewById(R.id.btEditSale);
+//                btShareSale = (Button) v.findViewById(R.id.btShareSale);
                 btLike = (ImageButton) v.findViewById(R.id.btLike);
                 ivPic1 = (ImageView) v.findViewById(R.id.ivPic1);
                 ivPic2 = (ImageView) v.findViewById(R.id.ivPic2);
@@ -89,13 +95,13 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                     String user = sale.getSeller().fetchIfNeeded().getUsername();
 
                     tvAddedBy.setText("Added by " + user);
-                    if (sale.getSeller() == ParseUser.getCurrentUser()) {
-                        btDeleteSale.setVisibility(View.VISIBLE);
-                        btEditSale.setVisibility(View.VISIBLE);
-                    } else {
-                        btDeleteSale.setVisibility(View.INVISIBLE);
-                        btEditSale.setVisibility(View.INVISIBLE);
-                    }
+//                    if (sale.getSeller() == ParseUser.getCurrentUser()) {
+//                        btDeleteSale.setVisibility(View.VISIBLE);
+//                        btEditSale.setVisibility(View.VISIBLE);
+//                    } else {
+//                        btDeleteSale.setVisibility(View.INVISIBLE);
+//                        btEditSale.setVisibility(View.INVISIBLE);
+//                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -168,17 +174,17 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             }
         });
 
-        btShareSale.setOnClickListener(new View.OnClickListener() {
-            YardSale s = parseAdapter.getItem(position);
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(myContext, "share sale!", Toast.LENGTH_SHORT).show();
-                client.shareSale(myContext, s);
-                parseAdapter.loadObjects();
-                thingsAdapter.notifyDataSetChanged();
-            }
-        });
+//        btShareSale.setOnClickListener(new View.OnClickListener() {
+//            YardSale s = parseAdapter.getItem(position);
+//
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(myContext, "share sale!", Toast.LENGTH_SHORT).show();
+//                client.shareSale(myContext, s);
+//                parseAdapter.loadObjects();
+//                thingsAdapter.notifyDataSetChanged();
+//            }
+//        });
 
 //        ivCoverPic.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -208,6 +214,8 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                         if ((System.currentTimeMillis() - then) > 500) {
                 /* Implement long click behavior here */
                             System.out.println("Long Click has happened!");
+                            setPosition(holder.getPosition());
+                            holder.showMenu();
                             return false;
                         } else {
                 /* Implement short click behavior here or do nothing */
@@ -222,32 +230,32 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             });
         }
 
-        btDeleteSale.setOnClickListener(new View.OnClickListener() {
-            YardSale s = parseAdapter.getItem(position);
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(myContext, "delete sale!", Toast.LENGTH_SHORT).show();
-                client.deleteSale(s);
-                thingsAdapter.parseAdapter.loadObjects();
-                thingsAdapter.notifyDataSetChanged();
-            }
-        });
-
-        btEditSale.setOnClickListener(new View.OnClickListener() {
-            YardSale s = parseAdapter.getItem(position);
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(myContext, "edit sale!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(myContext, EditYardSaleActivity.class);
-                intent.putExtra("edit_yard_sale_id", s.getObjectId());
-                editYardSale(s);
-                ((Activity) myContext).startActivityForResult(intent, 20);
-                parseAdapter.loadObjects();
-                thingsAdapter.notifyDataSetChanged();
-            }
-        });
+//        btDeleteSale.setOnClickListener(new View.OnClickListener() {
+//            YardSale s = parseAdapter.getItem(position);
+//
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(myContext, "delete sale!", Toast.LENGTH_SHORT).show();
+//                client.deleteSale(s);
+//                thingsAdapter.parseAdapter.loadObjects();
+//                thingsAdapter.notifyDataSetChanged();
+//            }
+//        });
+//
+//        btEditSale.setOnClickListener(new View.OnClickListener() {
+//            YardSale s = parseAdapter.getItem(position);
+//
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(myContext, "edit sale!", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(myContext, EditYardSaleActivity.class);
+//                intent.putExtra("edit_yard_sale_id", s.getObjectId());
+//                editYardSale(s);
+//                ((Activity) myContext).startActivityForResult(intent, 20);
+//                parseAdapter.loadObjects();
+//                thingsAdapter.notifyDataSetChanged();
+//            }
+//        });
 
     }
 
@@ -273,17 +281,19 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         }
     }
 
+    //these add and edit are to refresh the recyclerview
     public void editYardSale(YardSale row) {
         for (int i = 0; i < parseAdapter.getCount(); i++) {
-            if (yardSale.getObjectId().equals(row.getObjectId())) {
-                yardSale.setTitle(row.getTitle());
-                yardSale.setDescription(row.getDescription());
-                yardSale.setAddress(row.getAddress());
+            YardSale s = listSales.get(i);
+            if (s.getObjectId().equals(row.getObjectId())) {
+                s.setTitle(row.getTitle());
+                s.setDescription(row.getDescription());
+                s.setAddress(row.getAddress());
                 if (row.getCoverPic() != null)
-                    yardSale.setCoverPic(row.getCoverPic());
+                    s.setCoverPic(row.getCoverPic());
                 //sale.setLocation(row.getLocation());
-                yardSale.setStartTime(row.getStartTime());
-                yardSale.setEndTime(row.getEndTime());
+                s.setStartTime(row.getStartTime());
+                s.setEndTime(row.getEndTime());
                 parseAdapter.loadObjects();
                 thingsAdapter.notifyDataSetChanged();
                 break;
@@ -305,6 +315,35 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 
     public void removeYardSale(YardSale row) {
         parseAdapter.notifyDataSetChanged();
+    }
+
+    //these delete and edit methods are to fire the intent to parse for a sale
+    public void fireEdit(Activity newContext, int position) {
+        YardSale s = listSales.get(position);
+        Toast.makeText(myContext, "edit sale!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(myContext, EditYardSaleActivity.class);
+        intent.putExtra("edit_yard_sale_id", s.getObjectId());
+        //editYardSale(s);
+        ((Activity) myContext).startActivityForResult(intent, 20);
+//        parseAdapter.loadObjects();
+//        thingsAdapter.notifyDataSetChanged();
+    }
+
+    public void fireDelete(Activity newContext, int position) {
+        YardSale s = listSales.get(position);
+        Toast.makeText(newContext, "delete sale!", Toast.LENGTH_SHORT).show();
+        listSales.remove(position);
+        client.deleteSale(s);
+        parseAdapter.loadObjects();
+        thingsAdapter.notifyDataSetChanged();
+    }
+
+    public void fireShare(Activity newContext, int position) {
+        YardSale s = listSales.get(position);
+        Toast.makeText(newContext, "share sale!", Toast.LENGTH_SHORT).show();
+        client.shareSale(myContext, s);
+//        parseAdapter.loadObjects();
+//        thingsAdapter.notifyDataSetChanged();
     }
 
     private void updateHeartButton(final YardSale sale, final SaleViewHolder holder, boolean animated) {
@@ -353,6 +392,17 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 holder.btLike.setImageResource(R.drawable.ic_heart_outline_grey);
             }
         }
-
     }
+
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+
 }
