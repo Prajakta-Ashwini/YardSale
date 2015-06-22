@@ -134,6 +134,19 @@ public class AddYardSaleActivity extends ActionBarActivity {
             DatePickerDialog.OnDateSetListener {
 
         @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+//
+//            Window window = getDialog().getWindow();
+//            window.setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
             final Calendar c = Calendar.getInstance();

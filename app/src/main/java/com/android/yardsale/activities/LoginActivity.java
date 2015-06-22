@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.parse.ParseFacebookUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
@@ -81,6 +82,12 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 
     public void loginWithFB(View view) {

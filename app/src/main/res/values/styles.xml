@@ -6,6 +6,8 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_profile</item>
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
+        <item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
     </style>
 
     <style name="white_background_wh">
@@ -15,6 +17,20 @@
         <item name="android:padding">@dimen/white_background_padding</item>
     </style>
 
+    <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+    </style>
 
+    <style name="MyTimePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
+    </style>
+
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">@color/dark_primary_color</item>
+    </style>
+
+    <style name="MyTimePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">@color/dark_primary_color</item>
+    </style>
 
 </resources>

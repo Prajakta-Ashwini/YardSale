@@ -6,4 +6,6 @@
     <color name="image_foreground_color">#9E9E9E</color>
     <color name="amber">#FFC107</color>
     <color name="primary_color">#009688</color>
+    <color name="dark_primary_color">#00796B</color>
+    <color name="random_color_for_testing">#F0F4C3</color>
 </resources>

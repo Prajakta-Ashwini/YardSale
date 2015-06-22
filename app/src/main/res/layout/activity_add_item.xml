@@ -5,13 +5,13 @@
     tools:context="com.android.yardsale.activities.AddItemActivity">
 
     <ImageButton
+        android:id="@+id/ibClose"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:id="@+id/ibClose"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:src="@drawable/ic_close"
-        android:onClick="onClose" />
+        android:layout_alignParentTop="true"
+        android:onClick="onClose"
+        android:src="@drawable/ic_close" />
 
     <Button
         android:id="@+id/btnSaveItem"
@@ -23,71 +23,73 @@
 
 
     <RelativeLayout
+        android:id="@+id/rlEnterDataSection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
         android:layout_below="@+id/ibClose"
-        android:id="@+id/rlEnterDataSection">
+        android:layout_marginTop="60dp">
 
-    <EditText
-        android:id="@+id/etItemDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:maxLines="4"
-        android:hint="What's this sale?" />
+        <EditText
+            android:id="@+id/etItemDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:gravity="start"
+            android:hint="What's this item?"
+            android:maxLines="4" />
 
-    <EditText
-        android:id="@+id/etItemPrice"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$0.00"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/etItemDescription"
-        android:ems="10"
-        android:hint="Price ?"
-        android:inputType="number" />
+        <EditText
+            android:id="@+id/etItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/etItemDescription"
+            android:layout_marginTop="20dp"
+            android:hint="Price ?"
+            android:inputType="number"
+            android:text="$0.00" />
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/ivItemPreview"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_below="@id/rlEnterDataSection"/>
+        android:layout_below="@id/rlEnterDataSection" />
 
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="#E0E0E0"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true">
-
-    <TextView
-        android:id="@+id/tvCamera"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ic_camera"
-        android:clickable="true"
-        android:onClick="onTakePicture"
-        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="84dp" />
-
-    <TextView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/tvGallery"
-        android:layout_alignTop="@id/tvCamera"
-        android:layout_alignBottom="@id/tvCamera"
-        android:background="@drawable/ic_gallery"
-        android:clickable="true"
-        android:onClick="onPickPhoto"
-        android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="99dp" />
+        android:background="#E0E0E0">
+
+        <TextView
+            android:id="@+id/tvCamera"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="84dp"
+            android:background="@drawable/ic_camera"
+            android:clickable="true"
+            android:onClick="onTakePicture" />
+
+        <TextView
+            android:id="@+id/tvGallery"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@id/tvCamera"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@id/tvCamera"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="99dp"
+            android:background="@drawable/ic_gallery"
+            android:clickable="true"
+            android:onClick="onPickPhoto" />
     </RelativeLayout>
 
 

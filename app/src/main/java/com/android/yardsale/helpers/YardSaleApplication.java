@@ -131,7 +131,7 @@ public class YardSaleApplication extends Application {
                 if (user != null) {
                     // Hooray! The user is logged in.
                     Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                    getYardSales(false);
+                    getYardSales(false, false);
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
                     Toast.makeText(context, "Login failed :(", Toast.LENGTH_LONG).show();
@@ -161,41 +161,21 @@ public class YardSaleApplication extends Application {
                 //TODO Progress bars
                 if (user == null) {
                     Toast.makeText(callingActivity, "signUpAndLoginWithFB called user is null", Toast.LENGTH_SHORT).show();
-                    Log.d("DEBUG", "Uh oh. The user cancelled the Facebook login.");
+                    Log.e("DEBUG", "Uh oh. The user cancelled the Facebook login.");
 
                 } else if (user.isNew()) {
-                    Log.d("DEBUG", "User signed up and logged in through Facebook!");
+                    Toast.makeText(callingActivity, "User signed up and logged in through Facebook", Toast.LENGTH_SHORT).show();
+                    Log.e("DEBUG", "User signed up and logged in through Facebook!");
                     //TODO go to the add info to profile page
-                    getYardSales(false);
+                    getYardSales(false, true);
                 } else {
-                    Log.d("DEBUG", "User logged in through Facebook!");
+                    Log.e("DEBUG", "User logged in through Facebook!");
                     Toast.makeText(callingActivity, "signUpAndLoginWithFB called already exisiting user", Toast.LENGTH_SHORT).show();
-                    getYardSales(false);
+                    getYardSales(false, true);
                 }
             }
         });
     }
-
-//    private void saveUserPicForFacebookUsers(ParseUser user, TYPE_OF_PIC type) {
-//        switch (type) {
-//            case PROFILE_PIC:
-//                if (user.get("profile_pic") == null) {
-//                    Log.d("DEBUG 0", getUrlBasedOnType(type));
-//                    Bitmap bitmapUserProfilePic = getPicFromFacebook(TYPE_OF_PIC.PROFILE_PIC);
-//                    ParseFile profilePic = new ParseFile(ImageHelper.getBytesFromBitmap(bitmapUserProfilePic));
-//                    user.put("profile_pic", profilePic);
-//                    user.saveInBackground();
-//                }
-//            case COVER_PIC:
-//                if (user.get("cover_pic") == null) {
-//                    Bitmap bitmapUserProfilePic = getPicFromFacebook(TYPE_OF_PIC.COVER_PIC);
-//                    ParseFile profilePic = new ParseFile(ImageHelper.getBytesFromBitmap(bitmapUserProfilePic));
-//                    user.put("cover_pic", profilePic);
-//                    user.saveInBackground();
-//                }
-//
-//        }
-//    }
 
     public void createYardSale(final Activity activity, final String title, final String description, Date startTime, Date endTime, String address) {
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
@@ -252,7 +232,10 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void getYardSales(boolean getAllSales) {
+    public void getYardSales(boolean getAllSales, boolean isFBUSer) {
+        if (isFBUSer) {
+            makeMeRequest();
+        }
         ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
         query.include("seller");
         if (!getAllSales) {

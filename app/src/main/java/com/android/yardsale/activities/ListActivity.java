@@ -59,6 +59,7 @@ public class ListActivity extends ActionBarActivity {
 
         client = new YardSaleApplication(this);
 
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
