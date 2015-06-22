@@ -17,6 +17,7 @@ import com.android.yardsale.activities.EditItemActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
@@ -63,11 +64,19 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
             @Override
             public void onClick(View v) {
+
                 Toast.makeText(context, "delete item!", Toast.LENGTH_SHORT).show();
                 client.deleteItem(i);
                 itemList.remove(position);
+
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, itemList.size());
+                try {
+                    YardSale s = i.getYardSale().fetchIfNeeded();
+                    s.getItemsRelation().remove(i);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -163,12 +172,20 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     }
 
     public void delete(Activity newContext, int position) {
+
+
         Item i = itemList.get(position);
         Toast.makeText(newContext, "delete item!", Toast.LENGTH_SHORT).show();
         client.deleteItem(i);
         itemList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, itemList.size());
+        try {
+            YardSale s = i.getYardSale().fetchIfNeeded();
+            s.getItemsRelation().remove(i);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 }

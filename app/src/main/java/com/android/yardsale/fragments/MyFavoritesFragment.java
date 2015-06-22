@@ -27,6 +27,7 @@ public class MyFavoritesFragment extends Fragment {
     private ThingsAdapter adapter;
 
     public MyFavoritesFragment() {
+
     }
 
     public static MyFavoritesFragment newInstance()
@@ -68,6 +69,7 @@ public class MyFavoritesFragment extends Fragment {
             public ParseQuery<YardSale> create() {
                 ParseQuery<YardSale> query = YardSale.getQuery();
                 query.whereEqualTo("user_likes", ParseUser.getCurrentUser());
+
                 try {
                     query.find();
                 } catch (ParseException e) {

@@ -22,7 +22,6 @@ import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
 import com.parse.ParsePush;
 import com.parse.ParseUser;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
@@ -64,10 +63,10 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (sale.getCoverPic() != null)
-            Picasso.with(context).load(sale.getCoverPic().getUrl()).placeholder(R.drawable.placeholder).into(saleViewHolder.ivCoverPic);
-        else
-            Picasso.with(context).load(R.drawable.placeholder).into(saleViewHolder.ivCoverPic);
+//        if (sale.getCoverPic() != null)
+//            Picasso.with(context).load(sale.getCoverPic().getUrl()).placeholder(R.drawable.placeholder).into(saleViewHolder.ivCoverPic);
+//        else
+//            Picasso.with(context).load(R.drawable.placeholder).into(saleViewHolder.ivCoverPic);
 
 
         saleViewHolder.btDeleteSale.setOnClickListener(new View.OnClickListener() {
@@ -104,14 +103,14 @@ public class SalesAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             }
         });
 
-        saleViewHolder.ivCoverPic.setOnClickListener(new View.OnClickListener() {
-            YardSale s = salesList.get(position);
-
-            @Override
-            public void onClick(View v) {
-                client.getItemsForYardSale(context, s, saleViewHolder.ivCoverPic);
-            }
-        });
+//        saleViewHolder.ivCoverPic.setOnClickListener(new View.OnClickListener() {
+//            YardSale s = salesList.get(position);
+//
+//            @Override
+//            public void onClick(View v) {
+//                client.getItemsForYardSale(context, s, saleViewHolder.ivCoverPic);
+//            }
+//        });
 
         client.setLikeForSale(sale, saleViewHolder.btLike, false);
         saleViewHolder.btLike.setOnClickListener(new View.OnClickListener() {
