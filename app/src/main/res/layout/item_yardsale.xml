@@ -34,7 +34,8 @@
                     android:layout_alignParentTop="true"
                     android:scaleType="fitXY"
                     android:adjustViewBounds="true"
-                    android:transitionName="itemDetail" />
+                    android:transitionName="itemDetail"
+                    android:layout_weight=".50"/>
 
                 <ImageView
                     android:id="@+id/ivPic2"
@@ -44,7 +45,8 @@
                     android:layout_alignParentTop="true"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:transitionName="itemDetail" />
+                    android:transitionName="itemDetail"
+                    android:layout_weight=".50"/>
             </LinearLayout>
 
             <LinearLayout
@@ -52,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/llImagesBottom"
                 android:orientation="horizontal"
-                android:layout_below="@+id/llImagesTop">
+                android:layout_below="@+id/llImagesTop"
+                >
                 <ImageView
                     android:id="@+id/ivPic3"
                     android:layout_width="wrap_content"
@@ -60,7 +63,8 @@
                     android:layout_alignParentLeft="true"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:transitionName="itemDetail" />
+                    android:transitionName="itemDetail"
+                    android:layout_weight=".50"/>
 
                 <ImageView
                     android:id="@+id/ivPic4"
@@ -69,7 +73,8 @@
                     android:layout_alignParentRight="true"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:transitionName="itemDetail" />
+                    android:transitionName="itemDetail"
+                    android:layout_weight=".50"/>
             </LinearLayout>
 
             <ImageButton
@@ -134,33 +139,33 @@
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:visibility="invisible"
-        android:id="@+id/rlNoWishListView"
-        android:layout_height="match_parent">
+    <!--<RelativeLayout-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:visibility="invisible"-->
+        <!--android:id="@+id/rlNoWishListView"-->
+        <!--android:layout_height="match_parent">-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/no_wish_list_image" />
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:src="@drawable/no_wish_list_image" />-->
 
-        <TextView
-            android:layout_width="220dp"
-            android:layout_height="120dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:background="#CFD8DC"
-            android:gravity="center"
-            android:text="No Wish Lists Yet"
-            android:textColor="#9E9E9E"
-            android:textSize="25sp" />
-    </RelativeLayout>
+        <!--<TextView-->
+            <!--android:layout_width="220dp"-->
+            <!--android:layout_height="120dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--android:background="#CFD8DC"-->
+            <!--android:gravity="center"-->
+            <!--android:text="No Wish Lists Yet"-->
+            <!--android:textColor="#9E9E9E"-->
+            <!--android:textSize="25sp" />-->
+    <!--</RelativeLayout>-->
 </LinearLayout>
