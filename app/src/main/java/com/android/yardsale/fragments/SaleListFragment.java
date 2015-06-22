@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.activities.AddYardSaleActivity;
-import com.android.yardsale.adapters.SalesAdapter;
 import com.android.yardsale.helpers.CircularReveal;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
@@ -123,7 +122,7 @@ public class SaleListFragment extends FindStuffFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        rAdapter = new SalesAdapter(getActivity(), yardSalesList);
+       // rAdapter = new SalesAdapter(getActivity(), yardSalesList);
 
     }
 }

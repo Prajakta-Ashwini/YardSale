@@ -9,7 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -82,7 +86,7 @@ public class ListingsFragment extends Fragment {
         adapter = new ThingsAdapter(getActivity(), factory, container);
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
-
+        registerForContextMenu(rvSales);
 
         btCreateSale = (FloatingActionButton) view.findViewById(R.id.fab);
         btCreateSale.setImageDrawable((getResources().getDrawable(R.drawable.ic_action_content_add)));
@@ -139,4 +143,51 @@ public class ListingsFragment extends Fragment {
     public void addYardSale(YardSale yardSale) {
         adapter.addYardSale(yardSale);
     }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        //MyView.RecyclerContextMenuInfo info = (MyView.RecyclerContextMenuInfo) item.getMenuInfo();
+        int position = -1;
+        try {
+            position = adapter.getPosition() ;
+
+        } catch (Exception e) {
+            Log.d("Error", e.getLocalizedMessage(), e);
+            return super.onContextItemSelected(item);
+        }
+        switch (item.getItemId()) {
+            case R.id.delete_sale:
+                Toast.makeText(getActivity(), "delete sale!", Toast.LENGTH_SHORT).show();
+                adapter.fireDelete(getActivity(), position);
+                break;
+            case R.id.edit_sale:
+                Toast.makeText(getActivity(), "edit sale!", Toast.LENGTH_SHORT).show();
+                adapter.fireEdit(getActivity(), position);
+                break;
+
+            case R.id.share_sale:
+                Toast.makeText(getActivity(), "share sale!", Toast.LENGTH_SHORT).show();
+                adapter.fireShare(getActivity(), position);
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        mRecyclerView = view.findViewById(R.id.recyclerview);
+//        registerForContextMenu(mRecyclerView);
+//    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        // inflate menu here
+        menu.setHeaderTitle("Select action:");
+        menu.add(Menu.NONE, R.id.edit_sale, Menu.NONE, "Edit Sale");
+        menu.add(Menu.NONE, R.id.delete_sale, Menu.NONE, "Delete Sale");
+        menu.add(Menu.NONE, R.id.share_sale, Menu.NONE, "Share Sale");
+    }
+
 }
