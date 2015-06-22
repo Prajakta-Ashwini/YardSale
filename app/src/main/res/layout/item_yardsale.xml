@@ -10,28 +10,75 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
+        card_view:cardElevation="5dp"
         card_view:cardCornerRadius="3dp"
-        card_view:cardElevation="5dp">
+        android:layout_margin="2dp"
+        >
+
         <!--<card_view:contentPadding="@dimen/activity_horizontal_margin"-->
         <RelativeLayout
             android:id="@+id/rlCardView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivUserPic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+            <TextView
+                android:id="@+id/tvSeller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:text="Jim"
+                android:layout_toRightOf="@id/ivUserPic"
+                android:layout_marginLeft="10dp"
+               />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Sale"
+                android:layout_alignStart="@+id/tvSeller"
+                android:layout_below="@id/tvSeller"
+                />
+
+            <TextView
+                android:id="@+id/tvPostedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Sale"
+                android:layout_alignStart="@+id/tvSeller"
+                android:layout_below="@id/tvTitle"
+                />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/llImagesTop">
+                android:id="@+id/llImagesTop"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/tvPostedAt">
                 <ImageView
                     android:id="@+id/ivPic1"
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:scaleType="fitXY"
                     android:adjustViewBounds="true"
                     android:transitionName="itemDetail"
@@ -42,7 +89,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
                     android:transitionName="itemDetail"
@@ -87,25 +133,6 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:src="@drawable/btn_like" />
-
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llImagesBottom"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/tvAddedBy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvTitle"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:textAlignment="center" />
 
 
             <!--<Button-->

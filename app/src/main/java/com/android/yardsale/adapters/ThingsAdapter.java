@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.android.yardsale.R;
 import com.android.yardsale.activities.EditYardSaleActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
+import com.android.yardsale.helpers.image.CircleTransformation;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.parse.ParseException;
@@ -30,6 +32,7 @@ import com.parse.ParseRelation;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -45,10 +48,13 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     private ImageView ivPic3;
     private ImageView ivPic4;
     private ImageButton btLike;
+    private ImageView ivUserPic;
+    private TextView tvSeller;
 //    private Button btShareSale;
 //    private Button btDeleteSale;
 //    private Button btEditSale;
     private Context myContext;
+    private TextView tvPostedAt;
 
     private List<YardSale> listSales;
     ImageView[] arrIv = {ivPic1,ivPic2,ivPic3,ivPic4};
@@ -80,7 +86,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 listSales.add(sale);
 
                 TextView tvTitle = (TextView) v.findViewById(R.id.tvTitle);
-                TextView tvAddedBy = (TextView) v.findViewById(R.id.tvAddedBy);
+
 //                btDeleteSale = (Button) v.findViewById(R.id.btDeleteSale);
 //                btEditSale = (Button) v.findViewById(R.id.btEditSale);
 //                btShareSale = (Button) v.findViewById(R.id.btShareSale);
@@ -89,12 +95,40 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 ivPic2 = (ImageView) v.findViewById(R.id.ivPic2);
                 ivPic3 = (ImageView) v.findViewById(R.id.ivPic3);
                 ivPic4 = (ImageView) v.findViewById(R.id.ivPic4);
+                ivUserPic = (ImageView) v.findViewById(R.id.ivUserPic);
+                tvSeller = (TextView) v.findViewById(R.id.tvSeller);
+                tvPostedAt = (TextView) v.findViewById(R.id.tvPostedAt);
+                if(sale.getCreatedAt() !=null) {
+                    Date postedAtDate = sale.getCreatedAt();
+                    tvPostedAt.setText(DateUtils.getRelativeTimeSpanString(postedAtDate.getTime()));
+                }
+                if (sale.getSeller() != null) {
+                    try {
+                        tvSeller.setText(sale.getSeller().fetchIfNeeded().getUsername());
+
+                        if (sale.getSeller().getString("profile_pic_url") != null) {
+                            Picasso.with(context)
+                                    .load(sale.getSeller().getString("profile_pic_url"))
+                                    .transform(new CircleTransformation())
+                                    .into(ivUserPic);
+                        } else if (sale.getSeller().getString("profile_pic") != null) {
+                            Picasso.with(context)
+                                    .load(sale.getSeller().getParseFile("profile_pic").getUrl())
+                                    .transform(new CircleTransformation())
+                                    .into(ivUserPic);
+                        } else {
+                            Picasso.with(context)
+                                    .load(R.drawable.com_facebook_profile_picture_blank_square)
+                                    .transform(new CircleTransformation())
+                                    .into(ivUserPic);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
 
                 tvTitle.setText(sale.getTitle());
-                try {
-                    String user = sale.getSeller().fetchIfNeeded().getUsername();
 
-                    tvAddedBy.setText("Added by " + user);
 //                    if (sale.getSeller() == ParseUser.getCurrentUser()) {
 //                        btDeleteSale.setVisibility(View.VISIBLE);
 //                        btEditSale.setVisibility(View.VISIBLE);
@@ -102,9 +136,6 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 //                        btDeleteSale.setVisibility(View.INVISIBLE);
 //                        btEditSale.setVisibility(View.INVISIBLE);
 //                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
 
                 Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic1);
                 Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic2);
@@ -137,10 +168,6 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-//
-
-
-
                 return v;
             }
         };

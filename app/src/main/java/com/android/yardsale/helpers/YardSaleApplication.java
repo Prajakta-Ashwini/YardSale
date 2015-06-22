@@ -187,6 +187,7 @@ public class YardSaleApplication extends Application {
         yardSale.setTitle(title);
         yardSale.setDescription(description);
         yardSale.setAddress(address);
+        yardSale.setCreatedAt(new Date());
         if (yardSale.getAddress() != null) {
             LatLng lat = GeopointUtils.getLocationFromAddress(context, yardSale.getAddress());
             if (lat != null)
