@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
-import com.android.yardsale.adapters.PastHistoryFragment;
+import com.android.yardsale.fragments.PastHistoryFragment;
 import com.android.yardsale.fragments.ListingsFragment;
 import com.android.yardsale.fragments.MyFavoritesFragment;
 import com.android.yardsale.fragments.SalesFragment;
@@ -199,7 +199,6 @@ public class ListActivity extends ActionBarActivity {
 
     public void defaultDrawerItem(int position) {
         if (position == 0) {
-            // FindStuffFragment fragment = FindStuffFragment.newInstance(0);
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();

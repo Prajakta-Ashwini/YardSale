@@ -1,4 +1,4 @@
-package com.android.yardsale.adapters;
+package com.android.yardsale.fragments;
 
 
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.yardsale.R;
+import com.android.yardsale.adapters.ThingsAdapter;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
 import com.parse.ParseException;

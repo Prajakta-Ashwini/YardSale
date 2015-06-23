@@ -139,8 +139,6 @@ public class SaleMapFragment extends SupportMapFragment implements
         }
 
             if (yardSaleList!=null && yardSaleList.size() >0 ) {
-                //List<YardSale> sales = ((FindStuffFragment) getParentFragment()).getYardSaleList();
-
                 for (YardSale s : yardSaleList) {
                     addYardSale(s);
                 }
