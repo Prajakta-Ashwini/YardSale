@@ -8,7 +8,6 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_profile</item>
         <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
         <item name="android:timePickerDialogTheme">@style/MyTimePickerDialogTheme</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu</item>
     </style>
 
     <style name="white_background_wh">
@@ -34,7 +33,5 @@
         <item name="android:headerBackground">@color/dark_primary_color</item>
     </style>
 
-    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
-        <item name="android:popupBackground">@color/image_foreground_color</item>
-    </style>
+
 </resources>

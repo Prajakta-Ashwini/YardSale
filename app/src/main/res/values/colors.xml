@@ -11,4 +11,5 @@
     <color name="random_color_for_testing">#F0F4C3</color>
     <color name="dark_gray">#727272</color>
     <color name="light_gray">#B6B6B6</color>
+    <color name="primary_color_translucent">#33009688</color>
 </resources>
