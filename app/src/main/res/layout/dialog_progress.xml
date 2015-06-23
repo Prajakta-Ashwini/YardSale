@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+   >
+
+    <!--<TextView-->
+        <!--android:textColor="@color/text_color"-->
+        <!--android:textSize="20sp"-->
+        <!--android:text="Loading..."-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:shadowColor="@color/accent_color"-->
+        <!--android:shadowDx="0"-->
+        <!--android:shadowDy="0"-->
+        <!--android:shadowRadius="5"-->
+        <!--android:id="@+id/tvWaitText"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginTop="65dp" />-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_below="@+id/tvWaitText"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_marginTop="51dp"-->
+        <!--android:id="@+id/linearLayout">-->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/ivPost"
+            android:src="@drawable/ysscaled"
+            android:scaleType="fitCenter"
+
+
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+
+    <!--</LinearLayout>-->
+
+</RelativeLayout>

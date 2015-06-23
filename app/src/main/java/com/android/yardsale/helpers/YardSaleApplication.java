@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -22,6 +23,7 @@ import com.android.yardsale.activities.AddItemActivity;
 import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
+import com.android.yardsale.activities.ProgressDialog;
 import com.android.yardsale.activities.YardSaleDetailActivity;
 import com.android.yardsale.fragments.SaleMapFragment;
 import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
@@ -67,6 +69,7 @@ public class YardSaleApplication extends Application {
     public static final int MAP_ZOOM = 13;
     private static Context context;
     private Activity callingActivity;
+    FragmentManager fm;
 
 
     public YardSaleApplication() {
@@ -128,22 +131,50 @@ public class YardSaleApplication extends Application {
     }
 
     public void login(final FragmentManager manager, final String username, String password) {
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
-            public void done(ParseUser user, ParseException e) {
-                if (user != null) {
-                    // Hooray! The user is logged in.
-                    Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                    getYardSales(false, false);
-                } else {
-                    // Signup failed. Look at the ParseException to see what happened.
-                    Log.d("DEBUG", "LOGIN FAILED", e);
-                    FragmentManager fm = manager;
-                    YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("Login failed, Try again!!!");
-                    dialog.show(fm, "login_failed");
-                }
-            }
-        });
+        fm = manager;
+        new LoginOperation().execute(username, password);
     }
+
+    private class LoginOperation extends AsyncTask<String, Void, String> {
+        ProgressDialog dialog;
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm,"");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String username=params[0];
+            String password = params[1];
+
+            ParseUser.logInInBackground(username, password, new LogInCallback() {
+                public void done(ParseUser user, ParseException e) {
+                    if (user != null) {
+                        // Hooray! The user is logged in.
+                        Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
+                        getYardSales(false, false);
+                    } else {
+                        // Signup failed. Look at the ParseException to see what happened.
+                        Log.d("DEBUG", "LOGIN FAILED", e);
+
+                        YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("Login failed, Try again!!!");
+                        dialog.show(fm, "login_failed");
+                    }
+                }
+            });
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
+    }
+
 
     private void launchListActivity(ArrayList<CharSequence> saleList) {
         Intent intent = new Intent(context, ListActivity.class);
@@ -372,20 +403,11 @@ public class YardSaleApplication extends Application {
 
     public void getItemsForYardSale(final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
         // Define the class we would btn_like to query
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.whereEqualTo("yardsale_id", yardSale);
-        query.findInBackground(new FindCallback<Item>() {
-            public void done(List<Item> itemList, ParseException e) {
-                if (e == null) {
-                    launchYardSaleDetailActivity(context, yardSale, itemList, ivCoverPic);
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-            }
-        });
+
     }
 
     private static void launchYardSaleDetailActivity(Context context, YardSale yardsale, List<Item> items, ImageView ivCoverPic) {
+
         Intent intent = new Intent(context, YardSaleDetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ArrayList<CharSequence> itemObjList = new ArrayList<>();
@@ -397,9 +419,12 @@ public class YardSaleApplication extends Application {
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation((Activity) context, ivCoverPic, "itemDetail");
         context.startActivity(intent, options.toBundle());
+
     }
 
-    //TODO may be generalize this
+
+
+        //TODO may be generalize this
     private static void launchSearchActivity(List<Item> items) {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
