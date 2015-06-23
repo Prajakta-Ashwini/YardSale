@@ -415,9 +415,9 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             }
         }else {
             if (likeAnimations.containsKey(holder.getPosition())) {
-                holder.btLike.setImageResource(R.drawable.ic_heart_red);
+                holder.btLike.setImageResource(R.drawable.heartfilled);
             } else {
-                holder.btLike.setImageResource(R.drawable.ic_heart_outline_grey);
+                holder.btLike.setImageResource(R.drawable.heartoutline);
             }
         }
     }
