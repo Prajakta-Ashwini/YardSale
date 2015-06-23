@@ -153,13 +153,14 @@
 
             <ImageButton
                 android:id="@+id/btLike"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.8"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:alpha="0.8"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:src="@drawable/btn_like" />
 
