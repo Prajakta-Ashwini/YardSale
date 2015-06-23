@@ -25,9 +25,9 @@
         android:layout_gravity="bottom|right"
         android:src="@drawable/abc_btn_rating_star_on_mtrl_alpha"
         android:layout_margin="16dp"
-        app:backgroundTint="@color/amber"
-        fab:fab_colorNormal="@color/amber"
-        fab:fab_colorPressed="@color/amber"
-        fab:fab_colorRipple="@color/amber" />
+        app:backgroundTint="@color/accent_color"
+        fab:fab_colorNormal="@color/accent_color"
+        fab:fab_colorPressed="@color/accent_color"
+        fab:fab_colorRipple="@color/accent_color" />
 
 </android.support.design.widget.CoordinatorLayout>

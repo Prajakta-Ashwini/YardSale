@@ -95,7 +95,7 @@ public class ListingsFragment extends Fragment {
 //
 //        btFlip.setColorRipple(R.color.amber);
         btCreateSale.attachToRecyclerView(rvSales);
-        btCreateSale.setColorNormal(getResources().getColor(R.color.amber));
+        btCreateSale.setColorNormal(getResources().getColor(R.color.accent_color));
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override

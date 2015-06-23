@@ -20,9 +20,9 @@
         android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        app:backgroundTint="@color/amber"
-        fab:fab_colorNormal="@color/amber"
-        fab:fab_colorPressed="@color/amber"
+        app:backgroundTint="@color/accent_color"
+        fab:fab_colorNormal="@color/accent_color"
+        fab:fab_colorPressed="@color/accent_color"
         />
 
 </RelativeLayout>

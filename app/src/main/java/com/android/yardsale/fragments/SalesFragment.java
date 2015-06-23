@@ -82,11 +82,11 @@ public class SalesFragment extends Fragment {
         registerForContextMenu(rvSales);
         btFlip = (FloatingActionButton) view.findViewById(R.id.fab);
         btFlip.setImageDrawable((getResources().getDrawable(R.drawable.map)));
-        btFlip.setColorNormal(R.color.amber);
-        btFlip.setColorPressed(R.color.amber);
+        btFlip.setColorNormal(R.color.accent_color);
+        btFlip.setColorPressed(R.color.accent_color);
         //btFlip.setColorRipple(R.color.amber);
         btFlip.attachToRecyclerView(rvSales);
-        btFlip.setColorNormal(getResources().getColor(R.color.amber));
+        btFlip.setColorNormal(getResources().getColor(R.color.accent_color));
         btFlip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

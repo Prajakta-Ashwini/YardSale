@@ -98,8 +98,8 @@
 
             <ImageView
                 android:id="@+id/ivUserPic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
                 android:src="@drawable/com_facebook_profile_picture_blank_square"

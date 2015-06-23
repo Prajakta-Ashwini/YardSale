@@ -67,7 +67,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
         rvItems = (MyView) findViewById(R.id.rvItems);
         btCreateItem = (FloatingActionButton) findViewById(R.id.fab);
         btCreateItem.attachToRecyclerView(rvItems);
-        btCreateItem.setColorNormal(getResources().getColor(R.color.amber));
+        btCreateItem.setColorNormal(getResources().getColor(R.color.accent_color));
 
         itemList = new ArrayList<>();
         client = new YardSaleApplication();

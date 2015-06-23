@@ -94,9 +94,9 @@ public class SaleMapFragment extends SupportMapFragment implements
             flMap.addView(map);
 
             btFlip.setImageDrawable((getResources().getDrawable(R.drawable.list_bulleted)));
-            btFlip.setColorNormal(R.color.amber);
-            btFlip.setColorPressed(R.color.amber);
-            btFlip.setColorNormal(getResources().getColor(R.color.amber));
+            btFlip.setColorNormal(R.color.accent_color);
+            btFlip.setColorPressed(R.color.accent_color);
+            btFlip.setColorNormal(getResources().getColor(R.color.accent_color));
             btFlip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
