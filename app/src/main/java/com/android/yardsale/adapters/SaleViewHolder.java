@@ -39,7 +39,7 @@ public class SaleViewHolder extends RecyclerView.ViewHolder {
         ivPic4 = (ImageView) v.findViewById(R.id.ivPic4);
         ivUserPic = (ImageView) v.findViewById(R.id.ivUserPic);
         tvSeller = (TextView) v.findViewById(R.id.tvSeller);
-        tvPostedAt = (TextView) v.findViewById(R.id.tvPostedAt);
+        //tvPostedAt = (TextView) v.findViewById(R.id.tvPostedAt);
         view = v;
     }
 

@@ -23,57 +23,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/ivUserPic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="5dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/com_facebook_profile_picture_blank_square" />
 
-            <TextView
-                android:id="@+id/tvSeller"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:textStyle="bold"
-                android:text="Jim"
-                android:layout_toRightOf="@id/ivUserPic"
-                android:layout_marginLeft="10dp"
-               />
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Sale"
-                android:layout_alignStart="@+id/tvSeller"
-                android:layout_below="@id/tvSeller"
-                />
-
-            <TextView
-                android:id="@+id/tvPostedAt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Sale"
-                android:layout_alignStart="@+id/tvSeller"
-                android:layout_below="@id/tvTitle"
-                />
+            <!--<TextView-->
+                <!--android:id="@+id/tvPostedAt"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:text="Sale"-->
+                <!--android:layout_alignStart="@+id/tvSeller"-->
+                <!--android:layout_below="@id/tvTitle"-->
+                <!--/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:id="@+id/llImagesTop"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/tvPostedAt">
+                android:layout_alignParentTop="true"
+                >
                 <ImageView
                     android:id="@+id/ivPic1"
                     android:layout_width="wrap_content"
@@ -82,7 +50,9 @@
                     android:scaleType="fitXY"
                     android:adjustViewBounds="true"
                     android:transitionName="itemDetail"
-                    android:layout_weight=".50"/>
+                    android:layout_weight=".50"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginRight="3dp"/>
 
                 <ImageView
                     android:id="@+id/ivPic2"
@@ -92,7 +62,8 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
                     android:transitionName="itemDetail"
-                    android:layout_weight=".50"/>
+                    android:layout_weight=".50"
+                    android:layout_marginBottom="3dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -120,8 +91,65 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
                     android:transitionName="itemDetail"
-                    android:layout_weight=".50"/>
+                    android:layout_weight=".50"
+                    android:layout_marginLeft="3dp"/>
             </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/ivUserPic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/com_facebook_profile_picture_blank_square"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/llImagesBottom"
+                android:layout_marginBottom="-32dp"
+                android:layout_marginRight="20dp"/>
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Sale"
+                android:textStyle="bold"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@id/llImagesBottom"
+                />
+
+            <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text=""
+                android:layout_below="@id/tvTitle"
+                android:layout_alignStart="@id/tvTitle"
+                android:layout_marginBottom="10dp"
+                />
+
+            <TextView
+                android:id="@+id/hyphen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="-"
+                android:textColor="@android:color/darker_gray"
+                android:layout_toRightOf="@id/tvAddress"
+                android:layout_alignBottom="@id/tvAddress"
+                />
+
+            <TextView
+                android:id="@+id/tvSeller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text=""
+                android:layout_toRightOf="@id/hyphen"
+                android:layout_alignBottom="@id/tvAddress"
+                />
 
             <ImageButton
                 android:id="@+id/btLike"
@@ -131,6 +159,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
+                android:alpha="0.5"
                 android:background="@color/white"
                 android:src="@drawable/btn_like" />
 

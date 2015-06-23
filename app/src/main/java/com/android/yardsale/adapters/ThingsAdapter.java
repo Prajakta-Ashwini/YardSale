@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,7 +31,6 @@ import com.parse.ParseRelation;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,7 +52,8 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
 //    private Button btDeleteSale;
 //    private Button btEditSale;
     private Context myContext;
-    private TextView tvPostedAt;
+   //private TextView tvPostedAt;
+    private TextView tvAddress;
 
     private List<YardSale> listSales;
     ImageView[] arrIv = {ivPic1,ivPic2,ivPic3,ivPic4};
@@ -97,11 +96,13 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 ivPic4 = (ImageView) v.findViewById(R.id.ivPic4);
                 ivUserPic = (ImageView) v.findViewById(R.id.ivUserPic);
                 tvSeller = (TextView) v.findViewById(R.id.tvSeller);
-                tvPostedAt = (TextView) v.findViewById(R.id.tvPostedAt);
-                if(sale.getCreatedAt() !=null) {
-                    Date postedAtDate = sale.getCreatedAt();
-                    tvPostedAt.setText(DateUtils.getRelativeTimeSpanString(postedAtDate.getTime()));
-                }
+                tvAddress = (TextView) v.findViewById(R.id.tvAddress);
+                //tvPostedAt = (TextView) v.findViewById(R.id.tvPostedAt);
+//                if(sale.getCreatedAt() !=null) {
+//                    Date postedAtDate = sale.getCreatedAt();
+//                    tvPostedAt.setText(DateUtils.getRelativeTimeSpanString(postedAtDate.getTime()));
+//                }
+                tvAddress.setText(sale.getAddress());
                 if (sale.getSeller() != null) {
                     try {
                         tvSeller.setText(sale.getSeller().fetchIfNeeded().getUsername());
