@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
+        android:src="@drawable/plus"
         app:backgroundTint="@color/accent_color"
         fab:fab_colorNormal="@color/accent_color"
         fab:fab_colorPressed="@color/accent_color"
