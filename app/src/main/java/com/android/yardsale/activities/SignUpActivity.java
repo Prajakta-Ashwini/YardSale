@@ -3,7 +3,9 @@ package com.android.yardsale.activities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.parse.ParseFacebookUtils;
 import com.squareup.picasso.Picasso;
@@ -33,6 +36,8 @@ public class SignUpActivity extends ActionBarActivity {
         final List<String> permissions = Arrays.asList("public_profile", "email");
         final EditText etSignUpUsername = (EditText) findViewById(R.id.etSignUpUserName);
         final EditText etSignUpPassword = (EditText) findViewById(R.id.etSignUpPassword);
+        final EditText etSignUpPasswordRetype = (EditText) findViewById(R.id.etSignUpPasswordRetype);
+
         Button btnSaveUser = (Button) findViewById(R.id.btnSaveUser);
         final TextView tvLoginText = (TextView) findViewById(R.id.tvLoginText);
 
@@ -50,8 +55,16 @@ public class SignUpActivity extends ActionBarActivity {
         btnSaveUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.manualSignUp(String.valueOf(etSignUpUsername.getText()),
-                        String.valueOf(etSignUpPassword.getText()));
+                if (!String.valueOf(etSignUpPassword.getText()).equals(String.valueOf(etSignUpPasswordRetype.getText()))) {
+                    Log.e("ALERT DIALOGUE", etSignUpPassword.getText().toString() + " : " + etSignUpPasswordRetype.getText().toString());
+                    FragmentManager fm = getSupportFragmentManager();
+                    YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("Password Dont match, Try again!!!");
+                    dialog.show(fm, "cannot_add_item");
+                } else {
+                    Log.e("ALERT DIALOGUE OUT", String.valueOf(etSignUpPassword.getText()) + " : " + String.valueOf(etSignUpPassword.getText()));
+                    client.manualSignUp(getSupportFragmentManager(), String.valueOf(etSignUpUsername.getText()),
+                            String.valueOf(etSignUpPassword.getText()));
+                }
             }
         });
 

@@ -1,10 +1,9 @@
 package com.android.yardsale.fragments;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 
 import com.android.yardsale.R;
 
@@ -25,9 +24,9 @@ public class YouDoNotOwnThisAlertDialog extends DialogFragment {
 
         String tag = getArguments().getString("tag");
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        alertDialogBuilder.setTitle("Sorry!!");
+        alertDialogBuilder.setTitle("Error!!");
         alertDialogBuilder.setIcon(R.drawable.ic_warning);
-        alertDialogBuilder.setMessage("The item you are trying to " + Html.fromHtml("<b>" + tag + "</b>") + " is not owned by you");
+        alertDialogBuilder.setMessage(tag);
         return alertDialogBuilder.create();
     }
 

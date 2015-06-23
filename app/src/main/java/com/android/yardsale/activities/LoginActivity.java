@@ -56,7 +56,7 @@ public class LoginActivity extends ActionBarActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                client.login(String.valueOf(etEmail.getText()), String.valueOf(etPassword.getText()));
+                client.login(getSupportFragmentManager(), String.valueOf(etEmail.getText()), String.valueOf(etPassword.getText()));
             }
         });
 

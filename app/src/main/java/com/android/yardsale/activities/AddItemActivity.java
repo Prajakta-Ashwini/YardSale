@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -64,8 +65,9 @@ public class AddItemActivity extends ActionBarActivity {
         }
 
         if (!isAuthorized(yardSale)) {
+            FragmentManager fm = getSupportFragmentManager();
             YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("add to yardsale " + yardSale.getTitle());
-            dialog.show(getFragmentManager(), "cannot_add_item");
+            dialog.show(fm, "cannot_add_item");
         }
 
         client = new YardSaleApplication(this);
@@ -165,58 +167,43 @@ public class AddItemActivity extends ActionBarActivity {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
-
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 4;
-
-                AssetFileDescriptor fileDescriptor;
-                try {
-                    fileDescriptor =
-                            this.getContentResolver().openAssetFileDescriptor(takenPhotoUri, "r");
-                    image = BitmapFactory.decodeFileDescriptor(
-                            fileDescriptor.getFileDescriptor(), null, options);
-                    Log.e("'4-sample' method"
-                            , image.getWidth() + " "
-                            + image.getHeight());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
-                ivItemPreview.setImageBitmap(bMapScaled);
+                processImage(takenPhotoUri);
             }
         } else if (requestCode == PICK_PHOTO_CODE) {
             Uri photoUri = data.getData();
             // Do something with the photo based on Uri
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 4;
-
-            AssetFileDescriptor fileDescriptor = null;
-            try {
-                fileDescriptor =
-                        this.getContentResolver().openAssetFileDescriptor(photoUri, "r");
-                image = BitmapFactory.decodeFileDescriptor(
-                        fileDescriptor.getFileDescriptor(), null, options);
-                Log.e("'4-sample' method"
-                        , image.getWidth() + " "
-                        + image.getHeight());
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            // Load the selected image into a preview
-            Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
-            ivItemPreview.setImageBitmap(bMapScaled);
+            processImage(photoUri);
         }
+    }
+
+    private void processImage(Uri takenPhotoUri) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+
+        AssetFileDescriptor fileDescriptor;
+        try {
+            fileDescriptor =
+                    this.getContentResolver().openAssetFileDescriptor(takenPhotoUri, "r");
+            image = BitmapFactory.decodeFileDescriptor(
+                    fileDescriptor.getFileDescriptor(), null, options);
+            Log.e("'4-sample' method"
+                    , image.getWidth() + " "
+                    + image.getHeight());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Bitmap bMapScaled = Bitmap.createScaledBitmap(image, 150, 100, true);
+        ivItemPreview.setImageBitmap(bMapScaled);
     }
 
     public void addItem(View view) {
         Number price = Double.parseDouble(etAddItemPrice.getText().toString().replace("$", ""));
         String description = String.valueOf(etAddItemDescription.getText());
         if (image == null) {
-            Toast.makeText(this, "please add image!!!", Toast.LENGTH_SHORT).show();
+            YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("Please add image!!!");
+            dialog.show(getSupportFragmentManager(), "image_missing");
             return;
         }
-
         ParseFile imageParseFile = new ParseFile(ImageHelper.getBytesFromBitmap(image));
         client.createItem(this, description, price, imageParseFile, yardSale);
 

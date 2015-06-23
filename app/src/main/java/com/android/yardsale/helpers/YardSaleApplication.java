@@ -12,18 +12,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.yardsale.activities.AddItemActivity;
-import com.android.yardsale.activities.HowItWorksActivity;
 import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.activities.ListActivity;
 import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
 import com.android.yardsale.fragments.SaleMapFragment;
+import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.AccessToken;
@@ -87,7 +88,7 @@ public class YardSaleApplication extends Application {
         Parse.enableLocalDatastore(getApplicationContext());
         Parse.initialize(this, YARDSALE_APPLICATION_ID, YARDSALE_CLIENT_KEY);
         ParseUser.enableAutomaticUser();
-        PushService.setDefaultPushCallback(context, HowItWorksActivity.class);
+        PushService.setDefaultPushCallback(context, ListActivity.class);
         ParseInstallation.getCurrentInstallation().saveInBackground();
         ParseFacebookUtils.initialize(this);
 
@@ -104,7 +105,7 @@ public class YardSaleApplication extends Application {
         super.onCreate();
     }
 
-    public void manualSignUp(final String userName, final String password) {
+    public void manualSignUp(final FragmentManager manager, final String userName, final String password) {
         ParseUser user = new ParseUser();
         user.setUsername(userName);
         user.setPassword(password);
@@ -114,18 +115,19 @@ public class YardSaleApplication extends Application {
                 if (e == null) {
                     // Signup success
                     Toast.makeText(context, "Signup Success", Toast.LENGTH_LONG).show();
-                    login(userName, password);
+                    login(manager, userName, password);
 
                 } else {
-                    Toast.makeText(context, "Signup Failed", Toast.LENGTH_LONG).show();
                     Log.d("DEBUG", "SIGNUP FAILED", e);
-                    // signup failed
+                    FragmentManager fm = manager;
+                    YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("Signup failed, Try again!!!");
+                    dialog.show(fm, "signup_failed");
                 }
             }
         });
     }
 
-    public void login(final String username, String password) {
+    public void login(final FragmentManager manager, final String username, String password) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             public void done(ParseUser user, ParseException e) {
                 if (user != null) {
@@ -134,8 +136,10 @@ public class YardSaleApplication extends Application {
                     getYardSales(false, false);
                 } else {
                     // Signup failed. Look at the ParseException to see what happened.
-                    Toast.makeText(context, "Login failed :(", Toast.LENGTH_LONG).show();
-                    Log.d("DEBUG", "SIGNUP FAILED", e);
+                    Log.d("DEBUG", "LOGIN FAILED", e);
+                    FragmentManager fm = manager;
+                    YouDoNotOwnThisAlertDialog dialog = YouDoNotOwnThisAlertDialog.newInstance("Login failed, Try again!!!");
+                    dialog.show(fm, "login_failed");
                 }
             }
         });
@@ -319,14 +323,14 @@ public class YardSaleApplication extends Application {
                     Log.e("PUSH", yardSale.getObjectId() + yardSale.getSeller().getUsername());
                     ParsePush push = new ParsePush();
                     push.setChannel(yardSale.getObjectId());
-                    push.setMessage("blah");
+                    push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
                     push.sendInBackground();
                     ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
                     ((Activity) context).finish();
 
                 } else {
                     Log.e("CREATE_ITEM_ERR", "blah", e);
-                    Toast.makeText(context, "error while saving item!!!", Toast.LENGTH_SHORT).show();
+                    // when something went wrong in saving the item you do not want to display this to the user.
                 }
             }
         });
