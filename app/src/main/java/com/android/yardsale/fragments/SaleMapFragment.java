@@ -81,7 +81,9 @@ public class SaleMapFragment extends SupportMapFragment implements
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        defaultMarker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+        //defaultMarker = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN);
+        defaultMarker = BitmapDescriptorFactory.fromResource(R.drawable.ys1);
+
        View v;
 //
         if(yardSaleList!=null ) {
