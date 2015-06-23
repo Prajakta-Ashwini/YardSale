@@ -87,7 +87,6 @@ public class YardSaleDetailActivity extends FragmentActivity {
         rvItems.setAdapter(hAdapter);
         registerForContextMenu(rvItems);
         thisactivity = this;
-
 //        aItems = new ItemsAdapter(this, itemList);
 //        //gvItems.setExpanded(true);
 //        rvItems.setAdapter(aItems);
@@ -146,7 +145,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
                                             .transform(new CircleTransformation())
                                             .into(ivUserPic);
                                 }
-                            }catch (ParseException ex){
+                            } catch (ParseException ex) {
                                 ex.printStackTrace();
                             }
                         }
@@ -221,7 +220,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
                                 if (i.getObjectId().equals(objId)) {
                                     //if photo changed then update itemlist
                                     YardSale s = i.getYardSale();
-                                    if(i.getPhoto()!=item.getPhoto()) {
+                                    if (i.getPhoto() != item.getPhoto()) {
                                         s.getItemsRelation().remove(i);
                                         s.getItemsRelation().add(item);
                                         s.saveInBackground();
@@ -304,16 +303,9 @@ public class YardSaleDetailActivity extends FragmentActivity {
         return super.onContextItemSelected(item);
     }
 
-//    @Override
-//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        mRecyclerView = view.findViewById(R.id.recyclerview);
-//        registerForContextMenu(mRecyclerView);
-//    }
-
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-
+        //TODO fix the theme color for this one
         // inflate menu here
         menu.setHeaderTitle("Select action:");
         menu.add(Menu.NONE, R.id.edit_item, Menu.NONE, "EDIT");

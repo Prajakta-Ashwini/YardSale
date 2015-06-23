@@ -9,10 +9,9 @@
     <com.android.yardsale.helpers.image.TouchImageView
         android:id="@+id/ivFullImage"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

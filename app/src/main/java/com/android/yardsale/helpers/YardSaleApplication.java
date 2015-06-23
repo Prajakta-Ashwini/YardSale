@@ -525,7 +525,7 @@ public class YardSaleApplication extends Application {
     }
 
     //todo fix this
-    public static void launchItemDetailActivity(Context context, Item item, ImageView ivItemPic) {
+    public static void launchItemDetailActivity(Context context, Item item) {
         Intent i = new Intent(context, ItemDetailActivity.class);
         i.putExtra("selected_item", item.getObjectId());
 //        ActivityOptionsCompat options = ActivityOptionsCompat.

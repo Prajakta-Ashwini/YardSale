@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.activities.EditItemActivity;
+import com.android.yardsale.activities.ItemDetailActivity;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
@@ -44,14 +45,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         final YardSale sale = item.getYardSale();
         viewHolder.tvPrice.setTextColor(Color.WHITE);
         viewHolder.tvPrice.setText("$" + String.valueOf(item.getPrice()));
-
-//        if (sale.getSeller() == ParseUser.getCurrentUser()) {
-//            viewHolder.btDeleteItem.setVisibility(View.VISIBLE);
-//            viewHolder.btEditItem.setVisibility(View.VISIBLE);
-//        } else {
-//            viewHolder.btDeleteItem.setVisibility(View.INVISIBLE);
-//            viewHolder.btEditItem.setVisibility(View.INVISIBLE);
-//        }
 
         if (item.getPhoto() != null)
             Picasso.with(context).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(viewHolder.ivPic);
@@ -111,23 +104,28 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
             public boolean onTouch(View v, MotionEvent event) {
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    then = (long) System.currentTimeMillis();
+                    then = System.currentTimeMillis();
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     if ((System.currentTimeMillis() - then) > 500) {
-            /* Implement long click behavior here */
+                        /* Implement long click behavior here */
                         System.out.println("Long Click has happened!");
                         if (sale.getSeller() == ParseUser.getCurrentUser()) {
                             setPosition(viewHolder.getPosition());
                             viewHolder.showMenu();
-                        }else {
-                            Toast.makeText(context,"You are not the owner of this sale!",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "You are not the owner of this sale!", Toast.LENGTH_SHORT).show();
                         }
                         return false;
                     } else {
-            /* Implement short click behavior here or do nothing */
-                        System.out.println("Short Click has happened...");
-                        client.launchItemDetailActivity(context, i, viewHolder.ivPic);
-                        return true;
+                        /* Implement short click behavior here or do nothing */
+                        Log.e("ITEM VIEW", "Short Click has happened...");
+//                        YardSaleApplication.launchItemDetailActivity(context, i);
+                        Intent intent = new Intent(context, ItemDetailActivity.class);
+                        intent.putExtra("selected_item", i.getObjectId());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        // ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(context.getApplicationContext()., viewHolder.ivPic, "itemDetail");
+                        context.startActivity(intent);
+                        return false;
                     }
                 }
                 return true;

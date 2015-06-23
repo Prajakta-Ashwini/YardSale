@@ -2,6 +2,7 @@ package com.android.yardsale.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,6 +23,7 @@ public class ItemDetailActivity extends ActionBarActivity {
         setContentView(R.layout.activity_item_detail);
 
         final String objId = getIntent().getStringExtra("selected_item");
+        Log.e("ITEM_DETAIL", objId);
         ivImageResult = (TouchImageView) findViewById(R.id.ivFullImage);
 
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
@@ -30,7 +32,16 @@ public class ItemDetailActivity extends ActionBarActivity {
             public void done(Item item, ParseException e) {
                 if (e == null) {
                     //set values
-                    Picasso.with(getBaseContext()).load(item.getPhoto().getUrl()).fit().placeholder(R.drawable.placeholder).into(ivImageResult);
+                    Log.e("item_get", item.getDescription() + item.getPhoto().getUrl());
+                    if (item.getPhoto().getUrl() != null) {
+                        Picasso.with(getBaseContext())
+                                .load(item.getPhoto().getUrl())
+                                .into(ivImageResult);
+                    } else {
+                        Picasso.with(getBaseContext())
+                                .load(R.drawable.placeholder)
+                                .into(ivImageResult);
+                    }
                 }
             }
         });
