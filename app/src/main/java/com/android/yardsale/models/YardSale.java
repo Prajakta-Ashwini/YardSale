@@ -3,6 +3,7 @@ package com.android.yardsale.models;
 import android.util.Log;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -111,17 +112,27 @@ public class YardSale extends ParseObject  {
     }
 
     public void addLikeForUser(ParseUser user) {
-        getLikesRelation().add(user);
-        ParsePush.subscribeInBackground(getObjectId());
-        Log.e("PUSH SUBSCRIBE", getObjectId() + getSeller().getUsername());
-        saveInBackground();
+        try {
+            getLikesRelation().add(user);
+            ParsePush.subscribeInBackground(getObjectId());
+            Log.e("PUSH SUBSCRIBE", getObjectId() + getSeller().fetchIfNeeded().getUsername());
+            saveInBackground();
+        }catch(ParseException e){
+            Log.d("Error:","Not able to get username");
+            e.printStackTrace();
+        }
     }
 
     public void removeLikeForUser(ParseUser user) {
-        getLikesRelation().remove(user);
-        ParsePush.unsubscribeInBackground(getObjectId());
-        Log.e("PUSH UNSUBSCRIBE", getObjectId() + getSeller().getUsername());
-        saveInBackground();
+        try{
+            getLikesRelation().remove(user);
+            ParsePush.unsubscribeInBackground(getObjectId());
+            Log.e("PUSH UNSUBSCRIBE", getObjectId() + getSeller().fetchIfNeeded().getUsername());
+            saveInBackground();
+        }catch(ParseException e){
+            Log.d("Error:","Not able to get username");
+            e.printStackTrace();
+        }
     }
 
     public ParseRelation<Item> getItemsRelation() {
