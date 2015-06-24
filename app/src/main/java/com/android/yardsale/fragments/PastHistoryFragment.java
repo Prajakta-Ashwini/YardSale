@@ -70,7 +70,7 @@ public class PastHistoryFragment extends Fragment {
         notRequiredFAB.setVisibility(View.INVISIBLE);
 
         ParseQueryAdapter.QueryFactory<YardSale> factory = getYardSaleQueryFactory();
-        adapter = new ThingsAdapter(getActivity(), factory, container);
+        adapter = new ThingsAdapter(getActivity().getSupportFragmentManager(), getActivity(), factory, container);
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
 

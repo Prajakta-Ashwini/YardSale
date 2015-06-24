@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,10 +32,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     private Context context;
     private YardSaleApplication client;
     long then;
+    FragmentManager fm;
 
-    public ItemsAdapter(Context context, List<Item> items) {
+    public ItemsAdapter(FragmentManager supportFragmentManager, Context context, List<Item> items) {
         this.itemList = items;
         this.context = context;
+        this.fm = supportFragmentManager;
         client = new YardSaleApplication();
     }
 
@@ -177,7 +180,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
     public void delete(Activity newContext, int position) {
         Item i = itemList.get(position);
         Toast.makeText(newContext, "delete item!", Toast.LENGTH_SHORT).show();
-        client.deleteItem(i);
+        client.deleteItem(fm, i);
         itemList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, itemList.size());

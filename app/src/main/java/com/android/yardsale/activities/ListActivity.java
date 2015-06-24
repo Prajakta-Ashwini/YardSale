@@ -169,7 +169,7 @@ public class ListActivity extends ActionBarActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                client.searchForItems(query);
+                client.searchForItems(getSupportFragmentManager(), ListActivity.this, query);
                 return true;
             }
 

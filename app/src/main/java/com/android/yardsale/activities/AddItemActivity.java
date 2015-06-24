@@ -207,7 +207,7 @@ public class AddItemActivity extends ActionBarActivity {
             return;
         }
         ParseFile imageParseFile = new ParseFile(ImageHelper.getBytesFromBitmap(image));
-        client.createItem(fromAddingYS, this, description, price, imageParseFile, yardSale);
+        client.createItem(getSupportFragmentManager(), fromAddingYS, this, description, price, imageParseFile, yardSale);
 
     }
 
