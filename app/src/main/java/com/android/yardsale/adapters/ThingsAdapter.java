@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,20 +23,24 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.activities.EditYardSaleActivity;
+import com.android.yardsale.activities.ProgressDialog;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.helpers.image.CircleTransformation;
+import com.android.yardsale.interfaces.OnAsyncTaskCompleted;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseRelation;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
+public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implements OnAsyncTaskCompleted {
 
     public ParseQueryAdapter<YardSale> parseAdapter;
     private ViewGroup parseParent;
@@ -187,20 +192,64 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         return vh;
     }
 
+    ThingsAdapter context;
     @Override
     public void onBindViewHolder(final SaleViewHolder holder, final int position) {
         parseAdapter.getView(position, holder.itemView, parseParent);
-        client.setLikeForSale(fm, yardSale, btLike, false);
+
+      //  client.setLikeForSale(fm, this, yardSale, btLike, false);
+        //start progress diaog
+        YardSale sale=yardSale;
+        final ProgressDialog dialog = ProgressDialog.newInstance();
+        dialog.show(fm, "");
+        sale.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+            public void done(List<ParseUser> results, ParseException e) {
+                if (e == null) {
+                        if (results.contains(client.getCurrentUser())) {
+                            holder.btLike.setSelected(true);
+                        } else {
+                            holder.btLike.setSelected(false);
+                        }
+                    //stop dialog
+                    dialog.dismiss();
+                } else {
+                    Log.d("ff", e.toString());
+                    //stop dialog
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        context = this;
         btLike.setOnClickListener(new View.OnClickListener() {
             YardSale s = parseAdapter.getItem(position);
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(myContext, "btn_like sale!", Toast.LENGTH_SHORT).show();
-                updateHeartButton(s, holder, true);
-                client.setLikeForSale(fm, s, btLike, true);
-                parseAdapter.loadObjects();
-                thingsAdapter.notifyDataSetChanged();
+                //Toast.makeText(myContext, "btn_like sale!", Toast.LENGTH_SHORT).show();
+
+                client.setLikeForSale(fm, s, context);
+//                //updateHeartButton(s, holder, true);
+//                final ProgressDialog dialog = ProgressDialog.newInstance();
+//                dialog.show(fm, "");
+//                s.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+//                    public void done(List<ParseUser> results, ParseException e) {
+//                        if (e == null) {
+//                            if (results.contains(client.getCurrentUser())) {
+//                                s.addLikeForUser(client.getCurrentUser());
+//                            } else {
+//                                s.removeLikeForUser(client.getCurrentUser());
+//                            }
+//                            //stop dialog
+//                            dialog.dismiss();
+//                        } else {
+//                            Log.d("ff", e.toString());
+//                            //stop dialog
+//                            dialog.dismiss();
+//                        }
+//                    }
+//                });
+
             }
         });
 
@@ -292,6 +341,12 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     @Override
     public int getItemCount() {
         return parseAdapter.getCount();
+    }
+
+    @Override
+    public void onTaskCompleted() {
+        parseAdapter.loadObjects();
+        thingsAdapter.notifyDataSetChanged();
     }
 
     public class OnQueryLoadListener implements ParseQueryAdapter.OnQueryLoadListener<YardSale> {
@@ -386,22 +441,22 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 rotationAnim.setDuration(300);
                 rotationAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
 
-                ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(holder.btLike, "scaleX", 0.2f, 1f);
-                bounceAnimX.setDuration(300);
-                bounceAnimX.setInterpolator(OVERSHOOT_INTERPOLATOR);
-
-                ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(holder.btLike, "scaleY", 0.2f, 1f);
-                bounceAnimY.setDuration(300);
-                bounceAnimY.setInterpolator(OVERSHOOT_INTERPOLATOR);
-//                bounceAnimY.addListener(new AnimatorListenerAdapter() {
+//                ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(holder.btLike, "scaleX", 0.2f, 1f);
+//                bounceAnimX.setDuration(300);
+//                bounceAnimX.setInterpolator(OVERSHOOT_INTERPOLATOR);
+//
+//                ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(holder.btLike, "scaleY", 0.2f, 1f);
+//                bounceAnimY.setDuration(300);
+//                bounceAnimY.setInterpolator(OVERSHOOT_INTERPOLATOR);
+//                rotationAnim.addListener(new AnimatorListenerAdapter() {
 //                    @Override
 //                    public void onAnimationStart(Animator animation) {
-//                        if(sale.li)
-//                        holder.btLike.setImageResource(R.drawable.ic_heart_red);
+//                        if(sale.addLikeForUser();)
+//                        holder.btLike.setImageResource(R.drawable.heartfilled);
 //                    }
 //                });
                 animatorSet.play(rotationAnim);
-                animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
+             //   animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
 
                 animatorSet.addListener(new AnimatorListenerAdapter() {
                     @Override
