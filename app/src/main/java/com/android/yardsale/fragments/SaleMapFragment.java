@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SaleMapFragment extends SupportMapFragment implements
@@ -56,6 +57,7 @@ public class SaleMapFragment extends SupportMapFragment implements
     private Button btDetailView;
     static Context context;
     FrameLayout flMap;
+    static List<Marker> markers;
     /*
      * Define a request code to send to Google Play services This code is
      * returned in Activity.onActivityResult
@@ -76,6 +78,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
+        markers = new ArrayList<>();
         return fragmentDemo;
     }
 
@@ -88,6 +91,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
         context = c;
+        markers = new ArrayList<>();
         return fragmentDemo;
     }
 
@@ -205,11 +209,13 @@ public class SaleMapFragment extends SupportMapFragment implements
                     .position(loc)
                     .title(row.getTitle() + "::::" + row.getObjectId())
                     .icon(defaultMarker).snippet(row.getAddress()));
+            markers.add(marker);
         }else{
             Marker marker = getMap().addMarker(new MarkerOptions()
                     .position(loc)
                     .title(row.getTitle())
                     .icon(defaultMarker).snippet(row.getAddress()));
+            markers.add(marker);
         }
 
     }
@@ -306,6 +312,8 @@ public class SaleMapFragment extends SupportMapFragment implements
 
     //called from detail activity only to see marker for 1 sale
     public void addMarker(YardSale ys){
+        for(Marker m:markers)
+            m.remove();
         if(btFlip!=null)
             btFlip.setVisibility(View.GONE);
         yardSaleList = null;

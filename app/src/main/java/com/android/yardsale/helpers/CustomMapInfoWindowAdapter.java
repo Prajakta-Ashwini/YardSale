@@ -21,6 +21,7 @@ public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     public CustomMapInfoWindowAdapter(FragmentManager fm, LayoutInflater i, Context context){
         mInflater = i;
         client = new YardSaleApplication();
+        this.fm = fm;
         this.context = context;
     }
 
