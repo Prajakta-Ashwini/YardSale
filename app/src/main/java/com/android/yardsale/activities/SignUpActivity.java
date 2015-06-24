@@ -73,7 +73,7 @@ public class SignUpActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(SignUpActivity.this, "logging in with FB", Toast.LENGTH_LONG).show();
-                client.signUpAndLoginWithFacebook(permissions);
+                client.signUpAndLoginWithFacebook(getSupportFragmentManager(),permissions);
             }
         });
     }

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -155,7 +156,7 @@ public class YardSaleApplication extends Application {
                     if (user != null) {
                         // Hooray! The user is logged in.
                         Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                        getYardSales(false, false);
+                        getYardSales(fm, false, false);
                     } else {
                         // Signup failed. Look at the ParseException to see what happened.
                         Log.d("DEBUG", "LOGIN FAILED", e);
@@ -189,28 +190,57 @@ public class YardSaleApplication extends Application {
         LoginManager.getInstance().logOut();
     }
 
-    public void signUpAndLoginWithFacebook(List<String> permissions) {
+    public void signUpAndLoginWithFacebook(FragmentManager fragmentManager,List<String> permissions) {
         //TODO check why this is not working
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException err) {
-                //TODO Progress bars
-                if (user == null) {
-                    Toast.makeText(callingActivity, "signUpAndLoginWithFB called user is null", Toast.LENGTH_SHORT).show();
-                    Log.e("DEBUG", "Uh oh. The user cancelled the Facebook login.");
+        fm = fragmentManager;
+        new LoginWithFbOperation().execute(permissions);
+    }
 
-                } else if (user.isNew()) {
-                    Toast.makeText(callingActivity, "User signed up and logged in through Facebook", Toast.LENGTH_SHORT).show();
-                    Log.e("DEBUG", "User signed up and logged in through Facebook!");
-                    //TODO go to the add info to profile page
-                    getYardSales(false, true);
-                } else {
-                    Log.e("DEBUG", "User logged in through Facebook!");
-                    Toast.makeText(callingActivity, "signUpAndLoginWithFB called already exisiting user", Toast.LENGTH_SHORT).show();
-                    getYardSales(false, true);
+    private class LoginWithFbOperation extends AsyncTask<List<String>, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm,"");
+        }
+
+        @Override
+        protected String doInBackground(List<String>... params) {
+            List<String> permissions = params[0];
+//            try {
+//                Thread.sleep(3000);
+//            }catch (InterruptedException e){
+//                e.printStackTrace();
+//            }
+            ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException err) {
+                    if (user == null) {
+                        Toast.makeText(callingActivity, "signUpAndLoginWithFB called user is null", Toast.LENGTH_SHORT).show();
+                        Log.e("DEBUG", "Uh oh. The user cancelled the Facebook login.");
+
+                    } else if (user.isNew()) {
+                        Toast.makeText(callingActivity, "User signed up and logged in through Facebook", Toast.LENGTH_SHORT).show();
+                        Log.e("DEBUG", "User signed up and logged in through Facebook!");
+                        //TODO go to the add info to profile page
+                        getYardSales(fm, false, true);
+                    } else {
+                        Log.e("DEBUG", "User logged in through Facebook!");
+                        Toast.makeText(callingActivity, "signUpAndLoginWithFB called already exisiting user", Toast.LENGTH_SHORT).show();
+                        getYardSales(fm, false, true);
+                    }
                 }
-            }
-        });
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
     public void createYardSale(final Activity activity, final String title, final String description, Date startTime, Date endTime, String address) {
@@ -270,60 +300,127 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void getYardSales(boolean getAllSales, boolean isFBUSer) {
-        if (isFBUSer) {
-            makeMeRequest();
-        }
-        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-        query.include("seller");
-        if (!getAllSales) {
-            //get only sales that dont belong to me
-            query.whereNotEqualTo("seller", getCurrentUser());
-        }
-        query.orderByDescending("createdAt");
-        query.findInBackground(new FindCallback<YardSale>() {
-            public void done(List<YardSale> itemList, ParseException e) {
-                if (e == null) {
-                    //String firstItemId = itemList.get(0).getObjectId();
-                    final ArrayList<CharSequence> saleList = new ArrayList<>();
-                    if (itemList != null) {
-                        for (int i = itemList.size() - 1; i >= 0; i--) {
-                            YardSale sale = itemList.get(i);
-                            if (sale.getLocation() == null) {
-                                LatLng lat = GeopointUtils.getLocationFromAddress(context, sale.getAddress());
-                                if (lat != null) {
-                                    sale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
-                                    sale.saveInBackground();
-                                }
-                            }
-                            saleList.add(sale.getObjectId());
-                        }
-
-                    }
-                    launchListActivity(saleList);
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-
-            }
-        });
+    public void getYardSales(FragmentManager fm, boolean getAllSales, boolean isFBUSer) {
+        Boolean[] params = new Boolean[2];
+        params[0] = getAllSales;
+        params[1] = isFBUSer;
+        this.fm = fm;
+        new GetYardSales().execute(params);
     }
 
-    public void addYardSalesToMap(final SaleMapFragment mapFragment, boolean getAllSales) {
-        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-        query.include("seller");
-        if (!getAllSales) {
-            //get only sales that dont belong to me
-            query.whereNotEqualTo("seller", getCurrentUser());
+    private class GetYardSales extends AsyncTask<Boolean, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
         }
-        query.findInBackground(new FindCallback<YardSale>() {
-            public void done(List<YardSale> itemList, ParseException e) {
-                if (e == null) {
-                    for (YardSale ys : itemList)
-                        mapFragment.addSaleToList(ys);
-                }
+
+        @Override
+        protected String doInBackground(Boolean... params) {
+            final boolean getAllSales = params[0];
+            final boolean isFBUser = params[1];
+            //            try {
+            //                Thread.sleep(3000);
+            //            }catch (InterruptedException e){
+            //                e.printStackTrace();
+            //            }
+            if (isFBUser) {
+                makeMeRequest();
             }
-        });
+            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+            query.include("seller");
+            if (!getAllSales) {
+                //get only sales that dont belong to me
+                query.whereNotEqualTo("seller", getCurrentUser());
+            }
+            query.orderByDescending("createdAt");
+            query.findInBackground(new FindCallback<YardSale>() {
+                public void done(List<YardSale> itemList, ParseException e) {
+                    if (e == null) {
+                        //String firstItemId = itemList.get(0).getObjectId();
+                        final ArrayList<CharSequence> saleList = new ArrayList<>();
+                        if (itemList != null) {
+                            for (int i = itemList.size() - 1; i >= 0; i--) {
+                                YardSale sale = itemList.get(i);
+                                if (sale.getLocation() == null) {
+                                    LatLng lat = GeopointUtils.getLocationFromAddress(context, sale.getAddress());
+                                    if (lat != null) {
+                                        sale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
+                                        sale.saveInBackground();
+                                    }
+                                }
+                                saleList.add(sale.getObjectId());
+                            }
+
+                        }
+                        launchListActivity(saleList);
+                    } else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
+    }
+
+    private boolean getAllSales;
+
+    public void addYardSalesToMap(FragmentActivity activity, final SaleMapFragment mapFragment, boolean getAllSales) {
+        this.fm = activity.getSupportFragmentManager();
+        this.getAllSales = getAllSales;
+        new AddYardSalesToMap().execute(mapFragment);
+    }
+
+    private class AddYardSalesToMap extends AsyncTask<SaleMapFragment, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(SaleMapFragment... params) {
+            final SaleMapFragment mapFragment = params[0];
+            //            try {
+            //                Thread.sleep(3000);
+            //            }catch (InterruptedException e){
+            //                e.printStackTrace();
+            //            }
+            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+            query.include("seller");
+            if (!getAllSales) {
+                //get only sales that dont belong to me
+                query.whereNotEqualTo("seller", getCurrentUser());
+            }
+            query.findInBackground(new FindCallback<YardSale>() {
+                public void done(List<YardSale> itemList, ParseException e) {
+                    if (e == null) {
+                        for (YardSale ys : itemList)
+                            mapFragment.addSaleToList(ys);
+                    }
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
     public void searchForItems(String query) {

@@ -119,7 +119,7 @@ public class SalesFragment extends Fragment {
 //                AnimationFactory.flipTransition(viewFlipper, AnimationFactory.FlipDirection.LEFT_RIGHT);
                 transaction.replace(R.id.flContent, frag).addToBackStack("map_frag").commit();
                 YardSaleApplication client = new YardSaleApplication();
-                client.addYardSalesToMap(frag, false);
+                client.addYardSalesToMap(getActivity(), frag, false);
 
             }
         });

@@ -93,7 +93,7 @@ public class LoginActivity extends ActionBarActivity {
     public void loginWithFB(View view) {
         final List<String> permissions = Arrays.asList("public_profile", "email");
         Toast.makeText(LoginActivity.this, "logging in with FB", Toast.LENGTH_LONG).show();
-        client.signUpAndLoginWithFacebook(permissions);
+        client.signUpAndLoginWithFacebook(getSupportFragmentManager(),permissions);
     }
 
     public void onBack(View view) {
