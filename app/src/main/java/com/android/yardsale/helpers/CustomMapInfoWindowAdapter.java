@@ -14,6 +14,7 @@ public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     LayoutInflater mInflater;
     YardSaleApplication client;
     Context context;
+    String selectedMarkerMap ;
 
     public CustomMapInfoWindowAdapter(LayoutInflater i, Context context){
         mInflater = i;
@@ -36,26 +37,27 @@ public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         description.setText(address);
         // Return info window contents
         ImageButton btSaleDetailView = (ImageButton)v.findViewById(R.id.btSaleDetailView);
-        if(arr.length == 2) {
-            btSaleDetailView.setVisibility(View.VISIBLE);
-            btSaleDetailView.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    //show detail activity
-                    client.getItemsForYardSaleFromMap(context, arr[1]);
-                }
-            });
+        if(arr.length == 2) {
+            selectedMarkerMap = arr[1];
+            btSaleDetailView.setVisibility(View.VISIBLE);
+
         }else{
             btSaleDetailView.setVisibility(View.GONE);
         }
         return v;
     }
 
-    // This changes the frame of the info window; returning null uses the default frame.
+     // This changes the frame of the info window; returning null uses the default frame.
     // This is just the border and arrow surrounding the contents specified above
     @Override
     public View getInfoWindow(Marker marker) {
         return null;
+    }
+
+
+    public void callDetailActivity() {
+        if(selectedMarkerMap!=null)
+            client.getItemsForYardSaleFromMap(context,selectedMarkerMap);
     }
 }

@@ -154,20 +154,26 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+        final CustomMapInfoWindowAdapter windowAdapter = new CustomMapInfoWindowAdapter(inflater, getActivity());
+        getMap().setInfoWindowAdapter(windowAdapter);
 
         if (yardSaleList!=null ) {
             for (YardSale s : yardSaleList) {
                 addYardSale(s,true);
             }
+            getMap().setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    windowAdapter.callDetailActivity();
+                }
+            }   );
         } else {
             if(yardSale!=null) {
                 addYardSale(yardSale, false);
             }
             settings.setAllGesturesEnabled(false);
             settings.setMyLocationButtonEnabled(false);
-
         }
-        getMap().setInfoWindowAdapter(new CustomMapInfoWindowAdapter(inflater, getActivity()));
     }
 
     private boolean isGooglePlayServicesAvailable() {
