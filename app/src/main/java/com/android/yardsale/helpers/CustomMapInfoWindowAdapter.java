@@ -1,5 +1,6 @@
 package com.android.yardsale.helpers;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -11,9 +12,13 @@ import com.google.android.gms.maps.model.Marker;
 
 public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     LayoutInflater mInflater;
+    YardSaleApplication client;
+    Context context;
 
-    public CustomMapInfoWindowAdapter(LayoutInflater i){
+    public CustomMapInfoWindowAdapter(LayoutInflater i, Context context){
         mInflater = i;
+        client = new YardSaleApplication();
+        this.context = context;
     }
 
     // This defines the contents within the info window based on the marker
@@ -24,21 +29,26 @@ public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         // Populate fields
         TextView titleTextView = (TextView) v.findViewById(R.id.tv_info_window_title);
         String title = marker.getTitle();
-        String[] arr = title.split("::::");
+        final String[] arr = title.split("::::");
         titleTextView.setText(arr[0]);
         String address = marker.getSnippet();
         TextView description = (TextView) v.findViewById(R.id.tv_info_window_description);
         description.setText(address);
         // Return info window contents
         ImageButton btSaleDetailView = (ImageButton)v.findViewById(R.id.btSaleDetailView);
-        btSaleDetailView.setOnClickListener(new View.OnClickListener() {
+        if(arr.length == 2) {
+            btSaleDetailView.setVisibility(View.VISIBLE);
+            btSaleDetailView.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                //show detail activity
-                //client.getItemsForYardSale(myContext, , arrIv[bkI]);
-            }
-        });
+                @Override
+                public void onClick(View v) {
+                    //show detail activity
+                    client.getItemsForYardSaleFromMap(context, arr[1]);
+                }
+            });
+        }else{
+            btSaleDetailView.setVisibility(View.GONE);
+        }
         return v;
     }
 

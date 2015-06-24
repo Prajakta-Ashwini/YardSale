@@ -63,10 +63,16 @@ public class SaleMapFragment extends SupportMapFragment implements
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private boolean doneAnim=false;
 
+    public SaleMapFragment(){
+        super();
+    }
+
+
     public static SaleMapFragment newInstance(YardSale sale,Context c){
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
         yardSale = sale;
+        yardSaleList = null;
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
@@ -77,6 +83,7 @@ public class SaleMapFragment extends SupportMapFragment implements
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
         yardSaleList = saleList;
+        yardSale = null;
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
@@ -100,6 +107,8 @@ public class SaleMapFragment extends SupportMapFragment implements
             View map = super.onCreateView(inflater, parent, savedInstanceState);
             flMap.addView(map);
 
+            //should only show on view all
+            btFlip.setVisibility(View.VISIBLE);
             btFlip.setImageDrawable((getResources().getDrawable(R.drawable.list_bulleted)));
             btFlip.setColorNormal(R.color.accent_color);
             btFlip.setColorPressed(R.color.accent_color);
@@ -130,6 +139,7 @@ public class SaleMapFragment extends SupportMapFragment implements
 
         }else{
              v = super.onCreateView(inflater, parent, savedInstanceState);
+            btFlip.setVisibility(View.GONE);
         }
         initMap(inflater);
         return v;
@@ -149,14 +159,14 @@ public class SaleMapFragment extends SupportMapFragment implements
 
             if (yardSaleList!=null && yardSaleList.size() >0 ) {
                 for (YardSale s : yardSaleList) {
-                    addYardSale(s);
+                    addYardSale(s,true);
                 }
             } else if(yardSale!=null){
-                addYardSale(yardSale);
+                addYardSale(yardSale,false);
                 settings.setAllGesturesEnabled(false);
                 settings.setMyLocationButtonEnabled(false);
             }
-        getMap().setInfoWindowAdapter(new CustomMapInfoWindowAdapter(inflater));
+        getMap().setInfoWindowAdapter(new CustomMapInfoWindowAdapter(inflater, getActivity()));
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -178,15 +188,22 @@ public class SaleMapFragment extends SupportMapFragment implements
         super.onCreate(savedInstanceState);
     }
 
-    private void addYardSale(YardSale row){
+    private void addYardSale(YardSale row, boolean fromlist){
         if(row.getLocation() == null)
             return;
         LatLng loc = new LatLng(row.getLocation().getLatitude(),row.getLocation().getLongitude());
         //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12));
-        Marker marker = getMap().addMarker(new MarkerOptions()
+        if(fromlist) {
+            Marker marker = getMap().addMarker(new MarkerOptions()
                     .position(loc)
                     .title(row.getTitle() + "::::" + row.getObjectId())
                     .icon(defaultMarker).snippet(row.getAddress()));
+        }else{
+            Marker marker = getMap().addMarker(new MarkerOptions()
+                    .position(loc)
+                    .title(row.getTitle())
+                    .icon(defaultMarker).snippet(row.getAddress()));
+        }
 
     }
 
@@ -195,7 +212,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         // Display the connection status
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location != null) {
-            Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
             CameraUpdate cameraUpdate;
             //Todo If loc for the selected sale is null then just display current loca?
             if(yardSale == null || yardSale.getTitle()==null || yardSale.getLocation() == null) {
@@ -280,14 +297,18 @@ public class SaleMapFragment extends SupportMapFragment implements
         }
     }
 
+    //called from detail activity only to see marker for 1 sale
     public void addMarker(YardSale ys){
+        btFlip.setVisibility(View.GONE);
+        yardSaleList = null;
         yardSale = ys;
-        addYardSale(ys);
+        addYardSale(ys,false);
     }
 
+    //for all sales
     public void addSaleToList(YardSale s){
         yardSaleList.add(s);
-        addYardSale(s);
+        addYardSale(s,true);
     }
 
     @Override
