@@ -274,8 +274,10 @@ public class YardSaleApplication extends Application {
 
     }
 
-    public void updateYardSale(String id, final String title, final String description, final Date startTime, final Date endTime, final String address) {
+    public void updateYardSale(FragmentManager fm, String id, final String title, final String description, final Date startTime, final Date endTime, final String address) {
         ParseQuery<YardSale> query = YardSale.getQuery();
+        final ProgressDialog dialog = ProgressDialog.newInstance();
+        dialog.show(fm, "");
         query.getInBackground(id, new GetCallback<YardSale>() {
             @Override
             public void done(YardSale yardSale, ParseException e) {
@@ -291,7 +293,9 @@ public class YardSaleApplication extends Application {
                             yardSale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
                     }
                     yardSale.saveInBackground();
+
                 }
+                dialog.dismiss();
             }
         });
     }

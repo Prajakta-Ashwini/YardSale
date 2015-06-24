@@ -138,7 +138,7 @@ public class EditYardSaleActivity extends ActionBarActivity {
     }
 
     public void onSave(View view) {
-        client.updateYardSale(yardSale.getObjectId(), String.valueOf(etEditYSTitle.getText()),
+        client.updateYardSale(getSupportFragmentManager(), yardSale.getObjectId(), String.valueOf(etEditYSTitle.getText()),
                 String.valueOf(etEditYSDescription.getText()),
                 start,
                 end,
