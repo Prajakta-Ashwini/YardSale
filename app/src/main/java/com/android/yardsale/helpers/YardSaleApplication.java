@@ -418,17 +418,18 @@ public class YardSaleApplication extends Application {
     }
 
     public void getItemsForYardSaleFromMap(final Context context, final String yardSale_id) {
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.whereEqualTo("yardsale_id", yardSale_id);
-        query.findInBackground(new FindCallback<Item>() {
-            public void done(List<Item> itemList, ParseException e) {
+        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+// Specify the object id
+        query.getInBackground(yardSale_id, new GetCallback<YardSale>() {
+            public void done(YardSale sale, ParseException e) {
                 if (e == null) {
-                    launchYardSaleDetailActivity(context, yardSale_id, itemList, null);
+                    getItemsForYardSale(context, sale, null);
                 } else {
                     Log.d("item", "Error: " + e.getMessage());
                 }
             }
         });
+
     }
 
     private static void launchYardSaleDetailActivity(Context context, String yardsale_id, List<Item> items, ImageView ivCoverPic) {
@@ -445,9 +446,10 @@ public class YardSaleApplication extends Application {
         if(ivCoverPic!=null) {
             options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation((Activity) context, ivCoverPic, "itemDetail");
+            context.startActivity(intent, options.toBundle());
+        }else{
+            context.startActivity(intent);
         }
-        context.startActivity(intent, options.toBundle());
-
     }
 
          //TODO may be generalize this
