@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    >
+
+    <TextView
+        android:id="@+id/tv_info_window_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/accent_color"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
+
+    <ImageButton
+        android:id="@+id/btSaleDetailView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/accent_color"
+        android:src="@drawable/detail_arrow"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/tv_info_window_title"
+        />
+
+    <TextView
+        android:id="@+id/tv_info_window_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:textSize="10sp"
+        android:layout_below="@id/tv_info_window_title"
+        android:layout_marginTop="5dp"
+        android:text="Hours" />
+
+</RelativeLayout>

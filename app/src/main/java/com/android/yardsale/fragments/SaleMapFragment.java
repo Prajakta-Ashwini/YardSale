@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.helpers.CustomMapInfoWindowAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.google.android.gms.common.ConnectionResult;
@@ -40,7 +42,8 @@ public class SaleMapFragment extends SupportMapFragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
-        GoogleMap.OnMapLongClickListener {
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnMarkerClickListener{
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -50,6 +53,7 @@ public class SaleMapFragment extends SupportMapFragment implements
     private static List<YardSale> yardSaleList;
     private static BitmapDescriptor defaultMarker ;
     private FloatingActionButton btFlip;
+    private Button btDetailView;
     static Context context;
     FrameLayout flMap;
     /*
@@ -57,11 +61,18 @@ public class SaleMapFragment extends SupportMapFragment implements
      * returned in Activity.onActivityResult
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private boolean doneAnim=false;
+
+    public SaleMapFragment(){
+        super();
+    }
+
 
     public static SaleMapFragment newInstance(YardSale sale,Context c){
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
         yardSale = sale;
+        yardSaleList = null;
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
@@ -72,6 +83,7 @@ public class SaleMapFragment extends SupportMapFragment implements
 
         SaleMapFragment fragmentDemo = new SaleMapFragment();
         yardSaleList = saleList;
+        yardSale = null;
         //Bundle args = new Bundle();
         //args.putInt("sale_list", list);
         //fragmentDemo.setArguments(args);
@@ -85,16 +97,17 @@ public class SaleMapFragment extends SupportMapFragment implements
         defaultMarker = BitmapDescriptorFactory.fromResource(R.drawable.ys1);
 
        View v;
-//
-        if(yardSaleList!=null ) {
-            //btFlip = new FloatingActionButton(context);
-            v = inflater.inflate(R.layout.fragment_map, parent, false);
-            btFlip = (FloatingActionButton) v.findViewById(R.id.fab);
+
+       if(yardSaleList!=null ) {
+           v = inflater.inflate(R.layout.fragment_map, parent, false);
             flMap = (FrameLayout) v.findViewById(R.id.flMap);
+            btFlip = (FloatingActionButton) v.findViewById(R.id.fab);
 
             View map = super.onCreateView(inflater, parent, savedInstanceState);
             flMap.addView(map);
 
+            //should only show on view all
+            btFlip.setVisibility(View.VISIBLE);
             btFlip.setImageDrawable((getResources().getDrawable(R.drawable.list_bulleted)));
             btFlip.setColorNormal(R.color.accent_color);
             btFlip.setColorPressed(R.color.accent_color);
@@ -121,14 +134,16 @@ public class SaleMapFragment extends SupportMapFragment implements
                     transaction.replace(R.id.flContent, frag).addToBackStack("list_frag").commit();
                 }
             });
+
+
         }else{
              v = super.onCreateView(inflater, parent, savedInstanceState);
-        }
-        initMap();
+       }
+        initMap(inflater);
         return v;
     }
 
-    private void initMap(){
+    private void initMap(LayoutInflater inflater){
         UiSettings settings = getMap().getUiSettings();
 
         getMap().setMyLocationEnabled(true);
@@ -140,16 +155,19 @@ public class SaleMapFragment extends SupportMapFragment implements
             mGoogleApiClient.connect();
         }
 
-            if (yardSaleList!=null && yardSaleList.size() >0 ) {
-                for (YardSale s : yardSaleList) {
-                    addYardSale(s);
-                }
-            } else if(yardSale!=null){
-                addYardSale(yardSale);
-                settings.setAllGesturesEnabled(false);
-                settings.setMyLocationButtonEnabled(false);
+        if (yardSaleList!=null ) {
+            for (YardSale s : yardSaleList) {
+                addYardSale(s,true);
             }
+        } else {
+            if(yardSale!=null) {
+                addYardSale(yardSale, false);
+            }
+            settings.setAllGesturesEnabled(false);
+            settings.setMyLocationButtonEnabled(false);
 
+        }
+        getMap().setInfoWindowAdapter(new CustomMapInfoWindowAdapter(inflater, getActivity()));
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -171,15 +189,22 @@ public class SaleMapFragment extends SupportMapFragment implements
         super.onCreate(savedInstanceState);
     }
 
-    private void addYardSale(YardSale row){
+    private void addYardSale(YardSale row, boolean fromlist){
         if(row.getLocation() == null)
             return;
         LatLng loc = new LatLng(row.getLocation().getLatitude(),row.getLocation().getLongitude());
         //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12));
-        Marker marker = getMap().addMarker(new MarkerOptions()
+        if(fromlist) {
+            Marker marker = getMap().addMarker(new MarkerOptions()
+                    .position(loc)
+                    .title(row.getTitle() + "::::" + row.getObjectId())
+                    .icon(defaultMarker).snippet(row.getAddress()));
+        }else{
+            Marker marker = getMap().addMarker(new MarkerOptions()
                     .position(loc)
                     .title(row.getTitle())
-                    .icon(defaultMarker));
+                    .icon(defaultMarker).snippet(row.getAddress()));
+        }
 
     }
 
@@ -188,7 +213,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         // Display the connection status
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location != null) {
-            Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "GPS location was found!", Toast.LENGTH_SHORT).show();
             CameraUpdate cameraUpdate;
             //Todo If loc for the selected sale is null then just display current loca?
             if(yardSale == null || yardSale.getTitle()==null || yardSale.getLocation() == null) {
@@ -273,13 +298,40 @@ public class SaleMapFragment extends SupportMapFragment implements
         }
     }
 
+    //called from detail activity only to see marker for 1 sale
     public void addMarker(YardSale ys){
+        if(btFlip!=null)
+            btFlip.setVisibility(View.GONE);
+        yardSaleList = null;
         yardSale = ys;
-        addYardSale(ys);
+        addYardSale(ys,false);
     }
 
+    //for all sales
     public void addSaleToList(YardSale s){
         yardSaleList.add(s);
-        addYardSale(s);
+        addYardSale(s,true);
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+//        Point pointSize = new Point();
+//        Display display = getActivity().getWindowManager().getDefaultDisplay();
+//        display.getSize(pointSize);
+//        int screenWidth = pointSize.x;
+//
+//        ObjectAnimator moveFab = ObjectAnimator.ofFloat(btFlip, "translationX", 0, -(screenWidth / 3));
+//        moveFab.setInterpolator(new AccelerateInterpolator());
+//        moveFab.setDuration(1000);
+//        moveFab.start();
+
+
+//            //button in center
+//            LinearLayout lLayout = (LinearLayout) getActivity().findViewById(R.id.llLayout);
+//            LinearLayout.LayoutParams ll = (LinearLayout.LayoutParams) lLayout.getLayoutParams();
+//            ll.gravity = Gravity.CENTER;
+//            btFlip.setLayoutParams(ll);
+
+        return true;
     }
 }
