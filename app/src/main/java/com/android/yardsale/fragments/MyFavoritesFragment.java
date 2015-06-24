@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ThingsAdapter;
+import com.android.yardsale.interfaces.OnAsyncTaskCompleted;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
 import com.parse.ParseException;
@@ -26,7 +27,7 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-public class MyFavoritesFragment extends Fragment {
+public class MyFavoritesFragment extends Fragment implements OnAsyncTaskCompleted{
 
     private static final String TAG = "MyFavoritesFragment";
     private RecyclerView rvSales;
@@ -35,6 +36,11 @@ public class MyFavoritesFragment extends Fragment {
 
     public MyFavoritesFragment() {
 
+    }
+
+    @Override
+    public void onTaskCompleted() {
+        adapter.notifyDataSetChanged();
     }
 
     public static MyFavoritesFragment newInstance()
@@ -101,7 +107,7 @@ public class MyFavoritesFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.delete_sale:
                 Toast.makeText(getActivity(), "delete sale!", Toast.LENGTH_SHORT).show();
-                adapter.fireDelete(getActivity(), position);
+                adapter.fireDelete(getActivity(), position, this);
                 break;
             case R.id.edit_sale:
                 Toast.makeText(getActivity(), "edit sale!", Toast.LENGTH_SHORT).show();

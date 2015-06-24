@@ -712,51 +712,7 @@ public class YardSaleApplication extends Application {
         activity.startActivity(intent);
     }
 
-    public void deleteSale(FragmentManager fm, YardSale sale) {
-        this.fm = fm;
-        new DeleteSale().execute(sale);
 
-//        Naturally we can also delete in an offline manner with:
-//
-//        todoItem.deleteEventually();
-    }
-
-    private class DeleteSale extends AsyncTask<YardSale, Void, String> {
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            //show dialog
-            dialog = ProgressDialog.newInstance();
-            dialog.show(fm, "");
-        }
-
-        @Override
-        protected String doInBackground(YardSale... params) {
-            final YardSale sale = params[0];
-            sale.deleteInBackground();
-
-            ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-            query.whereEqualTo("yardsale_id", sale);
-            query.findInBackground(new FindCallback<Item>() {
-                public void done(List<Item> itemList, ParseException e) {
-                    if (e == null) {
-                        for (Item item : itemList)
-                            item.deleteInBackground();
-                    } else {
-                        Log.d("item", "Error: " + e.getMessage());
-                    }
-                }
-            });
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            //remove dialog
-            dialog.dismiss();
-        }
-    }
 
     public void deleteItem(FragmentManager fm, Item item) {
         this.fm = fm;

@@ -22,6 +22,7 @@ import com.android.yardsale.R;
 import com.android.yardsale.activities.AddYardSaleActivity;
 import com.android.yardsale.adapters.ThingsAdapter;
 import com.android.yardsale.helpers.CircularReveal;
+import com.android.yardsale.interfaces.OnAsyncTaskCompleted;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
 import com.parse.ParseException;
@@ -29,7 +30,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
-public class ListingsFragment extends Fragment {
+public class ListingsFragment extends Fragment implements OnAsyncTaskCompleted{
 
     private static final String TAG = "ListingsFragment";
 
@@ -62,6 +63,11 @@ public class ListingsFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         adapter.parseAdapter.loadObjects();
+    }
+
+    @Override
+    public void onTaskCompleted() {
+        adapter.notifyDataSetChanged();
     }
 
     @Nullable
@@ -156,7 +162,7 @@ public class ListingsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.delete_sale:
                 Toast.makeText(getActivity(), "delete sale!", Toast.LENGTH_SHORT).show();
-                adapter.fireDelete(getActivity(), position);
+                adapter.fireDelete(getActivity(), position, this);
                 break;
             case R.id.edit_sale:
                 Toast.makeText(getActivity(), "edit sale!", Toast.LENGTH_SHORT).show();

@@ -7,6 +7,8 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +26,8 @@ import android.widget.Toast;
 import com.android.yardsale.R;
 import com.android.yardsale.activities.EditYardSaleActivity;
 import com.android.yardsale.activities.ProgressDialog;
+import com.android.yardsale.fragments.ListingsFragment;
+import com.android.yardsale.fragments.MyFavoritesFragment;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.helpers.image.CircleTransformation;
 import com.android.yardsale.interfaces.OnAsyncTaskCompleted;
@@ -31,6 +35,7 @@ import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -75,6 +80,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
 
     public ThingsAdapter(FragmentManager fm, final Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
         this.fm = fm;
+        myContext = context;
         parseParent = parentIn;
         client = new YardSaleApplication();
         listSales = new ArrayList<>();
@@ -415,13 +421,17 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
 //        thingsAdapter.notifyDataSetChanged();
     }
 
-    public void fireDelete(Activity newContext, int position) {
+    public void fireDelete(Activity newContext, int position, Fragment listener) {
         YardSale s = listSales.get(position);
         Toast.makeText(newContext, "delete sale!", Toast.LENGTH_SHORT).show();
         listSales.remove(position);
-        client.deleteSale(fm, s);
-        parseAdapter.loadObjects();
-        thingsAdapter.notifyDataSetChanged();
+        if(listener instanceof MyFavoritesFragment)
+            deleteSale(fm, s,(MyFavoritesFragment) listener);
+        else if(listener instanceof ListingsFragment)
+            deleteSale(fm,s,(ListingsFragment) listener);
+//        parseAdapter.loadObjects();
+//        thingsAdapter.notifyDataSetChanged();
+
     }
 
     public void fireShare(FragmentManager fm, Activity newContext, int position) {
@@ -430,6 +440,56 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
         client.shareSale(fm, myContext, s);
 //        parseAdapter.loadObjects();
 //        thingsAdapter.notifyDataSetChanged();
+    }
+
+    public void deleteSale(FragmentManager fm, YardSale sale, OnAsyncTaskCompleted listener) {
+        this.fm = fm;
+        //this.listener = listener;
+        new DeleteSale().execute(sale);
+
+//        Naturally we can also delete in an offline manner with:
+//
+//        todoItem.deleteEventually();
+    }
+
+    private class DeleteSale extends AsyncTask<YardSale, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(YardSale... params) {
+            final YardSale sale = params[0];
+            sale.deleteInBackground();
+
+            ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+            query.whereEqualTo("yardsale_id", sale);
+            query.findInBackground(new FindCallback<Item>() {
+                public void done(List<Item> itemList, ParseException e) {
+                    if (e == null) {
+                        for (Item item : itemList)
+                            item.deleteInBackground();
+                    } else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+            });
+            //listener.onTaskCompleted();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+            parseAdapter.loadObjects();
+            thingsAdapter.notifyDataSetChanged();
+        }
     }
 
     private void updateHeartButton(final YardSale sale, final SaleViewHolder holder, boolean animated) {
