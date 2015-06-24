@@ -52,6 +52,11 @@ public class CustomPagerAdapter extends PagerAdapter {
         TextView tvNameOfTheApp = (TextView) itemView.findViewById(R.id.tvNameOfTheApp);
         tvNameOfTheApp.setText("YardSale");
         tvNameOfTheApp.setTextColor(Color.WHITE);
+
+        TextView tvAppDescription = (TextView) itemView.findViewById(R.id.tvAppDescription);
+        tvAppDescription.setText("Save Money. Find Unique Items. Meet Interesting People. Environmentally friendly");
+        tvAppDescription.setTextColor(Color.WHITE);
+
         container.addView(itemView);
 
         return itemView;
