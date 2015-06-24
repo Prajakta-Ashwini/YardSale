@@ -47,6 +47,7 @@ public class AddItemActivity extends ActionBarActivity {
     private EditText etAddItemPrice;
     private YardSale yardSale;
     private Bitmap image;
+    boolean fromAddingYS = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class AddItemActivity extends ActionBarActivity {
         image = null;
 
         String yardSaleId = getIntent().getStringExtra("yard_sale_id");
+        fromAddingYS = getIntent().getBooleanExtra("fromAddingYS", false);
         ParseQuery getQuery = YardSale.getQuery();
         try {
             yardSale = (YardSale) getQuery.get(yardSaleId);
@@ -205,7 +207,7 @@ public class AddItemActivity extends ActionBarActivity {
             return;
         }
         ParseFile imageParseFile = new ParseFile(ImageHelper.getBytesFromBitmap(image));
-        client.createItem(this, description, price, imageParseFile, yardSale);
+        client.createItem(fromAddingYS, this, description, price, imageParseFile, yardSale);
 
     }
 

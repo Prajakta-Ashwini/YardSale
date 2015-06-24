@@ -137,16 +137,17 @@ public class YardSaleApplication extends Application {
 
     private class LoginOperation extends AsyncTask<String, Void, String> {
         ProgressDialog dialog;
+
         @Override
         protected void onPreExecute() {
             //show dialog
             dialog = ProgressDialog.newInstance();
-            dialog.show(fm,"");
+            dialog.show(fm, "");
         }
 
         @Override
         protected String doInBackground(String... params) {
-            String username=params[0];
+            String username = params[0];
             String password = params[1];
 
             ParseUser.logInInBackground(username, password, new LogInCallback() {
@@ -235,6 +236,7 @@ public class YardSaleApplication extends Application {
             public void done(ParseException e) {
                 if (e == null) {
                     Intent intent = new Intent(activity, AddItemActivity.class);
+                    intent.putExtra("fromAddingYS", true);
                     intent.putExtra("yard_sale_id", yardSale.getObjectId());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     activity.startActivity(intent);
@@ -340,11 +342,16 @@ public class YardSaleApplication extends Application {
     }
 
 
-    public void createItem(final Context context, final String description, final Number price, ParseFile photo, final YardSale yardSale) {
+    public void createItem(final boolean isFromYSCreation, final Context context, final String description, final Number price, ParseFile photo, final YardSale yardSale) {
         final Item item = new Item(description, price, photo, yardSale);
         item.saveInBackground(new SaveCallback() {
             public void done(ParseException e) {
                 if (e == null) {
+
+                    if (isFromYSCreation) {
+                        item.getYardSale().getItemsRelation().add(item);
+                        item.getYardSale().saveInBackground();
+                    }
                     Intent data = new Intent();
                     Log.e("PUSH ", "Start PUSH");
                     data.putExtra("desc", String.valueOf(description));
@@ -442,17 +449,17 @@ public class YardSaleApplication extends Application {
         }
         intent.putCharSequenceArrayListExtra("item_list", itemObjList);
         intent.putExtra("yardsale", yardsale_id);
-        ActivityOptionsCompat options = null ;
-        if(ivCoverPic!=null) {
+        ActivityOptionsCompat options = null;
+        if (ivCoverPic != null) {
             options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation((Activity) context, ivCoverPic, "itemDetail");
             context.startActivity(intent, options.toBundle());
-        }else{
+        } else {
             context.startActivity(intent);
         }
     }
 
-         //TODO may be generalize this
+    //TODO may be generalize this
     private static void launchSearchActivity(List<Item> items) {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
