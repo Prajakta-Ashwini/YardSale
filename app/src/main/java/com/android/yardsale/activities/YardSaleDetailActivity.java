@@ -249,6 +249,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
                 });
             }
         }
+
     }
 
     @Override
