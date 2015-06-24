@@ -170,7 +170,7 @@ public class SaleMapFragment extends SupportMapFragment implements
                 public void onInfoWindowClick(Marker marker) {
                     windowAdapter.callDetailActivity();
                 }
-            }   );
+            });
         } else {
             if(yardSale!=null) {
                 addYardSale(yardSale, false);
@@ -312,8 +312,12 @@ public class SaleMapFragment extends SupportMapFragment implements
 
     //called from detail activity only to see marker for 1 sale
     public void addMarker(YardSale ys){
-        for(Marker m:markers)
-            m.remove();
+        if(markers!=null) {
+            for (Marker m : markers)
+                m.remove();
+        }else{
+            markers = new ArrayList<>();
+        }
         if(btFlip!=null)
             btFlip.setVisibility(View.GONE);
         yardSaleList = null;
@@ -348,4 +352,6 @@ public class SaleMapFragment extends SupportMapFragment implements
 
         return true;
     }
+
+
 }
