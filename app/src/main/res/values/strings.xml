@@ -7,7 +7,7 @@
     <string name="title_activity_how_it_works">HowItWorksActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
-    <string name="title_activity_list">ListActivity</string>
+    <string name="title_activity_list">What\'s new\?</string>
     <string name="create_yardsale" >Create Sale</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_yard_sale_detail">YardSaleDetailActivity</string>

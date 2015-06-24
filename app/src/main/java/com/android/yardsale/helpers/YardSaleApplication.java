@@ -1017,7 +1017,6 @@ public class YardSaleApplication extends Application {
                             sale.removeLikeForUser(getCurrentUser());
 
                         }
-
                         listener.onTaskCompleted();
                     } else {
                         Log.d("ff", e.toString());
