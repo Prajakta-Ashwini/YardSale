@@ -210,11 +210,6 @@ public class YardSaleApplication extends Application {
         @Override
         protected String doInBackground(List<String>... params) {
             List<String> permissions = params[0];
-//            try {
-//                Thread.sleep(3000);
-//            }catch (InterruptedException e){
-//                e.printStackTrace();
-//            }
             ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
                 @Override
                 public void done(ParseUser user, ParseException err) {
@@ -492,6 +487,10 @@ public class YardSaleApplication extends Application {
                     push.setChannel("yardsale_" + yardSale.getObjectId());
                     push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
                     push.sendInBackground();
+                    
+                    item.getYardSale().getItemsRelation().add(item);
+                    item.getYardSale().saveInBackground();
+
                     ((Activity) context).setResult(143, data);
                     ((Activity) context).finish();
 
@@ -711,7 +710,6 @@ public class YardSaleApplication extends Application {
         intent.putExtras(data);
         activity.startActivity(intent);
     }
-
 
 
     public void deleteItem(FragmentManager fm, Item item) {
