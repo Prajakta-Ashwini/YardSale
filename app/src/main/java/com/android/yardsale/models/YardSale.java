@@ -16,7 +16,7 @@ import java.util.Date;
 
 
 @ParseClassName("YardSale")
-public class YardSale extends ParseObject  {
+public class YardSale extends ParseObject {
     public YardSale() {
         super();
     }
@@ -34,7 +34,10 @@ public class YardSale extends ParseObject  {
         setCreatedAt(new Date());
     }
 
-    public Date getCreatedAt() { return getDate("createdAtDate"); }
+    public Date getCreatedAt() {
+        return getDate("createdAtDate");
+    }
+
     public void setCreatedAt(Date endTime) {
         put("createdAtDate", endTime);
     }
@@ -43,64 +46,64 @@ public class YardSale extends ParseObject  {
         put("title", title);
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return getString("title");
     }
 
     public void setDescription(String description) {
-        put("description",description);
+        put("description", description);
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return getString("description");
     }
 
     public void setStartTime(Date startTime) {
-        put("start_time",startTime);
+        put("start_time", startTime);
     }
 
-    public Date getStartTime(){
+    public Date getStartTime() {
         return getDate("start_time");
     }
 
     public void setEndTime(Date endTime) {
-        put("end_time",endTime);
+        put("end_time", endTime);
     }
 
-    public Date getEndTime(){
+    public Date getEndTime() {
         return getDate("end_time");
     }
 
     public void setLocation(ParseGeoPoint location) {
-        put("location",location);
+        put("location", location);
     }
 
-    public ParseGeoPoint getLocation(){
+    public ParseGeoPoint getLocation() {
         return getParseGeoPoint("location");
     }
 
     public void setAddress(String address) {
-        put("address",address);
+        put("address", address);
     }
 
-    public String getAddress(){
+    public String getAddress() {
         return getString("address");
     }
 
     public void setSeller(ParseUser seller) {
-        put("seller",seller);
+        put("seller", seller);
     }
 
-    public ParseUser getSeller(){
+    public ParseUser getSeller() {
         return getParseUser("seller");
     }
 
-    public ParseFile getCoverPic(){
+    public ParseFile getCoverPic() {
         return getParseFile("cover_pic");
     }
 
     public void setCoverPic(ParseFile photo) {
-        put("cover_pic",photo);
+        put("cover_pic", photo);
     }
 
     public static ParseQuery<YardSale> getQuery() {
@@ -114,23 +117,23 @@ public class YardSale extends ParseObject  {
     public void addLikeForUser(ParseUser user) {
         try {
             getLikesRelation().add(user);
-            ParsePush.subscribeInBackground(getObjectId());
+            ParsePush.subscribeInBackground("yardsale_" + getObjectId());
             Log.e("PUSH SUBSCRIBE", getObjectId() + getSeller().fetchIfNeeded().getUsername());
             saveInBackground();
-        }catch(ParseException e){
-            Log.d("Error:","Not able to get username");
+        } catch (ParseException e) {
+            Log.d("Error:", "Not able to get username");
             e.printStackTrace();
         }
     }
 
     public void removeLikeForUser(ParseUser user) {
-        try{
+        try {
             getLikesRelation().remove(user);
-            ParsePush.unsubscribeInBackground(getObjectId());
+            ParsePush.unsubscribeInBackground("yardsale_" + getObjectId());
             Log.e("PUSH UNSUBSCRIBE", getObjectId() + getSeller().fetchIfNeeded().getUsername());
             saveInBackground();
-        }catch(ParseException e){
-            Log.d("Error:","Not able to get username");
+        } catch (ParseException e) {
+            Log.d("Error:", "Not able to get username");
             e.printStackTrace();
         }
     }

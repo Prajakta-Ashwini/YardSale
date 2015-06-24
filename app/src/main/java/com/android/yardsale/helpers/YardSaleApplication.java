@@ -190,7 +190,7 @@ public class YardSaleApplication extends Application {
         LoginManager.getInstance().logOut();
     }
 
-    public void signUpAndLoginWithFacebook(FragmentManager fragmentManager,List<String> permissions) {
+    public void signUpAndLoginWithFacebook(FragmentManager fragmentManager, List<String> permissions) {
         //TODO check why this is not working
         fm = fragmentManager;
         new LoginWithFbOperation().execute(permissions);
@@ -203,7 +203,7 @@ public class YardSaleApplication extends Application {
         protected void onPreExecute() {
             //show dialog
             dialog = ProgressDialog.newInstance();
-            dialog.show(fm,"");
+            dialog.show(fm, "");
         }
 
         @Override
@@ -466,6 +466,7 @@ public class YardSaleApplication extends Application {
 
     private boolean isFromYSCreation;
     YardSale yardSale;
+
     public void createItem(FragmentManager fm, final boolean isFromYSCreation, final Context context, final String description, final Number price, ParseFile photo, final YardSale yardSale) {
         final Item item = new Item(description, price, photo, yardSale);
         this.isFromYSCreation = isFromYSCreation;
@@ -503,7 +504,7 @@ public class YardSaleApplication extends Application {
 
                         Log.e("PUSH", yardSale.getObjectId() + yardSale.getSeller().getUsername());
                         ParsePush push = new ParsePush();
-                        push.setChannel(yardSale.getObjectId());
+                        push.setChannel("yardsale_" + yardSale.getObjectId());
                         push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
                         push.sendInBackground();
                         ((Activity) context).setResult(143, data);
@@ -535,7 +536,7 @@ public class YardSaleApplication extends Application {
         this.price = price;
         this.photo = photo;
         this.yardSale = yardSale;
-        new UpdateItem().execute(id,description);
+        new UpdateItem().execute(id, description);
     }
 
     private class UpdateItem extends AsyncTask<String, Void, String> {
@@ -592,6 +593,7 @@ public class YardSaleApplication extends Application {
     }
 
     private ImageView ivCoverPic;
+
     public void getItemsForYardSale(FragmentManager fm, final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
         this.ivCoverPic = ivCoverPic;
         this.fm = fm;
@@ -773,7 +775,7 @@ public class YardSaleApplication extends Application {
         protected String doInBackground(Item... params) {
             final Item item = params[0];
             ParsePush push = new ParsePush();
-            push.setChannel(item.getYardSale().getObjectId());
+            push.setChannel("yardsale_" + item.getYardSale().getObjectId());
             push.setMessage(item.getDescription() + " was deleted");
             push.sendInBackground();
             item.deleteInBackground();
@@ -981,6 +983,7 @@ public class YardSaleApplication extends Application {
 
     private ImageButton btLike;
     private boolean toggleLike;
+
     public void setLikeForSale(FragmentManager fm, final YardSale sale, final ImageButton btLike, final boolean toggleLike) {
         this.btLike = btLike;
         this.toggleLike = toggleLike;

@@ -2,7 +2,12 @@ package com.android.yardsale.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -32,6 +37,7 @@ import com.android.yardsale.fragments.PastHistoryFragment;
 import com.android.yardsale.fragments.SalesFragment;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.helpers.image.CircleTransformation;
+import com.android.yardsale.helpers.image.RoundedTransformation;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.parse.FindCallback;
@@ -130,7 +136,7 @@ public class ListActivity extends ActionBarActivity {
                 });
             }
         } else if (resultCode == 143) {
-            Toast.makeText(getBaseContext(),"ListActivity", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "ListActivity", Toast.LENGTH_SHORT).show();
             String price = data.getStringExtra("price");
             String desc = data.getStringExtra("desc");
             final String objId = data.getStringExtra("obj_id");
@@ -274,12 +280,12 @@ public class ListActivity extends ActionBarActivity {
         //TODO work on the look and feel
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         View convertView = inflater.inflate(R.layout.nav_header, null);
-        Picasso.with(this)
-                .load(R.drawable.profile_background)
-                .fit().centerInside()
-                .skipMemoryCache()
-                .transform(new jp.wasabeef.picasso.transformations.BlurTransformation(getBaseContext(), 25))
-                .into((ImageView) convertView.findViewById(R.id.ivProfileBackground));
+//        Picasso.with(this)
+//                .load(R.drawable.profile_background)
+//                .fit().centerInside()
+//                .skipMemoryCache()
+//                .transform(new jp.wasabeef.picasso.transformations.BlurTransformation(getBaseContext(), 25))
+//                .into((ImageView) convertView.findViewById(R.id.ivProfileBackground));
 
         ImageView ivUserProfilePic = (ImageView) convertView.findViewById(R.id.ivUserProfilePic);
         ParseUser currentUser = ParseUser.getCurrentUser();
@@ -292,18 +298,18 @@ public class ListActivity extends ActionBarActivity {
             } else {
                 Picasso.with(this)
                         .load(currentUser.getString("profile_pic_url"))
-                        .transform(new CircleTransformation())
+                        .transform(new RoundedTransformation(65, 0))
                         .into(ivUserProfilePic);
             }
         } else {
             Picasso.with(this)
                     .load(currentUser.getParseFile("profile_pic").getUrl())
-                    .transform(new CircleTransformation())
+                    .transform(new RoundedTransformation(600, 0))
                     .into(ivUserProfilePic);
         }
 
         TextView tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
-        tvUserName.setTextColor(Color.DKGRAY);
+        tvUserName.setTextColor(Color.WHITE);
         tvUserName.setText(currentUser.getUsername());
 
         TextView tvWishList = (TextView) convertView.findViewById(R.id.tvWishList);
@@ -325,6 +331,15 @@ public class ListActivity extends ActionBarActivity {
 
             }
         });
+
+        TextView tvSettings = (TextView) convertView.findViewById(R.id.tvSettings);
+        tvSettings.setClickable(true);
+        tvSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.getCurrentUser().logOut();
+            }
+        });
         return convertView;
     }
 
@@ -332,5 +347,31 @@ public class ListActivity extends ActionBarActivity {
     public void onBackPressed() {
         moveTaskToBack(true);
         super.onBackPressed();
+    }
+
+    public static Bitmap getCircularBitmapWithWhiteBorder(Bitmap bitmap,
+                                                          int borderWidth) {
+        if (bitmap == null || bitmap.isRecycled()) {
+            return null;
+        }
+
+        final int width = bitmap.getWidth() + borderWidth;
+        final int height = bitmap.getHeight() + borderWidth;
+
+        Bitmap canvasBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(shader);
+
+        Canvas canvas = new Canvas(canvasBitmap);
+        float radius = width > height ? ((float) height) / 2f : ((float) width) / 2f;
+        canvas.drawCircle(width / 2, height / 2, radius, paint);
+        paint.setShader(null);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.BLUE);
+        paint.setStrokeWidth(borderWidth);
+        canvas.drawCircle(width / 2, height / 2, radius - borderWidth / 2, paint);
+        return canvasBitmap;
     }
 }

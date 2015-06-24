@@ -89,9 +89,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
         rvItems.setAdapter(hAdapter);
         registerForContextMenu(rvItems);
         thisactivity = this;
-//        aItems = new ItemsAdapter(this, itemList);
-//        //gvItems.setExpanded(true);
-//        rvItems.setAdapter(aItems);
+
         if (itemsObjList != null) {
             for (CharSequence objId : itemsObjList) {
                 ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
