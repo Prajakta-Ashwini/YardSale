@@ -130,6 +130,7 @@ public class ListActivity extends ActionBarActivity {
                 });
             }
         } else if (resultCode == 143) {
+            Toast.makeText(getBaseContext(),"ListActivity", Toast.LENGTH_SHORT).show();
             String price = data.getStringExtra("price");
             String desc = data.getStringExtra("desc");
             final String objId = data.getStringExtra("obj_id");
@@ -144,7 +145,8 @@ public class ListActivity extends ActionBarActivity {
                     public void done(List<Item> items, ParseException e) {
                         if (e == null) {
                             Item item = items.get(0);
-                            listingsFragment.adapter.parseAdapter.loadObjects();
+                            listingsFragment.adapter.notifyDataSetChanged();
+                            listingsFragment.adapter.parseAdapter.notifyDataSetChanged();
                             salesFragment.adapter.parseAdapter.loadObjects();
                             // itemlist add
                             YardSale s = item.getYardSale();

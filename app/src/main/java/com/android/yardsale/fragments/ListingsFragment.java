@@ -22,12 +22,16 @@ import com.android.yardsale.R;
 import com.android.yardsale.activities.AddYardSaleActivity;
 import com.android.yardsale.adapters.ThingsAdapter;
 import com.android.yardsale.helpers.CircularReveal;
+import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 public class ListingsFragment extends Fragment {
 
@@ -147,7 +151,7 @@ public class ListingsFragment extends Fragment {
         //MyView.RecyclerContextMenuInfo info = (MyView.RecyclerContextMenuInfo) item.getMenuInfo();
         int position = -1;
         try {
-            position = adapter.getPosition() ;
+            position = adapter.getPosition();
 
         } catch (Exception e) {
             Log.d("Error", e.getLocalizedMessage(), e);
@@ -188,4 +192,33 @@ public class ListingsFragment extends Fragment {
         menu.add(Menu.NONE, R.id.share_sale, Menu.NONE, "Share Sale");
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == 143) {
+            Toast.makeText(getActivity(), "ListingsFragment", Toast.LENGTH_SHORT).show();
+            String price = data.getStringExtra("price");
+            String desc = data.getStringExtra("desc");
+            final String objId = data.getStringExtra("obj_id");
+            if (objId == null) {
+                ParseQuery<Item> query = Item.getQuery();
+                //query.whereEqualTo("price", price);
+                query.whereEqualTo("description", desc);
+                //query.whereEqualTo("seller", YardSaleApplication.getCurrentUser());
+
+                query.findInBackground(new FindCallback<Item>() {
+                    @Override
+                    public void done(List<Item> items, ParseException e) {
+                        if (e == null) {
+                            Item item = items.get(0);
+                            // itemlist add
+                            YardSale s = item.getYardSale();
+                            s.getItemsRelation().add(item);
+                            s.saveInBackground();
+                        }
+                    }
+                });
+
+            }
+        }
+    }
 }
