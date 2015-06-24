@@ -403,7 +403,18 @@ public class YardSaleApplication extends Application {
 
     public void getItemsForYardSale(final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
         // Define the class we would btn_like to query
-
+        // Define the class we would btn_like to query
+        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        query.whereEqualTo("yardsale_id", yardSale);
+        query.findInBackground(new FindCallback<Item>() {
+            public void done(List<Item> itemList, ParseException e) {
+                if (e == null) {
+                    launchYardSaleDetailActivity(context, yardSale, itemList, ivCoverPic);
+                } else {
+                    Log.d("item", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 
     private static void launchYardSaleDetailActivity(Context context, YardSale yardsale, List<Item> items, ImageView ivCoverPic) {
@@ -416,13 +427,28 @@ public class YardSaleApplication extends Application {
         }
         intent.putCharSequenceArrayListExtra("item_list", itemObjList);
         intent.putExtra("yardsale", yardsale.getObjectId());
-        ActivityOptionsCompat options = ActivityOptionsCompat.
-                makeSceneTransitionAnimation((Activity) context, ivCoverPic, "itemDetail");
+        ActivityOptionsCompat options = null ;
+        if(ivCoverPic!=null) {
+            options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation((Activity) context, ivCoverPic, "itemDetail");
+        }
         context.startActivity(intent, options.toBundle());
 
     }
 
-
+//    private static void launchYardSaleDetailActivityFromMap(Context context, String yardsale_id, List<Item> items) {
+//        Intent intent = new Intent(context, YardSaleDetailActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        ArrayList<CharSequence> itemObjList = new ArrayList<>();
+//        for (Item item : items) {
+//            itemObjList.add(item.getObjectId());
+//        }
+//        intent.putCharSequenceArrayListExtra("item_list", itemObjList);
+//        intent.putExtra("yardsale", yardsale.getObjectId());
+//
+//        context.startActivity(intent);
+//
+//    }
 
         //TODO may be generalize this
     private static void launchSearchActivity(List<Item> items) {

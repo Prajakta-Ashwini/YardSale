@@ -2,6 +2,7 @@ package com.android.yardsale.helpers;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.yardsale.R;
@@ -21,12 +22,23 @@ public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         // Getting view from the layout file
         View v = mInflater.inflate(R.layout.custom_info_window, null);
         // Populate fields
-        TextView title = (TextView) v.findViewById(R.id.tv_info_window_title);
-        title.setText(marker.getTitle());
+        TextView titleTextView = (TextView) v.findViewById(R.id.tv_info_window_title);
+        String title = marker.getTitle();
+        String[] arr = title.split("::::");
+        titleTextView.setText(arr[0]);
         String address = marker.getSnippet();
         TextView description = (TextView) v.findViewById(R.id.tv_info_window_description);
         description.setText(address);
         // Return info window contents
+        ImageButton btSaleDetailView = (ImageButton)v.findViewById(R.id.btSaleDetailView);
+        btSaleDetailView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //show detail activity
+                //client.getItemsForYardSale(myContext, , arrIv[bkI]);
+            }
+        });
         return v;
     }
 

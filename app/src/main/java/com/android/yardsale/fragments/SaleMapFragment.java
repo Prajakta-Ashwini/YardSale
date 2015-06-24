@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -41,7 +42,8 @@ public class SaleMapFragment extends SupportMapFragment implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener,
-        GoogleMap.OnMapLongClickListener {
+        GoogleMap.OnMapLongClickListener,
+        GoogleMap.OnMarkerClickListener{
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -51,6 +53,7 @@ public class SaleMapFragment extends SupportMapFragment implements
     private static List<YardSale> yardSaleList;
     private static BitmapDescriptor defaultMarker ;
     private FloatingActionButton btFlip;
+    private Button btDetailView;
     static Context context;
     FrameLayout flMap;
     /*
@@ -58,6 +61,7 @@ public class SaleMapFragment extends SupportMapFragment implements
      * returned in Activity.onActivityResult
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private boolean doneAnim=false;
 
     public static SaleMapFragment newInstance(YardSale sale,Context c){
 
@@ -122,6 +126,8 @@ public class SaleMapFragment extends SupportMapFragment implements
                     transaction.replace(R.id.flContent, frag).addToBackStack("list_frag").commit();
                 }
             });
+
+
         }else{
              v = super.onCreateView(inflater, parent, savedInstanceState);
         }
@@ -179,7 +185,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         //getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12));
         Marker marker = getMap().addMarker(new MarkerOptions()
                     .position(loc)
-                    .title(row.getTitle())
+                    .title(row.getTitle() + "::::" + row.getObjectId())
                     .icon(defaultMarker).snippet(row.getAddress()));
 
     }
@@ -282,5 +288,27 @@ public class SaleMapFragment extends SupportMapFragment implements
     public void addSaleToList(YardSale s){
         yardSaleList.add(s);
         addYardSale(s);
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+//        Point pointSize = new Point();
+//        Display display = getActivity().getWindowManager().getDefaultDisplay();
+//        display.getSize(pointSize);
+//        int screenWidth = pointSize.x;
+//
+//        ObjectAnimator moveFab = ObjectAnimator.ofFloat(btFlip, "translationX", 0, -(screenWidth / 3));
+//        moveFab.setInterpolator(new AccelerateInterpolator());
+//        moveFab.setDuration(1000);
+//        moveFab.start();
+
+
+//            //button in center
+//            LinearLayout lLayout = (LinearLayout) getActivity().findViewById(R.id.llLayout);
+//            LinearLayout.LayoutParams ll = (LinearLayout.LayoutParams) lLayout.getLayoutParams();
+//            ll.gravity = Gravity.CENTER;
+//            btFlip.setLayoutParams(ll);
+
+        return true;
     }
 }
