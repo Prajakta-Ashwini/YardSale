@@ -194,7 +194,7 @@ public class EditItemActivity extends ActionBarActivity {
             imageParseFile = new ParseFile(getBytesFromBitmap(image));
         else
             imageParseFile = item.getParseFile("photo");
-        client.updateItem(item.getObjectId(), description, price, imageParseFile, item.getYardSale());
+        client.updateItem(getSupportFragmentManager(), item.getObjectId(), description, price, imageParseFile, item.getYardSale());
 
         Intent data = new Intent();
         data.putExtra("price", String.valueOf(etEditItemPrice.getText()));

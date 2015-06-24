@@ -83,7 +83,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
         rvItems.setLayoutManager(llm);
         rvItems.setItemAnimator(new DefaultItemAnimator());
 
-        aItems = new ItemsAdapter(getBaseContext(), itemList);
+        aItems = new ItemsAdapter(getSupportFragmentManager(), getBaseContext(), itemList);
         hAdapter = new HeaderRecyclerViewAdapterV2(aItems);
 
         rvItems.setAdapter(hAdapter);

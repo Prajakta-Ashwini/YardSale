@@ -1,6 +1,7 @@
 package com.android.yardsale.helpers;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,8 +16,9 @@ public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     YardSaleApplication client;
     Context context;
     String selectedMarkerMap ;
+    FragmentManager fm;
 
-    public CustomMapInfoWindowAdapter(LayoutInflater i, Context context){
+    public CustomMapInfoWindowAdapter(FragmentManager fm, LayoutInflater i, Context context){
         mInflater = i;
         client = new YardSaleApplication();
         this.context = context;
@@ -58,6 +60,6 @@ public class CustomMapInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     public void callDetailActivity() {
         if(selectedMarkerMap!=null)
-            client.getItemsForYardSaleFromMap(context,selectedMarkerMap);
+            client.getItemsForYardSaleFromMap(fm, context,selectedMarkerMap);
     }
 }

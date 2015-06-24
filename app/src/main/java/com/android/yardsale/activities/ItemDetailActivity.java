@@ -35,7 +35,7 @@ public class ItemDetailActivity extends ActionBarActivity {
                     Log.e("item_get", item.getDescription() + item.getPhoto().getUrl());
                     if (item.getPhoto().getUrl() != null) {
                         Picasso.with(getBaseContext())
-                                .load(item.getPhoto().getUrl())
+                                .load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading)
                                 .into(ivImageResult);
                     } else {
                         Picasso.with(getBaseContext())

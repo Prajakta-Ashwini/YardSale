@@ -76,7 +76,7 @@ public class SalesFragment extends Fragment {
         rvSales.setItemAnimator(new DefaultItemAnimator());
 
         ParseQueryAdapter.QueryFactory<YardSale> factory = getYardSaleQueryFactory();
-        adapter = new ThingsAdapter(getActivity(), factory, container);
+        adapter = new ThingsAdapter(getActivity().getSupportFragmentManager(), getActivity(), factory, container);
         // Set CustomAdapter as the adapter for RecyclerView.
         rvSales.setAdapter(adapter);
         registerForContextMenu(rvSales);
@@ -119,7 +119,7 @@ public class SalesFragment extends Fragment {
 //                AnimationFactory.flipTransition(viewFlipper, AnimationFactory.FlipDirection.LEFT_RIGHT);
                 transaction.replace(R.id.flContent, frag).addToBackStack("map_frag").commit();
                 YardSaleApplication client = new YardSaleApplication();
-                client.addYardSalesToMap(frag, false);
+                client.addYardSalesToMap(getActivity(), frag, false);
 
             }
         });
@@ -159,7 +159,7 @@ public class SalesFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.share_sale:
                 Toast.makeText(getActivity(), "share sale!", Toast.LENGTH_SHORT).show();
-                adapter.fireShare(getActivity(), position);
+                adapter.fireShare(getActivity().getSupportFragmentManager(), getActivity(), position);
                 break;
         }
         return super.onContextItemSelected(item);

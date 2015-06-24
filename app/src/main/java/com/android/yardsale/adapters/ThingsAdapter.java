@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -60,14 +61,15 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
     HashMap<SaleViewHolder, AnimatorSet> likeAnimations = new HashMap<>();
+    FragmentManager fm;
     long then;
 
     public List<YardSale> getListSales() {
         return listSales;
     }
 
-    public ThingsAdapter(final Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
-
+    public ThingsAdapter(FragmentManager fm, final Context context, ParseQueryAdapter.QueryFactory<YardSale> queryFactory, ViewGroup parentIn) {
+        this.fm = fm;
         parseParent = parentIn;
         client = new YardSaleApplication();
         listSales = new ArrayList<>();
@@ -151,16 +153,16 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                             break;
                         if (item.getPhoto() != null) {
                             if (i == 0) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic1);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic1);
                             }
                             if (i == 1) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic2);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic2);
                             }
                             if (i == 2) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic3);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic3);
                             }
                             if (i == 3) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic4);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic4);
                             }
                             i++;
                         }
@@ -188,7 +190,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
     @Override
     public void onBindViewHolder(final SaleViewHolder holder, final int position) {
         parseAdapter.getView(position, holder.itemView, parseParent);
-        client.setLikeForSale(yardSale, btLike, false);
+        client.setLikeForSale(fm, yardSale, btLike, false);
         btLike.setOnClickListener(new View.OnClickListener() {
             YardSale s = parseAdapter.getItem(position);
 
@@ -196,7 +198,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
             public void onClick(View v) {
                 Toast.makeText(myContext, "btn_like sale!", Toast.LENGTH_SHORT).show();
                 updateHeartButton(s, holder, true);
-                client.setLikeForSale(s, btLike, true);
+                client.setLikeForSale(fm, s, btLike, true);
                 parseAdapter.loadObjects();
                 thingsAdapter.notifyDataSetChanged();
             }
@@ -249,7 +251,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                 /* Implement short click behavior here or do nothing */
                             System.out.println("Short Click has happened...");
                             YardSale s = parseAdapter.getItem(position);
-                            client.getItemsForYardSale(myContext, s, arrIv[bkI]);
+                            client.getItemsForYardSale(fm, myContext, s, arrIv[bkI]);
                             return true;
                         }
                     }
@@ -361,15 +363,15 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
         YardSale s = listSales.get(position);
         Toast.makeText(newContext, "delete sale!", Toast.LENGTH_SHORT).show();
         listSales.remove(position);
-        client.deleteSale(s);
+        client.deleteSale(fm, s);
         parseAdapter.loadObjects();
         thingsAdapter.notifyDataSetChanged();
     }
 
-    public void fireShare(Activity newContext, int position) {
+    public void fireShare(FragmentManager fm, Activity newContext, int position) {
         YardSale s = listSales.get(position);
         Toast.makeText(newContext, "share sale!", Toast.LENGTH_SHORT).show();
-        client.shareSale(myContext, s);
+        client.shareSale(fm, myContext, s);
 //        parseAdapter.loadObjects();
 //        thingsAdapter.notifyDataSetChanged();
     }

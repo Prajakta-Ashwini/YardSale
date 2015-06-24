@@ -154,7 +154,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-        final CustomMapInfoWindowAdapter windowAdapter = new CustomMapInfoWindowAdapter(inflater, getActivity());
+        final CustomMapInfoWindowAdapter windowAdapter = new CustomMapInfoWindowAdapter(getActivity().getSupportFragmentManager(), inflater, getActivity());
         getMap().setInfoWindowAdapter(windowAdapter);
 
         if (yardSaleList!=null ) {

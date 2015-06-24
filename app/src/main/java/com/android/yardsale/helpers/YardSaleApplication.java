@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -155,7 +156,7 @@ public class YardSaleApplication extends Application {
                     if (user != null) {
                         // Hooray! The user is logged in.
                         Toast.makeText(context, "Logged In!!!!!", Toast.LENGTH_LONG).show();
-                        getYardSales(false, false);
+                        getYardSales(fm, false, false);
                     } else {
                         // Signup failed. Look at the ParseException to see what happened.
                         Log.d("DEBUG", "LOGIN FAILED", e);
@@ -189,28 +190,57 @@ public class YardSaleApplication extends Application {
         LoginManager.getInstance().logOut();
     }
 
-    public void signUpAndLoginWithFacebook(List<String> permissions) {
+    public void signUpAndLoginWithFacebook(FragmentManager fragmentManager,List<String> permissions) {
         //TODO check why this is not working
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException err) {
-                //TODO Progress bars
-                if (user == null) {
-                    Toast.makeText(callingActivity, "signUpAndLoginWithFB called user is null", Toast.LENGTH_SHORT).show();
-                    Log.e("DEBUG", "Uh oh. The user cancelled the Facebook login.");
+        fm = fragmentManager;
+        new LoginWithFbOperation().execute(permissions);
+    }
 
-                } else if (user.isNew()) {
-                    Toast.makeText(callingActivity, "User signed up and logged in through Facebook", Toast.LENGTH_SHORT).show();
-                    Log.e("DEBUG", "User signed up and logged in through Facebook!");
-                    //TODO go to the add info to profile page
-                    getYardSales(false, true);
-                } else {
-                    Log.e("DEBUG", "User logged in through Facebook!");
-                    Toast.makeText(callingActivity, "signUpAndLoginWithFB called already exisiting user", Toast.LENGTH_SHORT).show();
-                    getYardSales(false, true);
+    private class LoginWithFbOperation extends AsyncTask<List<String>, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm,"");
+        }
+
+        @Override
+        protected String doInBackground(List<String>... params) {
+            List<String> permissions = params[0];
+//            try {
+//                Thread.sleep(3000);
+//            }catch (InterruptedException e){
+//                e.printStackTrace();
+//            }
+            ParseFacebookUtils.logInWithReadPermissionsInBackground(callingActivity, permissions, new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException err) {
+                    if (user == null) {
+                        Toast.makeText(callingActivity, "signUpAndLoginWithFB called user is null", Toast.LENGTH_SHORT).show();
+                        Log.e("DEBUG", "Uh oh. The user cancelled the Facebook login.");
+
+                    } else if (user.isNew()) {
+                        Toast.makeText(callingActivity, "User signed up and logged in through Facebook", Toast.LENGTH_SHORT).show();
+                        Log.e("DEBUG", "User signed up and logged in through Facebook!");
+                        //TODO go to the add info to profile page
+                        getYardSales(fm, false, true);
+                    } else {
+                        Log.e("DEBUG", "User logged in through Facebook!");
+                        Toast.makeText(callingActivity, "signUpAndLoginWithFB called already exisiting user", Toast.LENGTH_SHORT).show();
+                        getYardSales(fm, false, true);
+                    }
                 }
-            }
-        });
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
     public void createYardSale(final Activity activity, final String title, final String description, Date startTime, Date endTime, String address) {
@@ -270,127 +300,280 @@ public class YardSaleApplication extends Application {
         });
     }
 
-    public void getYardSales(boolean getAllSales, boolean isFBUSer) {
-        if (isFBUSer) {
-            makeMeRequest();
+    public void getYardSales(FragmentManager fm, boolean getAllSales, boolean isFBUSer) {
+        Boolean[] params = new Boolean[2];
+        params[0] = getAllSales;
+        params[1] = isFBUSer;
+        this.fm = fm;
+        new GetYardSales().execute(params);
+    }
+
+    private class GetYardSales extends AsyncTask<Boolean, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
         }
-        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-        query.include("seller");
-        if (!getAllSales) {
-            //get only sales that dont belong to me
-            query.whereNotEqualTo("seller", getCurrentUser());
-        }
-        query.orderByDescending("createdAt");
-        query.findInBackground(new FindCallback<YardSale>() {
-            public void done(List<YardSale> itemList, ParseException e) {
-                if (e == null) {
-                    //String firstItemId = itemList.get(0).getObjectId();
-                    final ArrayList<CharSequence> saleList = new ArrayList<>();
-                    if (itemList != null) {
-                        for (int i = itemList.size() - 1; i >= 0; i--) {
-                            YardSale sale = itemList.get(i);
-                            if (sale.getLocation() == null) {
-                                LatLng lat = GeopointUtils.getLocationFromAddress(context, sale.getAddress());
-                                if (lat != null) {
-                                    sale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
-                                    sale.saveInBackground();
+
+        @Override
+        protected String doInBackground(Boolean... params) {
+            final boolean getAllSales = params[0];
+            final boolean isFBUser = params[1];
+            //            try {
+            //                Thread.sleep(3000);
+            //            }catch (InterruptedException e){
+            //                e.printStackTrace();
+            //            }
+            if (isFBUser) {
+                makeMeRequest(fm);
+            }
+            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+            query.include("seller");
+            if (!getAllSales) {
+                //get only sales that dont belong to me
+                query.whereNotEqualTo("seller", getCurrentUser());
+            }
+            query.orderByDescending("createdAt");
+            query.findInBackground(new FindCallback<YardSale>() {
+                public void done(List<YardSale> itemList, ParseException e) {
+                    if (e == null) {
+                        //String firstItemId = itemList.get(0).getObjectId();
+                        final ArrayList<CharSequence> saleList = new ArrayList<>();
+                        if (itemList != null) {
+                            for (int i = itemList.size() - 1; i >= 0; i--) {
+                                YardSale sale = itemList.get(i);
+                                if (sale.getLocation() == null) {
+                                    LatLng lat = GeopointUtils.getLocationFromAddress(context, sale.getAddress());
+                                    if (lat != null) {
+                                        sale.setLocation(new ParseGeoPoint(lat.latitude, lat.longitude));
+                                        sale.saveInBackground();
+                                    }
                                 }
+                                saleList.add(sale.getObjectId());
                             }
-                            saleList.add(sale.getObjectId());
+
                         }
-
+                        launchListActivity(saleList);
+                    } else {
+                        Log.d("item", "Error: " + e.getMessage());
                     }
-                    launchListActivity(saleList);
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
+
                 }
-
-            }
-        });
-    }
-
-    public void addYardSalesToMap(final SaleMapFragment mapFragment, boolean getAllSales) {
-        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-        query.include("seller");
-        if (!getAllSales) {
-            //get only sales that dont belong to me
-            query.whereNotEqualTo("seller", getCurrentUser());
+            });
+            return null;
         }
-        query.findInBackground(new FindCallback<YardSale>() {
-            public void done(List<YardSale> itemList, ParseException e) {
-                if (e == null) {
-                    for (YardSale ys : itemList)
-                        mapFragment.addSaleToList(ys);
-                }
-            }
-        });
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
-    public void searchForItems(String query) {
-        ParseQuery<Item> searchQuery = ParseQuery.getQuery(Item.class);
-        searchQuery.whereMatches("description", "(" + query + ")", "i");
-        searchQuery.findInBackground(new FindCallback<Item>() {
-            public void done(List<Item> results, ParseException e) {
-                if (e == null) {
-                    launchSearchActivity(results);
-                    //   objectsWereRetrievedSuccessfully(objects);
-                } else {
-                    //  objectRetrievalFailed();
-                }
-            }
-        });
+    private boolean getAllSales;
+
+    public void addYardSalesToMap(FragmentActivity activity, final SaleMapFragment mapFragment, boolean getAllSales) {
+        this.fm = activity.getSupportFragmentManager();
+        this.getAllSales = getAllSales;
+        new AddYardSalesToMap().execute(mapFragment);
     }
 
+    private class AddYardSalesToMap extends AsyncTask<SaleMapFragment, Void, String> {
+        ProgressDialog dialog;
 
-    public void createItem(final boolean isFromYSCreation, final Context context, final String description, final Number price, ParseFile photo, final YardSale yardSale) {
-        final Item item = new Item(description, price, photo, yardSale);
-        item.saveInBackground(new SaveCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
 
-                    if (isFromYSCreation) {
-                        item.getYardSale().getItemsRelation().add(item);
-                        item.getYardSale().saveInBackground();
+        @Override
+        protected String doInBackground(SaleMapFragment... params) {
+            final SaleMapFragment mapFragment = params[0];
+            //            try {
+            //                Thread.sleep(3000);
+            //            }catch (InterruptedException e){
+            //                e.printStackTrace();
+            //            }
+            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+            query.include("seller");
+            if (!getAllSales) {
+                //get only sales that dont belong to me
+                query.whereNotEqualTo("seller", getCurrentUser());
+            }
+            query.findInBackground(new FindCallback<YardSale>() {
+                public void done(List<YardSale> itemList, ParseException e) {
+                    if (e == null) {
+                        for (YardSale ys : itemList)
+                            mapFragment.addSaleToList(ys);
                     }
-                    Intent data = new Intent();
-                    Log.e("PUSH ", "Start PUSH");
-                    data.putExtra("desc", String.valueOf(description));
-                    data.putExtra("price", String.valueOf(price));
-                    Log.e("PUSH", "Set extras done" + yardSale.getObjectId());
-
-                    Log.e("PUSH", yardSale.getObjectId() + yardSale.getSeller().getUsername());
-                    ParsePush push = new ParsePush();
-                    push.setChannel(yardSale.getObjectId());
-                    push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
-                    push.sendInBackground();
-                    ((Activity) context).setResult(143, data);
-                    ((Activity) context).finish();
-
-                } else {
-                    Log.e("CREATE_ITEM_ERR", "blah", e);
-                    // when something went wrong in saving the item you do not want to display this to the user.
                 }
-            }
-        });
-        if (yardSale.getCoverPic() == null)
-            setPicForYardSale(yardSale, photo);
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
-    public void updateItem(final String id, final String description, final Number price, final ParseFile photo, final YardSale yardSale) {
-        ParseQuery<Item> query = Item.getQuery();
-        query.getInBackground(id, new GetCallback<Item>() {
-            @Override
-            public void done(Item item, ParseException e) {
-                if (e == null) {
-                    item.setDescription(description);
-                    item.setPrice(price);
-                    item.setPhoto(photo);
-                    if (!yardSale.getCoverPic().equals(photo))
-                        setPicForYardSale(yardSale, photo);
-                    item.saveInBackground();
+    public void searchForItems(FragmentManager fm, Activity activity, String query) {
+        this.fm = fm;
+        this.callingActivity = activity;
+        new SearchItems().execute(query);
+    }
+
+    private class SearchItems extends AsyncTask<String, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            final String query = params[0];
+            ParseQuery<Item> searchQuery = ParseQuery.getQuery(Item.class);
+            searchQuery.whereMatches("description", "(" + query + ")", "i");
+            searchQuery.findInBackground(new FindCallback<Item>() {
+                public void done(List<Item> results, ParseException e) {
+                    if (e == null) {
+                        launchSearchActivity(callingActivity, results);
+                        //   objectsWereRetrievedSuccessfully(objects);
+                    } else {
+                        //  objectRetrievalFailed();
+                    }
                 }
-            }
-        });
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
+    }
+
+    private boolean isFromYSCreation;
+    YardSale yardSale;
+    public void createItem(FragmentManager fm, final boolean isFromYSCreation, final Context context, final String description, final Number price, ParseFile photo, final YardSale yardSale) {
+        final Item item = new Item(description, price, photo, yardSale);
+        this.isFromYSCreation = isFromYSCreation;
+        this.yardSale = yardSale;
+        this.fm = fm;
+        new CreateItems().execute(item);
+    }
+
+    private class CreateItems extends AsyncTask<Item, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(Item... params) {
+            final Item item = params[0];
+            item.saveInBackground(new SaveCallback() {
+                public void done(ParseException e) {
+                    if (e == null) {
+
+                        if (isFromYSCreation) {
+                            item.getYardSale().getItemsRelation().add(item);
+                            item.getYardSale().saveInBackground();
+                        }
+                        Intent data = new Intent();
+                        Log.e("PUSH ", "Start PUSH");
+                        data.putExtra("desc", String.valueOf(item.getDescription()));
+                        data.putExtra("price", String.valueOf(item.getPrice()));
+                        Log.e("PUSH", "Set extras done" + yardSale.getObjectId());
+
+                        Log.e("PUSH", yardSale.getObjectId() + yardSale.getSeller().getUsername());
+                        ParsePush push = new ParsePush();
+                        push.setChannel(yardSale.getObjectId());
+                        push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
+                        push.sendInBackground();
+                        ((Activity) context).setResult(143, data);
+                        ((Activity) context).finish();
+
+                    } else {
+                        Log.e("CREATE_ITEM_ERR", "blah", e);
+                        // when something went wrong in saving the item you do not want to display this to the user.
+                    }
+                }
+            });
+            if (yardSale.getCoverPic() == null)
+                setPicForYardSale(yardSale, item.getPhoto());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
+    }
+
+    private Number price;
+    private ParseFile photo;
+
+    public void updateItem(FragmentManager fm, final String id, final String description, final Number price, final ParseFile photo, final YardSale yardSale) {
+        this.fm = fm;
+        this.price = price;
+        this.photo = photo;
+        this.yardSale = yardSale;
+        new UpdateItem().execute(id,description);
+    }
+
+    private class UpdateItem extends AsyncTask<String, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String id = params[0];
+            final String description = params[1];
+            ParseQuery<Item> query = Item.getQuery();
+            query.getInBackground(id, new GetCallback<Item>() {
+                @Override
+                public void done(Item item, ParseException e) {
+                    if (e == null) {
+                        item.setDescription(description);
+                        item.setPrice(price);
+                        item.setPhoto(photo);
+                        if (!yardSale.getCoverPic().equals(photo))
+                            setPicForYardSale(yardSale, photo);
+                        item.saveInBackground();
+                    }
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
     public Item getItem(final String id) {
@@ -408,35 +591,87 @@ public class YardSaleApplication extends Application {
         sale.saveInBackground();
     }
 
-    public void getItemsForYardSale(final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
-        // Define the class we would btn_like to query
-        // Define the class we would btn_like to query
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.whereEqualTo("yardsale_id", yardSale);
-        query.findInBackground(new FindCallback<Item>() {
-            public void done(List<Item> itemList, ParseException e) {
-                if (e == null) {
-                    launchYardSaleDetailActivity(context, yardSale.getObjectId(), itemList, ivCoverPic);
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-            }
-        });
+    private ImageView ivCoverPic;
+    public void getItemsForYardSale(FragmentManager fm, final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
+        this.ivCoverPic = ivCoverPic;
+        this.fm = fm;
+        this.context = context;
+        new GetItemsForSale().execute(yardSale);
     }
 
-    public void getItemsForYardSaleFromMap(final Context context, final String yardSale_id) {
-        ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
-// Specify the object id
-        query.getInBackground(yardSale_id, new GetCallback<YardSale>() {
-            public void done(YardSale sale, ParseException e) {
-                if (e == null) {
-                    getItemsForYardSale(context, sale, null);
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-            }
-        });
+    private class GetItemsForSale extends AsyncTask<YardSale, Void, String> {
+        ProgressDialog dialog;
 
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(YardSale... params) {
+            final YardSale yardSale = params[0];
+            // Define the class we would btn_like to query
+            // Define the class we would btn_like to query
+            ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+            query.whereEqualTo("yardsale_id", yardSale);
+            query.findInBackground(new FindCallback<Item>() {
+                public void done(List<Item> itemList, ParseException e) {
+                    if (e == null) {
+                        launchYardSaleDetailActivity(context, yardSale.getObjectId(), itemList, ivCoverPic);
+                    } else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
+    }
+
+    public void getItemsForYardSaleFromMap(FragmentManager fm, final Context context, final String yardSale_id) {
+        this.fm = fm;
+        new GetItemsForSaleFromMap().execute(yardSale_id);
+    }
+
+    private class GetItemsForSaleFromMap extends AsyncTask<String, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            final String yardSale_id = params[0];
+            ParseQuery<YardSale> query = ParseQuery.getQuery(YardSale.class);
+// Specify the object id
+            query.getInBackground(yardSale_id, new GetCallback<YardSale>() {
+                public void done(YardSale sale, ParseException e) {
+                    if (e == null) {
+                        getItemsForYardSale(fm, context, sale, null);
+                    } else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
     private static void launchYardSaleDetailActivity(Context context, String yardsale_id, List<Item> items, ImageView ivCoverPic) {
@@ -460,8 +695,8 @@ public class YardSaleApplication extends Application {
     }
 
     //TODO may be generalize this
-    private static void launchSearchActivity(List<Item> items) {
-        Intent intent = new Intent(context, SearchActivity.class);
+    private static void launchSearchActivity(Activity activity, List<Item> items) {
+        Intent intent = new Intent(activity, SearchActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle data = new Bundle();
         ArrayList<String> seachItems = new ArrayList<>();
@@ -470,50 +705,118 @@ public class YardSaleApplication extends Application {
         }
         data.putStringArrayList("search", seachItems);
         intent.putExtras(data);
-        context.startActivity(intent);
+        activity.startActivity(intent);
     }
 
-    public void deleteSale(YardSale sale) {
-        sale.deleteInBackground();
-
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.whereEqualTo("yardsale_id", sale);
-        query.findInBackground(new FindCallback<Item>() {
-            public void done(List<Item> itemList, ParseException e) {
-                if (e == null) {
-                    for (Item item : itemList)
-                        item.deleteInBackground();
-                } else {
-                    Log.d("item", "Error: " + e.getMessage());
-                }
-            }
-        });
+    public void deleteSale(FragmentManager fm, YardSale sale) {
+        this.fm = fm;
+        new DeleteSale().execute(sale);
 
 //        Naturally we can also delete in an offline manner with:
 //
 //        todoItem.deleteEventually();
     }
 
-    public void deleteItem(Item item) {
-        ParsePush push = new ParsePush();
-        push.setChannel(item.getYardSale().getObjectId());
-        push.setMessage(item.getDescription() + " was deleted");
-        push.sendInBackground();
-        item.deleteInBackground();
+    private class DeleteSale extends AsyncTask<YardSale, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(YardSale... params) {
+            final YardSale sale = params[0];
+            sale.deleteInBackground();
+
+            ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+            query.whereEqualTo("yardsale_id", sale);
+            query.findInBackground(new FindCallback<Item>() {
+                public void done(List<Item> itemList, ParseException e) {
+                    if (e == null) {
+                        for (Item item : itemList)
+                            item.deleteInBackground();
+                    } else {
+                        Log.d("item", "Error: " + e.getMessage());
+                    }
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
+    }
+
+    public void deleteItem(FragmentManager fm, Item item) {
+        this.fm = fm;
+        new DeleteItem().execute(item);
+    }
+
+    private class DeleteItem extends AsyncTask<Item, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(Item... params) {
+            final Item item = params[0];
+            ParsePush push = new ParsePush();
+            push.setChannel(item.getYardSale().getObjectId());
+            push.setMessage(item.getDescription() + " was deleted");
+            push.sendInBackground();
+            item.deleteInBackground();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 
     // Can be triggered by a view event such as a button press
-    public void shareSale(Context context, YardSale sale) {
-        try {
-            ParseFile file = sale.getCoverPic();
-            if (file == null) {
-                Toast.makeText(context, "cover pic not found!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            // Get access to the URI for the bitmap
-            Uri bmpUri = getLocalBitmapUri(file);
+    public void shareSale(FragmentManager fm, Context context, YardSale sale) {
+        this.context = context;
+        this.fm = fm;
+        new ShareSale().execute(sale);
+    }
 
-            if (bmpUri != null) {
+    private class ShareSale extends AsyncTask<YardSale, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(YardSale... params) {
+            YardSale sale = params[0];
+            try {
+                ParseFile file = sale.getCoverPic();
+                if (file == null) {
+                    Toast.makeText(context, "cover pic not found!", Toast.LENGTH_SHORT).show();
+                    return "";
+                }
+                // Get access to the URI for the bitmap
+                Uri bmpUri = getLocalBitmapUri(file);
+
+                if (bmpUri != null) {
 //                // Construct a ShareIntent with link to image
 //                Intent shareIntent = new Intent();
 //                shareIntent.setAction(Intent.ACTION_SEND);
@@ -521,45 +824,53 @@ public class YardSaleApplication extends Application {
 //                shareIntent.setType("image/*");
 //                // Launch sharing dialog for image
 //                context.startActivity(Intent.createChooser(shareIntent, "Share Image"));
-                List<Intent> targetedShareIntents = new ArrayList<Intent>();
-                Intent share = new Intent(android.content.Intent.ACTION_SEND);
-                share.setType("image/*");
+                    List<Intent> targetedShareIntents = new ArrayList<Intent>();
+                    Intent share = new Intent(android.content.Intent.ACTION_SEND);
+                    share.setType("image/*");
 
-                List<ResolveInfo> resInfo = context.getPackageManager()
-                        .queryIntentActivities(share, 0);
-                if (!resInfo.isEmpty()) {
-                    for (ResolveInfo info : resInfo) {
-                        Intent targetedShare = new Intent(
-                                android.content.Intent.ACTION_SEND);
-                        targetedShare.setType("image/*"); // put here your mime
-                        // type
+                    List<ResolveInfo> resInfo = context.getPackageManager()
+                            .queryIntentActivities(share, 0);
+                    if (!resInfo.isEmpty()) {
+                        for (ResolveInfo info : resInfo) {
+                            Intent targetedShare = new Intent(
+                                    android.content.Intent.ACTION_SEND);
+                            targetedShare.setType("image/*"); // put here your mime
+                            // type
 //                        if (info.activityInfo.packageName.toLowerCase().contains(
 //                                nameApp)
 //                                || info.activityInfo.name.toLowerCase().contains(
 //                                nameApp)) {
-                        String subject = "Yardsale alert! :) " + sale.getTitle() + " at " + sale.getAddress();
-                        targetedShare.putExtra(Intent.EXTRA_SUBJECT, subject);
-                        targetedShare.putExtra(Intent.EXTRA_TEXT, subject);
-                        targetedShare.putExtra(Intent.EXTRA_STREAM,
-                                bmpUri);
-                        targetedShare.setPackage(info.activityInfo.packageName);
-                        targetedShareIntents.add(targetedShare);
+                            String subject = "Yardsale alert! :) " + sale.getTitle() + " at " + sale.getAddress();
+                            targetedShare.putExtra(Intent.EXTRA_SUBJECT, subject);
+                            targetedShare.putExtra(Intent.EXTRA_TEXT, subject);
+                            targetedShare.putExtra(Intent.EXTRA_STREAM,
+                                    bmpUri);
+                            targetedShare.setPackage(info.activityInfo.packageName);
+                            targetedShareIntents.add(targetedShare);
 
+                        }
+                        Intent chooserIntent = Intent.createChooser(
+                                targetedShareIntents.remove(0), "Select app to share");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                                targetedShareIntents.toArray(new Parcelable[]{}));
+                        context.startActivity(chooserIntent);
                     }
-                    Intent chooserIntent = Intent.createChooser(
-                            targetedShareIntents.remove(0), "Select app to share");
-                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
-                            targetedShareIntents.toArray(new Parcelable[]{}));
-                    context.startActivity(chooserIntent);
+                } else {
+                    // ...sharing failed, handle error
+                    Toast.makeText(context, "Error while sharing image!", Toast.LENGTH_SHORT)
+                            .show();
                 }
-            } else {
-                // ...sharing failed, handle error
+            } catch (ParseException e) {
                 Toast.makeText(context, "Error while sharing image!", Toast.LENGTH_SHORT)
                         .show();
             }
-        } catch (ParseException e) {
-            Toast.makeText(context, "Error while sharing image!", Toast.LENGTH_SHORT)
-                    .show();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
         }
     }
 
@@ -597,77 +908,130 @@ public class YardSaleApplication extends Application {
         return ParseUser.getCurrentUser();
     }
 
-    public void makeMeRequest() {
-        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                        if (jsonObject != null) {
-                            JSONObject userProfile = new JSONObject();
-                            System.out.println("response: " + jsonObject.toString());
-                            try {
-
-                                String url = "https://graph.facebook.com/" + jsonObject.getLong("id") + "/picture?type=large";
-                                // Save the user profile info in a user property
-                                ParseUser currentUser = ParseUser.getCurrentUser();
-                                currentUser.put("profile", userProfile);
-                                currentUser.setUsername(jsonObject.getString("name"));
-                                currentUser.setEmail(jsonObject.getString("email"));
-                                currentUser.put("profile_pic_url", url);
-                                currentUser.saveInBackground();
-
-                            } catch (JSONException e) {
-                                Log.d("TAG",
-                                        "Error parsing returned user data. " + e);
-                            }
-                        } else if (graphResponse.getError() != null) {
-                            switch (graphResponse.getError().getCategory()) {
-                                case LOGIN_RECOVERABLE:
-                                    Log.d("TAG",
-                                            "Authentication error: " + graphResponse.getError());
-                                    break;
-
-                                case TRANSIENT:
-                                    Log.d("TAG",
-                                            "Transient error. Try again. " + graphResponse.getError());
-                                    break;
-
-                                case OTHER:
-                                    Log.d("TAG",
-                                            "Some other error: " + graphResponse.getError());
-                                    break;
-                            }
-                        }
-                    }
-                });
-
-        request.executeAsync();
+    public void makeMeRequest(FragmentManager fm) {
+        this.fm = fm;
+        new MakeMeRequest().execute();
     }
 
-    public void setLikeForSale(final YardSale sale, final ImageButton btLike, final boolean toggleLike) {
-        sale.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
-            public void done(List<ParseUser> results, ParseException e) {
-                if (e == null) {
-                    if (toggleLike) {
-                        if (!results.contains(ParseUser.getCurrentUser())) {
-                            sale.addLikeForUser(ParseUser.getCurrentUser());
-                            btLike.setSelected(true);
-                        } else {
-                            sale.removeLikeForUser(ParseUser.getCurrentUser());
-                            btLike.setSelected(false);
-                        }
-                    } else {
-                        if (results.contains(ParseUser.getCurrentUser())) {
-                            btLike.setSelected(true);
-                        } else {
-                            btLike.setSelected(false);
-                        }
-                    }
+    private class MakeMeRequest extends AsyncTask<Void, Void, String> {
+        ProgressDialog dialog;
 
-                } else {
-                    Log.d("ff", e.toString());
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                            if (jsonObject != null) {
+                                JSONObject userProfile = new JSONObject();
+                                System.out.println("response: " + jsonObject.toString());
+                                try {
+
+                                    String url = "https://graph.facebook.com/" + jsonObject.getLong("id") + "/picture?type=large";
+                                    // Save the user profile info in a user property
+                                    ParseUser currentUser = ParseUser.getCurrentUser();
+                                    currentUser.put("profile", userProfile);
+                                    currentUser.setUsername(jsonObject.getString("name"));
+                                    currentUser.setEmail(jsonObject.getString("email"));
+                                    currentUser.put("profile_pic_url", url);
+                                    currentUser.saveInBackground();
+
+                                } catch (JSONException e) {
+                                    Log.d("TAG",
+                                            "Error parsing returned user data. " + e);
+                                }
+                            } else if (graphResponse.getError() != null) {
+                                switch (graphResponse.getError().getCategory()) {
+                                    case LOGIN_RECOVERABLE:
+                                        Log.d("TAG",
+                                                "Authentication error: " + graphResponse.getError());
+                                        break;
+
+                                    case TRANSIENT:
+                                        Log.d("TAG",
+                                                "Transient error. Try again. " + graphResponse.getError());
+                                        break;
+
+                                    case OTHER:
+                                        Log.d("TAG",
+                                                "Some other error: " + graphResponse.getError());
+                                        break;
+                                }
+                            }
+                        }
+                    });
+
+            request.executeAsync();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
+    }
+
+    private ImageButton btLike;
+    private boolean toggleLike;
+    public void setLikeForSale(FragmentManager fm, final YardSale sale, final ImageButton btLike, final boolean toggleLike) {
+        this.btLike = btLike;
+        this.toggleLike = toggleLike;
+        this.fm = fm;
+        new SetLikeForSale().execute(sale);
+    }
+
+    private class SetLikeForSale extends AsyncTask<YardSale, Void, String> {
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            //show dialog
+            dialog = ProgressDialog.newInstance();
+            dialog.show(fm, "");
+        }
+
+        @Override
+        protected String doInBackground(YardSale... params) {
+            final YardSale sale = params[0];
+            sale.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
+                public void done(List<ParseUser> results, ParseException e) {
+                    if (e == null) {
+                        if (toggleLike) {
+                            if (!results.contains(ParseUser.getCurrentUser())) {
+                                sale.addLikeForUser(ParseUser.getCurrentUser());
+                                btLike.setSelected(true);
+                            } else {
+                                sale.removeLikeForUser(ParseUser.getCurrentUser());
+                                btLike.setSelected(false);
+                            }
+                        } else {
+                            if (results.contains(ParseUser.getCurrentUser())) {
+                                btLike.setSelected(true);
+                            } else {
+                                btLike.setSelected(false);
+                            }
+                        }
+
+                    } else {
+                        Log.d("ff", e.toString());
+                    }
                 }
-            }
-        });
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //remove dialog
+            dialog.dismiss();
+        }
     }
 }

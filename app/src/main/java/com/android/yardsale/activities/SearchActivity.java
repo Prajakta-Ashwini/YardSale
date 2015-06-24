@@ -39,7 +39,7 @@ public class SearchActivity extends ActionBarActivity {
         rvItems.setHasFixedSize(true);
         rvItems.setLayoutManager(llm);
         rvItems.setItemAnimator(new DefaultItemAnimator());
-        adapter = new ItemsAdapter(this, items);
+        adapter = new ItemsAdapter(getSupportFragmentManager(), this, items);
         rvItems.setAdapter(adapter);
 
 
