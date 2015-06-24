@@ -137,10 +137,7 @@
             android:name="com.parse.push.notification_icon"
             android:resource="@drawable/ic_profile" />
 
-        <activity
-            android:name=".activities.ProgressDialog"
-            android:label="@string/title_activity_wait" >
-        </activity>
+
     </application>
 
 </manifest>
