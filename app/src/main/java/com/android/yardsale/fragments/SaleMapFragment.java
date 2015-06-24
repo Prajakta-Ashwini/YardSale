@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
+import com.android.yardsale.helpers.CustomMapInfoWindowAdapter;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.models.YardSale;
 import com.google.android.gms.common.ConnectionResult;
@@ -124,11 +125,11 @@ public class SaleMapFragment extends SupportMapFragment implements
         }else{
              v = super.onCreateView(inflater, parent, savedInstanceState);
         }
-        initMap();
+        initMap(inflater);
         return v;
     }
 
-    private void initMap(){
+    private void initMap(LayoutInflater inflater){
         UiSettings settings = getMap().getUiSettings();
 
         getMap().setMyLocationEnabled(true);
@@ -149,7 +150,7 @@ public class SaleMapFragment extends SupportMapFragment implements
                 settings.setAllGesturesEnabled(false);
                 settings.setMyLocationButtonEnabled(false);
             }
-
+        getMap().setInfoWindowAdapter(new CustomMapInfoWindowAdapter(inflater));
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -179,7 +180,7 @@ public class SaleMapFragment extends SupportMapFragment implements
         Marker marker = getMap().addMarker(new MarkerOptions()
                     .position(loc)
                     .title(row.getTitle())
-                    .icon(defaultMarker));
+                    .icon(defaultMarker).snippet(row.getAddress()));
 
     }
 
