@@ -124,6 +124,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
 
                         tvTitle.setText(sale.getTitle());
                         tvDescription.setTextColor(Color.WHITE);
+                        tvTitle.setTextColor(Color.WHITE);
                         tvDescription.setText(sale.getDescription());
                         Date startDate = sale.getStartTime();
                         tvDateTime.setTextColor(Color.WHITE);
