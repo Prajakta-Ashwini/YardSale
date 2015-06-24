@@ -97,12 +97,11 @@ public class SaleMapFragment extends SupportMapFragment implements
         defaultMarker = BitmapDescriptorFactory.fromResource(R.drawable.ys1);
 
        View v;
-//
-        if(yardSaleList!=null ) {
-            //btFlip = new FloatingActionButton(context);
-            v = inflater.inflate(R.layout.fragment_map, parent, false);
-            btFlip = (FloatingActionButton) v.findViewById(R.id.fab);
+
+       if(yardSaleList!=null ) {
+           v = inflater.inflate(R.layout.fragment_map, parent, false);
             flMap = (FrameLayout) v.findViewById(R.id.flMap);
+            btFlip = (FloatingActionButton) v.findViewById(R.id.fab);
 
             View map = super.onCreateView(inflater, parent, savedInstanceState);
             flMap.addView(map);
@@ -139,8 +138,7 @@ public class SaleMapFragment extends SupportMapFragment implements
 
         }else{
              v = super.onCreateView(inflater, parent, savedInstanceState);
-            btFlip.setVisibility(View.GONE);
-        }
+       }
         initMap(inflater);
         return v;
     }
@@ -157,15 +155,18 @@ public class SaleMapFragment extends SupportMapFragment implements
             mGoogleApiClient.connect();
         }
 
-            if (yardSaleList!=null && yardSaleList.size() >0 ) {
-                for (YardSale s : yardSaleList) {
-                    addYardSale(s,true);
-                }
-            } else if(yardSale!=null){
-                addYardSale(yardSale,false);
-                settings.setAllGesturesEnabled(false);
-                settings.setMyLocationButtonEnabled(false);
+        if (yardSaleList!=null ) {
+            for (YardSale s : yardSaleList) {
+                addYardSale(s,true);
             }
+        } else {
+            if(yardSale!=null) {
+                addYardSale(yardSale, false);
+            }
+            settings.setAllGesturesEnabled(false);
+            settings.setMyLocationButtonEnabled(false);
+
+        }
         getMap().setInfoWindowAdapter(new CustomMapInfoWindowAdapter(inflater, getActivity()));
     }
 
@@ -299,7 +300,8 @@ public class SaleMapFragment extends SupportMapFragment implements
 
     //called from detail activity only to see marker for 1 sale
     public void addMarker(YardSale ys){
-        btFlip.setVisibility(View.GONE);
+        if(btFlip!=null)
+            btFlip.setVisibility(View.GONE);
         yardSaleList = null;
         yardSale = ys;
         addYardSale(ys,false);
