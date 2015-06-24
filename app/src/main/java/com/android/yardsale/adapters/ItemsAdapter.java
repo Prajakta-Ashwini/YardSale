@@ -47,7 +47,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         viewHolder.tvPrice.setText("$" + String.valueOf(item.getPrice()));
 
         if (item.getPhoto() != null)
-            Picasso.with(context).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(viewHolder.ivPic);
+            Picasso.with(context).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(viewHolder.ivPic);
         else
             Picasso.with(context).load(R.drawable.placeholder).into(viewHolder.ivPic);
 

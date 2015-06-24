@@ -151,16 +151,16 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> {
                             break;
                         if (item.getPhoto() != null) {
                             if (i == 0) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic1);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic1);
                             }
                             if (i == 1) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic2);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic2);
                             }
                             if (i == 2) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic3);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic3);
                             }
                             if (i == 3) {
-                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder).into(ivPic4);
+                                Picasso.with(getContext()).load(item.getPhoto().getUrl()).placeholder(R.drawable.placeholder_loading).into(ivPic4);
                             }
                             i++;
                         }
