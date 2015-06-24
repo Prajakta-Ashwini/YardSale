@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.android.yardsale.R;
 import com.android.yardsale.adapters.ItemsAdapter;
@@ -42,6 +43,9 @@ public class SearchActivity extends ActionBarActivity {
         adapter = new ItemsAdapter(getSupportFragmentManager(), this, items);
         rvItems.setAdapter(adapter);
 
+        if (seachObjectIds.isEmpty()) {
+            Toast.makeText(this, "No Items matching your request", Toast.LENGTH_SHORT).show();
+        }
 
         if (seachObjectIds != null) {
             for (String objId : seachObjectIds) {
