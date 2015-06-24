@@ -3,6 +3,7 @@ package com.android.yardsale.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -54,6 +55,7 @@ public class YardSaleDetailActivity extends FragmentActivity {
     private TextView tvAddress;
     private TextView tvSeller;
     private ImageView ivUserPic;
+    private TextView tvCompleteTime;
     LinearLayoutManager llm;
     Activity thisactivity;
     YardSaleApplication client;
@@ -119,14 +121,22 @@ public class YardSaleDetailActivity extends FragmentActivity {
                         tvDateTime = (TextView) head.findViewById(R.id.tvDateTime);
                         tvSeller = (TextView) head.findViewById(R.id.tvSeller);
                         ivUserPic = (ImageView) head.findViewById(R.id.ivUserPic);
+                        tvCompleteTime = (TextView) head.findViewById(R.id.tvCompleteTime);
                         //cvHeader = (CardView) findViewById(R.id.cvHeader);
+
                         tvTitle.setText(sale.getTitle());
+                        tvDescription.setTextColor(Color.WHITE);
                         tvDescription.setText(sale.getDescription());
                         Date startDate = sale.getStartTime();
+                        tvDateTime.setTextColor(Color.WHITE);
                         tvDateTime.setText(DateUtils.getRelativeTimeSpanString(startDate.getTime()));
+                        tvCompleteTime.setTextColor(Color.WHITE);
+                        tvCompleteTime.setText("Start " + startDate.toString() + "\nEnd " + sale.getEndTime().toString());
+                        tvAddress.setTextColor(Color.WHITE);
                         tvAddress.setText(sale.getAddress());
                         if (sale.getSeller() != null) {
                             try {
+                                tvSeller.setTextColor(Color.WHITE);
                                 tvSeller.setText("Hosted by " + sale.getSeller().fetchIfNeeded().getUsername());
                                 if (sale.getSeller().getString("profile_pic_url") != null) {
                                     Picasso.with(getBaseContext())
@@ -169,7 +179,6 @@ public class YardSaleDetailActivity extends FragmentActivity {
                         btCreateItem.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //TODO this would be broken because of linking add ys adn add item. Fix this!
                                 Toast.makeText(getBaseContext(), "creating item!!!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(YardSaleDetailActivity.this, AddItemActivity.class);
                                 intent.putExtra("yard_sale_id", sale.getObjectId());

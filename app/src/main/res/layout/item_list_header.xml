@@ -2,7 +2,7 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cvHeader"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:clickable="true"
@@ -17,57 +17,52 @@
         <ImageView
             android:id="@+id/background_image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:adjustViewBounds="true"
-            android:scaleType="matrix" />
+            android:scaleType="fitXY"
+            android:src="@drawable/yardsale_blur" />
 
-        <RelativeLayout
-            android:id="@+id/rlFirstSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="title"
+            android:textSize="22sp" />
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="title"
-                android:textSize="22sp" />
+        <ImageView
+            android:id="@+id/ivUserPic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@id/tvTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/com_facebook_profile_picture_blank_square" />
 
-            <ImageView
-                android:id="@+id/ivUserPic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_below="@id/tvTitle"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/com_facebook_profile_picture_blank_square" />
-
-            <TextView
-                android:id="@+id/tvSeller"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/ivUserPic"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:text="Hosted by seller" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/tvSeller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ivUserPic"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:text="Hosted by seller" />
 
         <View
             android:id="@+id/line1"
             android:layout_width="fill_parent"
             android:layout_height="1dip"
-            android:layout_below="@id/rlFirstSection"
+            android:layout_below="@id/tvSeller"
             android:background="@color/image_foreground_color"
             android:paddingLeft="5dp"
             android:paddingRight="5dp" />
@@ -79,7 +74,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@id/line1"
             android:layout_marginLeft="100dp"
-            android:src="@drawable/ic_maps_img" />
+            android:src="@drawable/ic_maps" />
 
         <TextView
             android:id="@+id/tvAddress"
@@ -122,6 +117,13 @@
             android:layout_below="@+id/line2"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/tvCompleteTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvDescription"
+            android:layout_marginBottom="20dp" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>
