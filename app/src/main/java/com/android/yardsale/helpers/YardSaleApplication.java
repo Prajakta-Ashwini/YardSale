@@ -28,6 +28,7 @@ import com.android.yardsale.activities.SearchActivity;
 import com.android.yardsale.activities.YardSaleDetailActivity;
 import com.android.yardsale.fragments.SaleMapFragment;
 import com.android.yardsale.fragments.YouDoNotOwnThisAlertDialog;
+import com.android.yardsale.interfaces.OnAsyncTaskCompleted;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.facebook.AccessToken;
@@ -983,11 +984,11 @@ public class YardSaleApplication extends Application {
 
     private ImageButton btLike;
     private boolean toggleLike;
+    private OnAsyncTaskCompleted listener;
 
-    public void setLikeForSale(FragmentManager fm, final YardSale sale, final ImageButton btLike, final boolean toggleLike) {
-        this.btLike = btLike;
-        this.toggleLike = toggleLike;
+    public void setLikeForSale(FragmentManager fm, final YardSale sale, OnAsyncTaskCompleted listener) {
         this.fm = fm;
+        this.listener = listener;
         new SetLikeForSale().execute(sale);
     }
 
@@ -1001,28 +1002,23 @@ public class YardSaleApplication extends Application {
             dialog.show(fm, "");
         }
 
+        //return list of sales that user likes
         @Override
         protected String doInBackground(YardSale... params) {
             final YardSale sale = params[0];
+
             sale.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
                 public void done(List<ParseUser> results, ParseException e) {
                     if (e == null) {
-                        if (toggleLike) {
-                            if (!results.contains(ParseUser.getCurrentUser())) {
-                                sale.addLikeForUser(ParseUser.getCurrentUser());
-                                btLike.setSelected(true);
-                            } else {
-                                sale.removeLikeForUser(ParseUser.getCurrentUser());
-                                btLike.setSelected(false);
-                            }
+                        if (!results.contains(getCurrentUser())) {
+                            sale.addLikeForUser(getCurrentUser());
+
                         } else {
-                            if (results.contains(ParseUser.getCurrentUser())) {
-                                btLike.setSelected(true);
-                            } else {
-                                btLike.setSelected(false);
-                            }
+                            sale.removeLikeForUser(getCurrentUser());
+
                         }
 
+                        listener.onTaskCompleted();
                     } else {
                         Log.d("ff", e.toString());
                     }
@@ -1034,6 +1030,7 @@ public class YardSaleApplication extends Application {
         @Override
         protected void onPostExecute(String result) {
             //remove dialog
+
             dialog.dismiss();
         }
     }

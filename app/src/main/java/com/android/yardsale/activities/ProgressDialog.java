@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 
 import com.android.yardsale.R;
@@ -61,15 +60,15 @@ public class ProgressDialog extends DialogFragment {
 
         ImageView post = (ImageView) waitDialogLayout.findViewById(R.id.ivPost);
 
-        ObjectAnimator movePost = ObjectAnimator.ofFloat(post, "translationY", -screenWidth/2, 0);
-        movePost.setInterpolator(new BounceInterpolator());
-        movePost.setDuration(500);
+//        ObjectAnimator movePost = ObjectAnimator.ofFloat(post, "translationY", -screenWidth/2, 0);
+//        movePost.setInterpolator(new BounceInterpolator());
+//        movePost.setDuration(500);
 
         //bounce
         ObjectAnimator rotatePost = ObjectAnimator.ofFloat(post ,
                 "rotation", 0f, 360f);//ObjectAnimator.ofFloat(post, "translationX", 0, screenWidth/2);
-        movePost.setInterpolator(new AccelerateInterpolator());
-        movePost.setDuration(2000);
+        rotatePost.setInterpolator(new AccelerateInterpolator());
+        rotatePost.setDuration(2000);
 
         ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(post, "scaleX", 0.5f);
         ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(post, "scaleY", 0.5f);
@@ -96,7 +95,7 @@ public class ProgressDialog extends DialogFragment {
         scaleSetUp.play(scaleUpX).with(scaleUpY);
 
         final AnimatorSet moveSet = new AnimatorSet();
-        moveSet.playSequentially(movePost, rotatePost, scaleSet, scaleSetUp);
+        moveSet.playSequentially( rotatePost, scaleSet, scaleSetUp);
         moveSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
