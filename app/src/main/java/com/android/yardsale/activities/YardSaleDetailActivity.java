@@ -185,7 +185,8 @@ public class YardSaleDetailActivity extends FragmentActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+        if (resultCode == 143) {
+            Toast.makeText(getBaseContext(), "yardsaledetailedactivity", Toast.LENGTH_SHORT).show();
             String price = data.getStringExtra("price");
             String desc = data.getStringExtra("desc");
             final String objId = data.getStringExtra("obj_id");

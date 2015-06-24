@@ -147,7 +147,7 @@ public class EditYardSaleActivity extends ActionBarActivity {
         Intent data = new Intent();
         data.putExtra("title", String.valueOf(etEditYSTitle.getText()));
         data.putExtra("desc", String.valueOf(etEditYSDescription.getText()));
-        data.putExtra("obj_id",yardSale.getObjectId());
+        data.putExtra("obj_id", yardSale.getObjectId());
         setResult(RESULT_OK, data);
         finish();
     }
@@ -184,11 +184,11 @@ public class EditYardSaleActivity extends ActionBarActivity {
             if (current_time == TIME_DIALOG_ID_START) {
                 start.setHours(view.getCurrentHour());
                 start.setMinutes(view.getCurrentMinute());
-                tvEditYSStart.setText(format.format(start));
+                tvEditYSStart.setText("Start\n\n" + format.format(start));
             } else if (current_time == TIME_DIALOG_ID_END) {
                 end.setHours(view.getCurrentHour());
                 end.setMinutes(view.getCurrentMinute());
-                tvEditYSEnd.setText(format.format(end));
+                tvEditYSEnd.setText("End\n\n" + format.format(end));
             }
         }
     }

@@ -325,7 +325,7 @@ public class YardSaleApplication extends Application {
                     push.setChannel(yardSale.getObjectId());
                     push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
                     push.sendInBackground();
-                    ((Activity) context).setResult(((Activity) context).RESULT_OK, data);
+                    ((Activity) context).setResult(143, data);
                     ((Activity) context).finish();
 
                 } else {

@@ -38,7 +38,7 @@ public class SalesFragment extends Fragment {
 
     private RecyclerView rvSales;
     private LinearLayoutManager mLayoutManager;
-    private ThingsAdapter adapter;
+    public ThingsAdapter adapter;
     public  List<YardSale> yardSales = new ArrayList<>();
     private FloatingActionButton btFlip;
 

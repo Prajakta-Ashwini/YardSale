@@ -209,4 +209,8 @@ public class EditItemActivity extends ActionBarActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
     }
+
+    public void onClose(View view) {
+        finish();
+    }
 }

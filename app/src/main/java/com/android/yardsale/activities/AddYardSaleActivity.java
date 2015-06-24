@@ -1,6 +1,5 @@
 package com.android.yardsale.activities;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -71,7 +70,7 @@ public class AddYardSaleActivity extends ActionBarActivity {
                 datePicker("end_date");
             }
         });
-        final Activity a = this;
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,9 +140,6 @@ public class AddYardSaleActivity extends ActionBarActivity {
         @Override
         public void onStart() {
             super.onStart();
-//
-//            Window window = getDialog().getWindow();
-//            window.setBackgroundDrawableResource(android.R.color.transparent);
         }
 
         @Override
@@ -201,16 +197,15 @@ public class AddYardSaleActivity extends ActionBarActivity {
                 start.setHours(view.getCurrentHour());
                 start.setMinutes(view.getCurrentMinute());
                 Log.d("Debug: on timeset", start.toString());
-                tvAddYSStart.setText(start.toString());
+                tvAddYSStart.setText("Start\n\n" + start.toString());
             } else if (current_time == TIME_DIALOG_ID_END) {
                 end.setHours(view.getCurrentHour());
                 end.setMinutes(view.getCurrentMinute());
-                tvAddYSEnd.setText(end.toString());
+                tvAddYSEnd.setText("End\n\n" + end.toString());
                 Log.d("Debug: on timeset", end.toString());
             }
         }
     }
-
 
 }
 

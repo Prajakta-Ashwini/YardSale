@@ -26,12 +26,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.yardsale.R;
-import com.android.yardsale.fragments.PastHistoryFragment;
 import com.android.yardsale.fragments.ListingsFragment;
 import com.android.yardsale.fragments.MyFavoritesFragment;
+import com.android.yardsale.fragments.PastHistoryFragment;
 import com.android.yardsale.fragments.SalesFragment;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.helpers.image.CircleTransformation;
+import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -99,6 +100,7 @@ public class ListActivity extends ActionBarActivity {
             String title = data.getStringExtra("title");
             String desc = data.getStringExtra("desc");
             String objId = data.getStringExtra("obj_id");
+            String price = data.getStringExtra("price");
             if (objId == null) {
                 ParseQuery<YardSale> query = YardSale.getQuery();
                 query.whereEqualTo("title", title);
@@ -126,6 +128,32 @@ public class ListActivity extends ActionBarActivity {
                         }
                     }
                 });
+            }
+        } else if (resultCode == 143) {
+            String price = data.getStringExtra("price");
+            String desc = data.getStringExtra("desc");
+            final String objId = data.getStringExtra("obj_id");
+            if (objId == null) {
+                ParseQuery<Item> query = Item.getQuery();
+                //query.whereEqualTo("price", price);
+                query.whereEqualTo("description", desc);
+                //query.whereEqualTo("seller", YardSaleApplication.getCurrentUser());
+
+                query.findInBackground(new FindCallback<Item>() {
+                    @Override
+                    public void done(List<Item> items, ParseException e) {
+                        if (e == null) {
+                            Item item = items.get(0);
+                            listingsFragment.adapter.parseAdapter.loadObjects();
+                            salesFragment.adapter.parseAdapter.loadObjects();
+                            // itemlist add
+                            YardSale s = item.getYardSale();
+                            s.getItemsRelation().add(item);
+                            s.saveInBackground();
+                        }
+                    }
+                });
+
             }
         }
     }
@@ -241,8 +269,15 @@ public class ListActivity extends ActionBarActivity {
     }
 
     private View getHeaderForNavDrawer() {
+        //TODO work on the look and feel
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         View convertView = inflater.inflate(R.layout.nav_header, null);
+        Picasso.with(this)
+                .load(R.drawable.profile_background)
+                .fit().centerInside()
+                .skipMemoryCache()
+                .transform(new jp.wasabeef.picasso.transformations.BlurTransformation(getBaseContext(), 25))
+                .into((ImageView) convertView.findViewById(R.id.ivProfileBackground));
 
         ImageView ivUserProfilePic = (ImageView) convertView.findViewById(R.id.ivUserProfilePic);
         ParseUser currentUser = ParseUser.getCurrentUser();

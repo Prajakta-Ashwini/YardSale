@@ -4,75 +4,72 @@
     android:gravity="top"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/userPersonalSection"
+    <ImageView
+        android:id="@+id/ivProfileBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/profile_background"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_alignBottom="@+id/line2" />
+
+    <ImageView
+        android:id="@+id/ivUserProfilePic"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:adjustViewBounds="true"
+        android:paddingBottom="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/com_facebook_profile_picture_blank_square" />
+
+    <TextView
+        android:id="@+id/tvUserName"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/ivUserProfilePic"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:paddingBottom="10dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/com_facebook_profile_picture_blank_square" />
-
-        <TextView
-            android:id="@+id/tvUserName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ivUserProfilePic"
-            android:gravity="center"
-            android:text="User name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="16sp" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivUserProfilePic"
+        android:gravity="center"
+        android:text="User name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="16sp" />
 
     <View
         android:id="@+id/line1"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
-        android:layout_below="@id/userPersonalSection"
+        android:layout_below="@id/tvUserName"
         android:layout_centerVertical="true"
         android:background="#BDBDBD" />
 
+    <TextView
+        android:id="@+id/tvWishList"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/line1"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_like"
+        android:clickable="true" />
 
-    <RelativeLayout
-        android:id="@+id/rlUserIconSection"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:paddingBottom="10dp"
-        android:layout_below="@id/line1">
-
-        <TextView
-            android:id="@+id/tvWishList"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_like"
-            android:clickable="true" />
-
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/tvWishList"
-            android:layout_marginEnd="75dp"
-            android:background="@drawable/ic_setting_light" />
-    </RelativeLayout>
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/tvWishList"
+        android:layout_marginEnd="75dp"
+        android:background="@drawable/ic_setting_dark" />
 
     <View
         android:id="@+id/line2"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
-        android:layout_alignBottom="@id/rlUserIconSection"
+        android:layout_alignBottom="@id/tvWishList"
         android:layout_centerVertical="true"
+        android:layout_marginTop="0dp"
         android:background="#BDBDBD" />
 
 </RelativeLayout>
