@@ -473,61 +473,62 @@ public class YardSaleApplication extends Application {
         this.isFromYSCreation = isFromYSCreation;
         this.yardSale = yardSale;
         this.fm = fm;
-        new CreateItems().execute(item);
-    }
+        item.saveInBackground(new SaveCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
 
-    private class CreateItems extends AsyncTask<Item, Void, String> {
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            //show dialog
-            dialog = ProgressDialog.newInstance();
-            dialog.show(fm, "");
-        }
-
-        @Override
-        protected String doInBackground(Item... params) {
-            final Item item = params[0];
-            item.saveInBackground(new SaveCallback() {
-                public void done(ParseException e) {
-                    if (e == null) {
-
-                        if (isFromYSCreation) {
-                            item.getYardSale().getItemsRelation().add(item);
-                            item.getYardSale().saveInBackground();
-                        }
-                        Intent data = new Intent();
-                        Log.e("PUSH ", "Start PUSH");
-                        data.putExtra("desc", String.valueOf(item.getDescription()));
-                        data.putExtra("price", String.valueOf(item.getPrice()));
-                        Log.e("PUSH", "Set extras done" + yardSale.getObjectId());
-
-                        Log.e("PUSH", yardSale.getObjectId() + yardSale.getSeller().getUsername());
-                        ParsePush push = new ParsePush();
-                        push.setChannel("yardsale_" + yardSale.getObjectId());
-                        push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
-                        push.sendInBackground();
-                        ((Activity) context).setResult(143, data);
-                        ((Activity) context).finish();
-
-                    } else {
-                        Log.e("CREATE_ITEM_ERR", "blah", e);
-                        // when something went wrong in saving the item you do not want to display this to the user.
+                    if (isFromYSCreation) {
+                        item.getYardSale().getItemsRelation().add(item);
+                        item.getYardSale().saveInBackground();
                     }
-                }
-            });
-            if (yardSale.getCoverPic() == null)
-                setPicForYardSale(yardSale, item.getPhoto());
-            return null;
-        }
+                    Intent data = new Intent();
+                    Log.e("PUSH ", "Start PUSH");
+                    data.putExtra("desc", String.valueOf(item.getDescription()));
+                    data.putExtra("price", String.valueOf(item.getPrice()));
+                    Log.e("PUSH", "Set extras done" + yardSale.getObjectId());
 
-        @Override
-        protected void onPostExecute(String result) {
-            //remove dialog
-            dialog.dismiss();
-        }
+                    Log.e("PUSH", yardSale.getObjectId() + yardSale.getSeller().getUsername());
+                    ParsePush push = new ParsePush();
+                    push.setChannel("yardsale_" + yardSale.getObjectId());
+                    push.setMessage("New Item has been added to the yardsale " + yardSale.getTitle());
+                    push.sendInBackground();
+                    ((Activity) context).setResult(143, data);
+                    ((Activity) context).finish();
+
+                } else {
+                    Log.e("CREATE_ITEM_ERR", "blah", e);
+                    // when something went wrong in saving the item you do not want to display this to the user.
+                }
+            }
+        });
+        if (yardSale.getCoverPic() == null)
+            setPicForYardSale(yardSale, item.getPhoto());
+        //new CreateItems().execute(item);
     }
+
+//    private class CreateItems extends AsyncTask<Item, Void, String> {
+//        ProgressDialog dialog;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            //show dialog
+//            dialog = ProgressDialog.newInstance();
+//            dialog.show(fm, "");
+//        }
+//
+//        @Override
+//        protected String doInBackground(Item... params) {
+//            final Item item = params[0];
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            //remove dialog
+//            dialog.dismiss();
+//        }
+//    }
 
     private Number price;
     private ParseFile photo;
