@@ -595,6 +595,7 @@ public class YardSaleApplication extends Application {
     public void getItemsForYardSale(FragmentManager fm, final Context context, final YardSale yardSale, final ImageView ivCoverPic) {
         this.ivCoverPic = ivCoverPic;
         this.fm = fm;
+        this.context = context;
         new GetItemsForSale().execute(yardSale);
     }
 

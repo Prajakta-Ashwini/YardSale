@@ -327,4 +327,10 @@ public class ListActivity extends ActionBarActivity {
         });
         return convertView;
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        super.onBackPressed();
+    }
 }
