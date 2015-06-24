@@ -1,12 +1,14 @@
 package com.android.yardsale.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.yardsale.R;
 import com.squareup.picasso.Picasso;
@@ -33,18 +35,23 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((LinearLayout) object);
+        return view == ((RelativeLayout) object);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
 
+
         ImageView imageView = (ImageView) itemView.findViewById(R.id.imageView);
         Picasso.with(mContext)
                 .load(mResources[position])
                 .fit()
                 .into(imageView);
+
+        TextView tvNameOfTheApp = (TextView) itemView.findViewById(R.id.tvNameOfTheApp);
+        tvNameOfTheApp.setText("YardSale");
+        tvNameOfTheApp.setTextColor(Color.WHITE);
         container.addView(itemView);
 
         return itemView;
@@ -52,6 +59,6 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((LinearLayout) object);
+        container.removeView((RelativeLayout) object);
     }
 }
