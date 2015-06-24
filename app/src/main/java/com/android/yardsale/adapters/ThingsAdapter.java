@@ -358,6 +358,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
         public void onLoaded(List<YardSale> objects, Exception e) {
 
             if (parseAdapter.getCount() == 0) {
+                Toast.makeText(myContext, "No items to display", Toast.LENGTH_SHORT).show();
                 //TODO may be over ride this to show a message no wishlist present
                 //http://stackoverflow.com/questions/27414173/equivalent-of-listview-setemptyview-in-recyclerview
             }
