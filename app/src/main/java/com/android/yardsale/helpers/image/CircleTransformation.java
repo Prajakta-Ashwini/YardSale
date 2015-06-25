@@ -3,7 +3,6 @@ package com.android.yardsale.helpers.image;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.squareup.picasso.Transformation;
@@ -33,12 +32,12 @@ public class CircleTransformation implements Transformation {
         float r = size / 2f;
         canvas.drawCircle(r, r, r, paint);
 
-        Paint paint1 = new Paint();
-        paint1.setColor(Color.WHITE);
-        paint1.setStyle(Paint.Style.STROKE);
-        paint1.setAntiAlias(true);
-        paint1.setStrokeWidth(5);
-        canvas.drawCircle((source.getWidth() - 4)/2, (source.getHeight() - 4)/2, r-2, paint1);
+//        Paint paint1 = new Paint();
+//        paint1.setColor(Color.WHITE);
+//        paint1.setStyle(Paint.Style.STROKE);
+//        paint1.setAntiAlias(true);
+//        paint1.setStrokeWidth(5);
+//        canvas.drawCircle((source.getWidth() - 4)/2, (source.getHeight() - 4)/2, r-2, paint1);
 
         squaredBitmap.recycle();
         return bitmap;

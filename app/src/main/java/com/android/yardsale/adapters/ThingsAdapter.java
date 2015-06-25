@@ -30,6 +30,7 @@ import com.android.yardsale.fragments.ListingsFragment;
 import com.android.yardsale.fragments.MyFavoritesFragment;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.helpers.image.CircleTransformation;
+import com.android.yardsale.helpers.image.RoundedTransformation;
 import com.android.yardsale.interfaces.OnAsyncTaskCompleted;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
@@ -59,15 +60,15 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
     private ImageButton btLike;
     private ImageView ivUserPic;
     private TextView tvSeller;
-//    private Button btShareSale;
+    //    private Button btShareSale;
 //    private Button btDeleteSale;
 //    private Button btEditSale;
     private Context myContext;
-   //private TextView tvPostedAt;
+    //private TextView tvPostedAt;
     private TextView tvAddress;
 
     private List<YardSale> listSales;
-    ImageView[] arrIv = {ivPic1,ivPic2,ivPic3,ivPic4};
+    ImageView[] arrIv = {ivPic1, ivPic2, ivPic3, ivPic4};
     private static final AccelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final OvershootInterpolator OVERSHOOT_INTERPOLATOR = new OvershootInterpolator(4);
     HashMap<SaleViewHolder, AnimatorSet> likeAnimations = new HashMap<>();
@@ -120,22 +121,26 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
                     try {
                         tvSeller.setText(sale.getSeller().fetchIfNeeded().getUsername());
 
-                        if (sale.getSeller().getString("profile_pic_url") != null) {
-                            Picasso.with(context)
-                                    .load(sale.getSeller().getString("profile_pic_url"))
-                                    .transform(new CircleTransformation())
-                                    .into(ivUserPic);
-                        } else if (sale.getSeller().getString("profile_pic") != null) {
-                            Picasso.with(context)
-                                    .load(sale.getSeller().getParseFile("profile_pic").getUrl())
-                                    .transform(new CircleTransformation())
-                                    .into(ivUserPic);
+                        ParseUser seller = sale.getSeller();
+                        if (seller.getParseFile("profile_pic") == null) {
+                            if (seller.getString("profile_pic_url") == null) {
+                                Picasso.with(getContext())
+                                        .load(R.drawable.com_facebook_profile_picture_blank_square)
+                                        .transform(new CircleTransformation())
+                                        .into(ivUserPic);
+                            } else {
+                                Picasso.with(getContext())
+                                        .load(seller.getString("profile_pic_url"))
+                                        .transform(new RoundedTransformation(65, 0))
+                                        .into(ivUserPic);
+                            }
                         } else {
-                            Picasso.with(context)
-                                    .load(R.drawable.com_facebook_profile_picture_blank_square)
+                            Picasso.with(getContext())
+                                    .load(seller.getParseFile("profile_pic").getUrl())
                                     .transform(new CircleTransformation())
                                     .into(ivUserPic);
                         }
+
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -155,12 +160,12 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
                 Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic2);
                 Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic3);
                 Picasso.with(getContext()).load(R.drawable.placeholder).into(ivPic4);
-                int i=0;
+                int i = 0;
                 ParseRelation<Item> rel = sale.getItemsRelation();
                 try {
                     List<Item> itemList = rel.getQuery().find();
-                    for(Item item:itemList) {
-                        if(i==4)
+                    for (Item item : itemList) {
+                        if (i == 4)
                             break;
                         if (item.getPhoto() != null) {
                             if (i == 0) {
@@ -199,23 +204,24 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
     }
 
     ThingsAdapter context;
+
     @Override
     public void onBindViewHolder(final SaleViewHolder holder, final int position) {
         parseAdapter.getView(position, holder.itemView, parseParent);
 
-      //  client.setLikeForSale(fm, this, yardSale, btLike, false);
+        //  client.setLikeForSale(fm, this, yardSale, btLike, false);
         //start progress diaog
-        YardSale sale=yardSale;
+        YardSale sale = yardSale;
         final ProgressDialog dialog = ProgressDialog.newInstance();
         dialog.show(fm, "");
         sale.getLikesRelation().getQuery().findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> results, ParseException e) {
                 if (e == null) {
-                        if (results.contains(client.getCurrentUser())) {
-                            holder.btLike.setSelected(true);
-                        } else {
-                            holder.btLike.setSelected(false);
-                        }
+                    if (results.contains(client.getCurrentUser())) {
+                        holder.btLike.setSelected(true);
+                    } else {
+                        holder.btLike.setSelected(false);
+                    }
                     //stop dialog
                     dialog.dismiss();
                 } else {
@@ -279,15 +285,15 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
 //            }
 //        });
 
-        for(int i=0;i<arrIv.length;i++) {
+        for (int i = 0; i < arrIv.length; i++) {
             final int bkI = i;
-            if(i==0)
+            if (i == 0)
                 arrIv[i] = ivPic1;
-            if(i==1)
+            if (i == 1)
                 arrIv[i] = ivPic2;
-            if(i==2)
+            if (i == 2)
                 arrIv[i] = ivPic3;
-            if(i==3)
+            if (i == 3)
                 arrIv[i] = ivPic4;
             arrIv[i].setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -425,10 +431,10 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
         YardSale s = listSales.get(position);
         Toast.makeText(newContext, "delete sale!", Toast.LENGTH_SHORT).show();
         listSales.remove(position);
-        if(listener instanceof MyFavoritesFragment)
-            deleteSale(fm, s,(MyFavoritesFragment) listener);
-        else if(listener instanceof ListingsFragment)
-            deleteSale(fm,s,(ListingsFragment) listener);
+        if (listener instanceof MyFavoritesFragment)
+            deleteSale(fm, s, (MyFavoritesFragment) listener);
+        else if (listener instanceof ListingsFragment)
+            deleteSale(fm, s, (ListingsFragment) listener);
 //        parseAdapter.loadObjects();
 //        thingsAdapter.notifyDataSetChanged();
 
@@ -517,7 +523,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
 //                    }
 //                });
                 animatorSet.play(rotationAnim);
-             //   animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
+                //   animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim);
 
                 animatorSet.addListener(new AnimatorListenerAdapter() {
                     @Override
@@ -531,7 +537,7 @@ public class ThingsAdapter extends RecyclerView.Adapter<SaleViewHolder> implemen
 
                 animatorSet.start();
             }
-        }else {
+        } else {
             if (likeAnimations.containsKey(holder.getPosition())) {
                 holder.btLike.setImageResource(R.drawable.heartfilled);
             } else {
