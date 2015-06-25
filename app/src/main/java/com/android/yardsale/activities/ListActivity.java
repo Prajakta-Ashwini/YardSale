@@ -304,7 +304,7 @@ public class ListActivity extends ActionBarActivity {
         } else {
             Picasso.with(this)
                     .load(currentUser.getParseFile("profile_pic").getUrl())
-                    .transform(new RoundedTransformation(600, 0))
+                    .transform(new CircleTransformation())
                     .into(ivUserProfilePic);
         }
 
