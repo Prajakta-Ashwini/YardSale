@@ -241,6 +241,12 @@ public class YardSaleApplication extends Application {
 
     public void createYardSale(final Activity activity, final String title, final String description, Date startTime, Date endTime, String address) {
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
+        if(startTime==null || endTime == null){
+            Toast.makeText(callingActivity, "Please enter start and end time", Toast.LENGTH_LONG).show();
+            return;
+
+        }
+
         String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
         Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
         //TODO get location from the given address
