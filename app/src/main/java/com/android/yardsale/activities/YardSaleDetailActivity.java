@@ -27,6 +27,7 @@ import com.android.yardsale.fragments.SaleMapFragment;
 import com.android.yardsale.helpers.MyView;
 import com.android.yardsale.helpers.YardSaleApplication;
 import com.android.yardsale.helpers.image.CircleTransformation;
+import com.android.yardsale.helpers.image.RoundedTransformation;
 import com.android.yardsale.models.Item;
 import com.android.yardsale.models.YardSale;
 import com.melnykov.fab.FloatingActionButton;
@@ -137,20 +138,22 @@ public class YardSaleDetailActivity extends FragmentActivity {
                             try {
                                 tvSeller.setTextColor(Color.WHITE);
                                 tvSeller.setText("Hosted by " + sale.getSeller().fetchIfNeeded().getUsername());
-                                if (sale.getSeller().getString("profile_pic_url") != null) {
-                                    Picasso.with(getBaseContext())
-                                            .load(sale.getSeller().getString("profile_pic_url"))
-                                            .transform(new CircleTransformation())
-                                            .into(ivUserPic);
-                                }
-                                if (sale.getSeller().getString("profile_pic") != null) {
-                                    Picasso.with(getBaseContext())
-                                            .load(sale.getSeller().getParseFile("profile_pic").getUrl())
-                                            .transform(new CircleTransformation())
-                                            .into(ivUserPic);
+                                ParseUser seller = sale.getSeller();
+                                if (seller.getParseFile("profile_pic") == null) {
+                                    if (seller.getString("profile_pic_url") == null) {
+                                        Picasso.with(getBaseContext())
+                                                .load(R.drawable.com_facebook_profile_picture_blank_square)
+                                                .transform(new CircleTransformation())
+                                                .into(ivUserPic);
+                                    } else {
+                                        Picasso.with(getBaseContext())
+                                                .load(seller.getString("profile_pic_url"))
+                                                .transform(new RoundedTransformation(65, 0))
+                                                .into(ivUserPic);
+                                    }
                                 } else {
                                     Picasso.with(getBaseContext())
-                                            .load(R.drawable.com_facebook_profile_picture_blank_square)
+                                            .load(seller.getParseFile("profile_pic").getUrl())
                                             .transform(new CircleTransformation())
                                             .into(ivUserPic);
                                 }
