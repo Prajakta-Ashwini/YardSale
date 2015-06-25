@@ -166,6 +166,11 @@ public class AddItemActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data == null){
+            Toast.makeText(this, "Please select a picture!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Uri takenPhotoUri = getPhotoFileUri(photoFileName);
