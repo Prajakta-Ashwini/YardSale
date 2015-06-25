@@ -247,8 +247,8 @@ public class YardSaleApplication extends Application {
 
         }
 
-        String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
-        Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
+//        String toastMessage = "title: " + title + " description: " + description + " startTime: " + dateFormat.format(startTime) + " endTime: " + dateFormat.format(endTime) + " address: " + address;
+//        Toast.makeText(callingActivity, toastMessage, Toast.LENGTH_LONG).show();
         //TODO get location from the given address
 
         final YardSale yardSale = new YardSale();

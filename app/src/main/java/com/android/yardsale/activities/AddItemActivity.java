@@ -113,7 +113,7 @@ public class AddItemActivity extends ActionBarActivity {
         btnSaveItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getBaseContext(), "btn save clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getBaseContext(), "btn save clicked", Toast.LENGTH_SHORT).show();
                 addItem(v);
             }
         });
