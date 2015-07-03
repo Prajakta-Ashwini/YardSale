@@ -2,6 +2,52 @@
 
 **YardSale** is an android app that allows users to discover location centric yard sales.
 
+## Sprint 3
+
+Here's a walkthrough of implemented user stories:
+
+![YardSale Sprint 2 Demo](sprint3.gif)
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+## Sprint 2
+
+* [x] User can register and login to the app
+* [x] User can view the yard sale in list view and map view
+* [x] User can view details for items in the yard sale
+* [x] Users can search for a specific item 
+* [x] User can host a yard sale, including the following items
+	* [x] pictures of the sale items
+	* [x] time, date, location
+	* [x] title, description 
+* [x] User can edit yard sale if it belongs to him - add/remove pictures, change time, date, location, title, description
+* [x] User can delete a yard sale if it belongs to him
+* [x] User can edit/delete items in a yard sale if it belongs to him - description, price
+* [x] Users can share the yard sale information to friends
+* [x] Save/bookmark a yard sale to visit in future
+
+Here's a walkthrough of implemented user stories:
+
+![YardSale Sprint 2 Demo](sprint2.gif)
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
+## Sprint 1
+
+* [x] User can register and login to the app
+* [x] User can view the yard sale in list view and map view
+* [x] User can view details for items in the yard sale
+* [x] Users can search for a specific item 
+
+## Video Walkthrough 
+Here's a walkthrough of implemented user stories:
+
+![YardSale Sprint 1 Demo](YardSale-Sprint-1.gif)
+
+![YardSale Map functionality](sprint1.gif)
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
+
 ## User Stories
 
 The following **required** functionality is completed:
@@ -27,59 +73,6 @@ The following **optional** features are implemented:
 * [ ] advanced filters to search yard sale 
 * [ ] users can view history of users activity
 * [ ] users can route to the selected yard sale
-
-## Sprint 1
-
-* [x] User can register and login to the app
-* [x] User can view the yard sale in list view and map view
-* [x] User can view details for items in the yard sale
-* [x] Users can search for a specific item 
-
-## Video Walkthrough 
-
-Sprint 1
---------
-
-Here's a walkthrough of implemented user stories:
-
-![YardSale Sprint 1 Demo](YardSale-Sprint-1.gif)
-
-![YardSale Map functionality](sprint1.gif)
-
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
-
-## Sprint 2
-
-* [x] User can register and login to the app
-* [x] User can view the yard sale in list view and map view
-* [x] User can view details for items in the yard sale
-* [x] Users can search for a specific item 
-* [x] User can host a yard sale, including the following items
-	* [x] pictures of the sale items
-	* [x] time, date, location
-	* [x] title, description 
-* [x] User can edit yard sale if it belongs to him - add/remove pictures, change time, date, location, title, description
-* [x] User can delete a yard sale if it belongs to him
-* [x] User can edit/delete items in a yard sale if it belongs to him - description, price
-* [x] Users can share the yard sale information to friends
-* [x] Save/bookmark a yard sale to visit in future
-
-Sprint 2
---------
-Here's a walkthrough of implemented user stories:
-
-![YardSale Sprint 2 Demo](sprint2.gif)
-
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
-
-
-Sprint 3
--------
-Here's a walkthrough of implemented user stories:
-
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
